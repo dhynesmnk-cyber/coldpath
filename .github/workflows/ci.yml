@@ -100,12 +100,24 @@ jobs:
       # node_modules from the build stage and shipped all eight devDependencies.
       - name: Runtime image carries no dev tooling
         run: |
+          probe() { docker run --rm --entrypoint sh coldpath:ci -c "test -e /app/node_modules/$1"; }
+
+          # POSITIVE CONTROL FIRST. Every assertion below reads "docker run
+          # exited non-zero", which is also what happens if the image name is
+          # wrong or the image has no shell — the absence check would then pass
+          # while proving nothing. Confirm the probe can find something before
+          # trusting it to report things missing.
+          if ! probe drizzle-orm; then
+            echo "::error::probe is broken — drizzle-orm is a production dependency and must be present"
+            exit 1
+          fi
+
           for pkg in vitest eslint typescript tsx drizzle-kit @electric-sql/pglite; do
-            if docker run --rm --entrypoint sh coldpath:ci -c "test -e /app/node_modules/$pkg"; then
+            if probe "$pkg"; then
               echo "::error::$pkg is present in the runtime image"; exit 1
             fi
           done
-          echo "runtime image is free of dev tooling"
+          echo "runtime image is free of dev tooling (probe verified against drizzle-orm)"
 
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=high
