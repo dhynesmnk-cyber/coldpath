@@ -9,6 +9,10 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+defaults:
+  run:
+    working-directory: app
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -38,6 +42,8 @@ jobs:
         with:
           node-version: 20
           cache: npm
+          # `defaults.run.working-directory` does not apply to `uses` steps.
+          cache-dependency-path: app/package-lock.json
 
       - run: npm ci --no-audit --no-fund
 
