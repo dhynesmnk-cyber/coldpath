@@ -1,0 +1,42 @@
+{
+  "name": "coldpath",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "COLDPATH — account intelligence engine for the cold chain",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "verify": "npm run typecheck && npm run lint && npm run build && node --max-old-space-size=384 dist/scripts/verify-integration.js",
+    "build": "tsc -p tsconfig.build.json && npm run copy:sql",
+    "copy:sql": "node -e \"require('fs').cpSync('src/db/migrations','dist/src/db/migrations',{recursive:true})\"",
+    "test:lowmem": "COLDPATH_LOW_MEMORY=1 NODE_OPTIONS=--max-old-space-size=192 vitest run",
+    "verify:integration": "npm run build && node --max-old-space-size=384 dist/scripts/verify-integration.js"
+  },
+  "dependencies": {
+    "drizzle-orm": "0.45.2",
+    "openid-client": "^6.8.8",
+    "pino": "10.3.1",
+    "postgres": "3.4.9",
+    "zod": "4.6.4"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
+    "@types/node": "24.10.1",
+    "drizzle-kit": "0.31.10",
+    "eslint": "^10.10.0",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.70.0",
+    "vitest": "4.1.11"
+  },
+  "engines": {
+    "node": ">=20.11"
+  }
+}

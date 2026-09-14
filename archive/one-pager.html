@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COLDPATH — One Page · Prepared for Ndustrial</title>
+<style>
+:root{
+  --ink:#0F1A23; --ink2:#3C4D5C; --ink3:#78899A; --line:#D9E1E8; --line2:#EDF1F5;
+  --acc:#0C7383; --acc-d:#08545F; --acc-l:#E8F5F7;
+  --amb:#8F5B12; --amb-l:#FDF4E6; --red:#9C3242; --red-l:#FCEEF0;
+  --grn:#1B6E4C; --grn-l:#EAF6F0; --vio:#5B4B9E; --vio-l:#F0EEFA;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#6B7885;font-family:var(--sans);color:var(--ink);font-size:8.4px;line-height:1.42;
+  -webkit-font-smoothing:antialiased;padding:16px 10px}
+.page{width:210mm;min-height:296mm;margin:0 auto;background:#fff;padding:11mm 11mm 8mm;
+  box-shadow:0 4px 28px rgba(0,0,0,.34);position:relative}
+.mono{font-family:var(--mono)}
+b,strong{font-weight:680}
+
+/* ---------- masthead ---------- */
+.mast{display:flex;align-items:flex-start;gap:12px;padding-bottom:8px;border-bottom:2.2px solid var(--ink)}
+.mark{width:34px;height:34px;flex:0 0 34px}
+.mast-t{flex:1}
+.brandline{display:flex;align-items:baseline;gap:8px}
+.brand{font-size:19px;font-weight:800;letter-spacing:.15em;line-height:1}
+.brand span{color:var(--acc)}
+.brandsub{font-family:var(--mono);font-size:7px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3)}
+.mast-h{font-size:11.5px;font-weight:700;letter-spacing:-.01em;margin-top:5px}
+.mast-s{font-size:8.6px;color:var(--ink2);margin-top:2px;max-width:112mm}
+.offer{flex:0 0 auto;text-align:right;border:1.6px solid var(--acc);border-radius:5px;padding:6px 11px;background:var(--acc-l)}
+.offer-v{font-size:17px;font-weight:800;letter-spacing:-.02em;color:var(--acc-d);line-height:1}
+.offer-l{font-family:var(--mono);font-size:6.4px;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin-top:3px}
+.offer-n{font-size:7.2px;color:var(--ink2);margin-top:4px;border-top:1px solid rgba(12,115,131,.25);padding-top:3px}
+
+/* ---------- section furniture ---------- */
+.sec{margin-top:7.5px}
+.sec-h{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.sec-n{font-family:var(--mono);font-size:6.4px;font-weight:700;color:#fff;background:var(--ink);
+  border-radius:2px;padding:1.5px 4px;letter-spacing:.06em}
+.sec-t{font-size:9.4px;font-weight:750;letter-spacing:-.005em}
+.sec-x{font-size:7.4px;color:var(--ink3);font-style:italic}
+.rule{flex:1;height:1px;background:var(--line)}
+
+.cols{display:grid;gap:7px}
+.c2{grid-template-columns:1fr 1fr}
+.c3{grid-template-columns:1fr 1fr 1fr}
+.c-16-84{grid-template-columns:1.55fr 1fr}
+.c-60-40{grid-template-columns:1.4fr 1fr}
+
+.box{border:1px solid var(--line);border-radius:4px;padding:6px 8px;background:#fff}
+.box-l{background:var(--line2);border-color:var(--line)}
+.box h4{font-family:var(--mono);font-size:6.4px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink3);font-weight:600;margin-bottom:3.5px}
+.box p{margin-bottom:3px;color:var(--ink2)}
+.box p:last-child{margin-bottom:0}
+ul{margin:0 0 0 9px}
+li{margin-bottom:2px;color:var(--ink2)}
+li:last-child{margin-bottom:0}
+li::marker{color:var(--acc)}
+
+/* ---------- problem banner ---------- */
+.prob{background:var(--ink);color:#fff;border-radius:5px;padding:8px 11px;display:grid;
+  grid-template-columns:repeat(4,1fr);gap:9px}
+.prob-k{font-family:var(--mono);font-size:6.2px;letter-spacing:.11em;text-transform:uppercase;color:#7FA8B3}
+.prob-v{font-size:16px;font-weight:800;letter-spacing:-.025em;line-height:1.08;margin-top:2px}
+.prob-v.bad{color:#FF9AA6}.prob-v.good{color:#6FE3C0}
+.prob-d{font-size:7px;color:#A8BCC6;margin-top:2px;line-height:1.32}
+.prob-note{grid-column:1/-1;border-top:1px solid #2C3B47;padding-top:5px;margin-top:1px;
+  font-size:7.6px;color:#C6D6DE}
+.prob-note b{color:#fff}
+
+/* ---------- pipeline ---------- */
+.flow{display:flex;align-items:stretch;gap:0}
+.fstep{flex:1;position:relative;padding:5px 6px 5px 9px;background:#fff;border:1px solid var(--line);
+  border-right:none}
+.fstep:first-child{border-radius:4px 0 0 4px}
+.fstep:last-child{border-right:1px solid var(--line);border-radius:0 4px 4px 0}
+.fstep:after{content:"";position:absolute;right:-5px;top:50%;transform:translateY(-50%) rotate(45deg);
+  width:8px;height:8px;background:#fff;border-top:1px solid var(--line);border-right:1px solid var(--line);z-index:2}
+.fstep:last-child:after{display:none}
+.fstep.hi{background:var(--acc-l);border-color:rgba(12,115,131,.35)}
+.fstep.hi:after{background:var(--acc-l);border-color:rgba(12,115,131,.35)}
+.fn{font-family:var(--mono);font-size:6px;font-weight:700;color:var(--acc);letter-spacing:.08em}
+.ft{font-size:8.2px;font-weight:700;margin-top:1px;letter-spacing:-.005em}
+.fd{font-size:6.9px;color:var(--ink2);margin-top:2px;line-height:1.32}
+.fmeta{display:flex;justify-content:space-between;align-items:center;margin-top:4px;font-size:7px;color:var(--ink3)}
+
+/* ---------- data tables ---------- */
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-family:var(--mono);font-size:6.1px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink3);font-weight:600;padding:3px 5px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:3px 5px;border-bottom:1px solid var(--line2);font-size:7.5px;vertical-align:top;color:var(--ink2)}
+tr:last-child td{border-bottom:none}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+td b{color:var(--ink)}
+.tint th{background:var(--line2)}
+
+.pill{display:inline-block;font-family:var(--mono);font-size:6.1px;letter-spacing:.06em;
+  text-transform:uppercase;padding:1px 4px;border-radius:2px;border:1px solid;white-space:nowrap}
+.p-acc{background:var(--acc-l);color:var(--acc-d);border-color:rgba(12,115,131,.3)}
+.p-red{background:var(--red-l);color:var(--red);border-color:rgba(156,50,66,.28)}
+.p-amb{background:var(--amb-l);color:var(--amb);border-color:rgba(143,91,18,.28)}
+.p-grn{background:var(--grn-l);color:var(--grn);border-color:rgba(27,110,76,.28)}
+.p-vio{background:var(--vio-l);color:var(--vio);border-color:rgba(91,75,158,.28)}
+.p-ink{background:var(--line2);color:var(--ink2);border-color:var(--line)}
+
+/* ---------- stat strip ---------- */
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.st{border:1px solid var(--line);border-radius:4px;padding:5px 6px;background:#fff;border-top:2px solid var(--acc)}
+.st-v{font-size:12.5px;font-weight:800;letter-spacing:-.025em;line-height:1.05}
+.st-l{font-family:var(--mono);font-size:5.9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-top:2.5px;line-height:1.3}
+
+/* ---------- callout ---------- */
+.call{border-left:2.5px solid var(--acc);background:var(--acc-l);padding:5px 8px;border-radius:0 4px 4px 0}
+.call.r{border-left-color:var(--red);background:var(--red-l)}
+.call.a{border-left-color:var(--amb);background:var(--amb-l)}
+.call.g{border-left-color:var(--grn);background:var(--grn-l)}
+.call p{color:var(--ink2)}
+.call b{color:var(--ink)}
+
+/* ---------- day plan ---------- */
+.days{display:grid;grid-template-columns:repeat(10,1fr);gap:3px}
+.day{border:1px solid var(--line);border-radius:3px;padding:4px 4.5px;background:#fff}
+.day.w2{background:#FBFDFD;border-color:rgba(12,115,131,.28)}
+.dn{font-family:var(--mono);font-size:6.4px;font-weight:700;color:var(--acc)}
+.dt{font-size:7.1px;font-weight:700;margin-top:1.5px;line-height:1.2}
+.dd{font-size:6.5px;color:var(--ink3);margin-top:2px;line-height:1.3}
+
+/* ---------- footer ---------- */
+.foot{margin-top:8px;padding-top:6px;border-top:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
+.foot-l{flex:1;font-size:6.6px;color:var(--ink3);line-height:1.45}
+.foot-r{text-align:right;font-size:6.6px;color:var(--ink3);line-height:1.45;white-space:nowrap}
+
+@page{size:A4;margin:0}
+@media print{
+  body{background:#fff;padding:0}
+  .page{width:auto;min-height:0;margin:0;box-shadow:none;padding:9mm 10mm 7mm}
+  .noprint{display:none}
+  a{color:inherit;text-decoration:none}
+}
+@media (max-width:820px){body{padding:0}.page{width:auto;min-height:0;padding:8mm;box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ================= MASTHEAD ================= -->
+  <div class="mast">
+    <svg class="mark" viewBox="0 0 32 32" fill="none">
+      <rect width="32" height="32" rx="7" fill="#E8F5F7" stroke="#0C7383" stroke-width="1.2"/>
+      <path d="M16 6.5v19M16 6.5l-4.2 4.2M16 6.5l4.2 4.2M16 25.5l-4.2-4.2M16 25.5l4.2-4.2M8 12l16 8M8 12l1.2 5.7M8 12l5.7-1.2M24 20l-1.2-5.7M24 20l-5.7 1.2M24 12L8 20M24 12l-5.7-1.2M24 12l-1.2 5.7M8 20l5.7 1.2M8 20l1.2-5.7" stroke="#0C7383" stroke-width="1.3" stroke-linecap="round"/>
+      <circle cx="16" cy="16" r="2.6" fill="#0C7383"/>
+    </svg>
+    <div class="mast-t">
+      <div class="brandline">
+        <div class="brand">COLD<span>PATH</span></div>
+        <div class="brandsub">Account Intelligence Engine</div>
+      </div>
+      <div class="mast-h">Turn one marketer into the research capacity of six — for the cold chain accounts that matter</div>
+      <div class="mast-s">Top-of-funnel list building, deep account research, and sales-and-marketing deliverables — generated from public data, gated by a human, and consumed by reps in under a minute. Prepared for <b>Ndustrial</b>, 11 September 2026.</div>
+    </div>
+    <div class="offer">
+      <div class="offer-v">$10,000</div>
+      <div class="offer-l">fixed fee · 2 weeks</div>
+      <div class="offer-n">Solo engineer, full-time<br>10 working days · 50/50 terms<br>~$200 pass-through at cost</div>
+    </div>
+  </div>
+
+  <!-- ================= 1. PROBLEM ================= -->
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">01</span><span class="sec-t">The bottleneck is arithmetic, not effort</span><span class="rule"></span><span class="sec-x">one marketer · six reps · 180 target accounts</span></div>
+    <div class="prob">
+      <div><div class="prob-k">Annual research demand</div><div class="prob-v bad">2,160h</div><div class="prob-d">180 accounts × 3h × 4 refreshes a year, because output goes stale within months</div></div>
+      <div><div class="prob-k">Hours actually available</div><div class="prob-v">720h</div><div class="prob-d">1,800 productive hours × 40% — the rest is campaigns, content, positioning and meetings</div></div>
+      <div><div class="prob-k">Over capacity by</div><div class="prob-v bad">3.0×</div><div class="prob-d">No amount of discipline closes a gap this size. It is closed by not doing the work</div></div>
+      <div><div class="prob-k">Accounts actually covered</div><div class="prob-v bad">60 / 180</div><div class="prob-d">33%. The other 120 are worked blind, or from a nine-month-old brief</div></div>
+      <div class="prob-note">With the engine, coverage goes to <b>180 of 180</b> in <b>194 hours</b> — releasing <b>526 hours</b> back to campaigns, positioning and brand, worth <b>$39,420</b> at a loaded rate. The marketer stops being a request queue and becomes a reviewer of machine-produced research. <b>The $10,000 fee is repaid by the released hours alone, before a single deal is counted.</b></div>
+    </div>
+  </div>
+
+  <!-- ================= 2. HOW IT WORKS ================= -->
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">02</span><span class="sec-t">How it works</span><span class="rule"></span><span class="sec-x">seven stages · the model synthesises, it never supplies facts</span></div>
+    <div class="flow">
+      <div class="fstep"><div class="fn">01</div><div class="ft">Ingest</div><div class="fd">12 public sources, nightly and on demand. Raw payload and licence retained on every record.</div></div>
+      <div class="fstep hi"><div class="fn">02</div><div class="ft">Resolve</div><div class="fd">247 reported legal names collapse to 114 real accounts. Existing customers suppressed here.</div></div>
+      <div class="fstep"><div class="fn">03</div><div class="ft">Detect</div><div class="fd">Dated events, classified and impact-scored on recency, materiality and proximity to a buying action.</div></div>
+      <div class="fstep hi"><div class="fn">04</div><div class="ft">Translate</div><div class="fd">What happened becomes what it costs them. Without this it is a news feed, not intelligence.</div></div>
+      <div class="fstep"><div class="fn">05</div><div class="ft">Map</div><div class="fd">To Ndustrial's four platform pillars. Severity scored on evidence strength — and allowed to say "weak fit".</div></div>
+      <div class="fstep"><div class="fn">06</div><div class="ft">Profile</div><div class="fd">Who to talk to, their role in the deal, and their angle. Unresolved roles are published as gaps.</div></div>
+      <div class="fstep hi"><div class="fn">07</div><div class="ft">Produce</div><div class="fd">Artefacts generated under enforced confidence floors, through a human gate, to the rep library.</div></div>
+    </div>
+    <div class="fmeta"><span>Facts live in Postgres with a source reference on every row. The LLM arranges retrieved text; a claim that cannot be traced to a retrieved passage is dropped and recorded as a gap.</span><span class="mono">Marketing builds and approves · reps search and read</span></div>
+  </div>
+
+  <!-- ================= 3. PROOF ================= -->
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">03</span><span class="sec-t">This is not a mockup — the differentiating source is already built and run</span><span class="rule"></span><span class="sec-x">live EPA pull, 11 September 2026</span></div>
+    <div class="cols c-16-84">
+      <div>
+        <div class="call" style="margin-bottom:5px">
+          <p><b>The cold-chain unlock.</b> Any US facility holding more than <b>10,000 lb of anhydrous ammonia</b> must file a Risk Management Plan with EPA — and those filings are <b>public</b>. Ammonia is the dominant industrial refrigerant. The RMP registry is therefore a near-complete, free enumeration of every significant refrigeration site in the United States, with charge size in pounds, location, accident history and a five-year filing cycle that predicts the next capital event.</p>
+          <p style="margin-top:3px">A purchased firmographic list tells you a company exists. This tells you it runs a large ammonia plant at a specific address — <b>which is the actual qualification criterion.</b> No competitor is using it.</p>
+        </div>
+        <div class="stats" style="grid-template-columns:repeat(3,1fr)">
+          <div class="st"><div class="st-v">1,382</div><div class="st-l">Facilities in scope<br>9 cold-chain NAICS</div></div>
+          <div class="st"><div class="st-v">114</div><div class="st-l">Real accounts after<br>entity resolution</div></div>
+          <div class="st"><div class="st-v">748</div><div class="st-l">Sites across<br>43 states</div></div>
+          <div class="st"><div class="st-v">111</div><div class="st-l">Prospects, with 3 existing<br>customers suppressed</div></div>
+          <div class="st"><div class="st-v">24.5M</div><div class="st-l">Pounds of validated<br>ammonia inventory</div></div>
+          <div class="st"><div class="st-v">187</div><div class="st-l">Sites with recorded<br>accident history (309)</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="box" style="margin-bottom:5px">
+          <h4>Top prospects, scored from RMP fields alone — before any enrichment</h4>
+          <table class="tint"><thead><tr><th>Account</th><th class="n">ICP</th><th class="n">Sites</th><th class="n">Ammonia lb</th><th class="n">St</th><th>Grid</th><th class="n">Acc</th></tr></thead><tbody>
+            <tr><td><b>Walmart Inc.</b></td><td class="n"><b>97</b></td><td class="n">39</td><td class="n">1,903,105</td><td class="n">28</td><td><span class="pill p-red">PJM</span></td><td class="n">3</td></tr>
+            <tr><td><b>Sysco Corporation</b></td><td class="n"><b>94</b></td><td class="n">60</td><td class="n">973,818</td><td class="n">33</td><td><span class="pill p-red">PJM</span></td><td class="n">16</td></tr>
+            <tr><td><b>JBS USA</b></td><td class="n"><b>91</b></td><td class="n">18</td><td class="n">2,037,596</td><td class="n">14</td><td><span class="pill p-ink">MISO</span></td><td class="n">10</td></tr>
+            <tr><td><b>United Global Foods</b></td><td class="n"><b>86</b></td><td class="n">9</td><td class="n">893,135</td><td class="n">8</td><td><span class="pill p-ink">MISO</span></td><td class="n">8</td></tr>
+            <tr><td><b>Tyson Foods, Inc.</b></td><td class="n"><b>84</b></td><td class="n">17</td><td class="n">660,555</td><td class="n">10</td><td><span class="pill p-ink">SPP</span></td><td class="n">10</td></tr>
+            <tr><td><b>C&amp;S Wholesale Grocers</b></td><td class="n"><b>83</b></td><td class="n">15</td><td class="n">425,100</td><td class="n">9</td><td><span class="pill p-red">PJM</span></td><td class="n">5</td></tr>
+            <tr><td><b>The Kroger Co.</b></td><td class="n"><b>79</b></td><td class="n">17</td><td class="n">464,610</td><td class="n">10</td><td><span class="pill p-ink">Duke</span></td><td class="n">18</td></tr>
+            <tr><td><b>Albertsons/Safeway</b></td><td class="n"><b>75</b></td><td class="n">10</td><td class="n">416,416</td><td class="n">9</td><td><span class="pill p-ink">CAISO</span></td><td class="n">4</td></tr>
+            <tr><td colspan="7" style="color:var(--ink3);font-size:6.9px;padding-top:3.5px">+ 103 more scored prospects · full list in <span class="mono">coldchain_rmp_accounts.csv</span></td></tr>
+          </tbody></table>
+        </div>
+        <div class="cols c2">
+          <div class="box box-l"><h4>Entity resolution did real work</h4>
+            <p><b>51 of 114 accounts (45%)</b> were filed under more than one legal name. Americold alone appears as <span class="mono">Americold Logistics, LLC</span> (88 sites), <span class="mono">Americold</span> (8), <span class="mono">Americold Realty</span> (5) and <span class="mono">Americold Realty Trust</span> (3).</p>
+            <p style="margin-top:3px;color:var(--red)"><b>A naive customer blocklist fails here.</b> Matching only the string "Americold" would have queued an 88-site flagship customer for outbound. This is the worst failure mode available to the system, so it is the first thing acceptance testing targets.</p></div>
+          <div class="box box-l"><h4>The data is dirty, and the gate caught it</h4>
+            <p>One facility — <b>Neches Terminal</b>, Beaumont TX, a <i>marine terminal</i> — declares <b>89,000,000 lb</b> of ammonia. That is 445× the p99 and <b>78% of all ammonia reported in the entire raw pull</b>. Median across 748 sites is 20,098 lb.</p>
+            <p style="margin-top:3px">Unvalidated it scored 60 and ranked <b>#15 of 111 prospects</b>, above Hormel and Cargill. The validation gate flags it, excludes it from scoring, retains it, and writes it to a human review queue. Nothing is dropped silently.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 4. WHAT YOU GET ================= -->
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">04</span><span class="sec-t">What the $10,000 buys — and what it does not</span><span class="rule"></span><span class="sec-x">fixed fee, fixed scope, scope is the release valve not the date</span></div>
+    <div class="cols c2">
+      <div class="box" style="border-color:rgba(27,110,76,.35)">
+        <h4 style="color:var(--grn)">In scope · delivered at handover on day 10</h4>
+        <table><tbody>
+          <tr><td style="width:31%"><b>Vertical</b></td><td>Cold storage &amp; logistics (NAICS 49312 primary)</td></tr>
+          <tr><td><b>Accounts</b></td><td><b>10</b> deeply researched and published — 8 highest-value prospects plus 2 deliberate hard cases</td></tr>
+          <tr><td><b>Deliverables</b></td><td><b>3 types:</b> Account Brief · Executive One-Pager · Site Portfolio Analysis</td></tr>
+          <tr><td><b>Connectors</b></td><td>EPA RMP <span class="pill p-grn">built &amp; tested</span> · SEC EDGAR · company website · news search</td></tr>
+          <tr><td><b>Pipeline</b></td><td>All 7 stages, full confidence model, entity resolution, numeric validation gate</td></tr>
+          <tr><td><b>Review gate</b></td><td>Marketing drafts → edits inline → approves → versions → publishes</td></tr>
+          <tr><td><b>Rep surface</b></td><td>Search · read · "this was wrong" · request a brief</td></tr>
+          <tr><td><b>Import / export</b></td><td>CSV in (customer list, ownership) · CSV and PDF out</td></tr>
+          <tr><td><b>Handover</b></td><td>Deployed, documented, walkthrough with marketer and both reps</td></tr>
+          <tr><td><b>Code you own</b></td><td>Full source, including the tested RMP connector and resolution logic</td></tr>
+        </tbody></table>
+      </div>
+      <div>
+        <div class="box" style="border-color:rgba(156,50,66,.3);margin-bottom:5px">
+          <h4 style="color:var(--red)">Not in the $10,000 · Phase 2</h4>
+          <div class="cols c2" style="gap:5px">
+            <ul>
+              <li>Outbound sequences, battlecards, discovery guides</li>
+              <li>Business case model, campaign briefs, exec letters, social</li>
+              <li>Live CRM sync — CSV instead</li>
+            </ul>
+            <ul>
+              <li>Paid enrichment (Apollo / Clay)</li>
+              <li>Manufacturing and retail verticals</li>
+              <li>Slack alerts, email digests, DOCX</li>
+            </ul>
+          </div>
+          <p style="margin-top:4px;font-size:7.2px">All seven deferred deliverable types are <b>already fully written</b> for Kroger, Tyson and NewCold in the prototype and lift straight into Phase 2. Outbound is deferred for a specific reason: it must be <b>refused, not degraded</b>, when the primary contact is unresolved — and without paid enrichment that would block it on most pilot accounts.</p>
+        </div>
+        <div class="box box-l">
+          <h4>Why two weeks is credible, not optimistic</h4>
+          <p>This is not a discount on a six-week build. It is a different scope, achievable because <b>~40% of the hard work is already done and de-risked</b>:</p>
+          <table style="margin-top:3px"><tbody>
+            <tr><td style="width:62%">Full UI across all 8 screens</td><td><span class="pill p-grn">working prototype</span></td></tr>
+            <tr><td>EPA RMP connector — ingest, pagination, provenance, licence</td><td><span class="pill p-grn">built · run live</span></td></tr>
+            <tr><td>Entity resolution — 247 names → 114 accounts</td><td><span class="pill p-grn">built · tested</span></td></tr>
+            <tr><td>Validation gate + human review queue</td><td><span class="pill p-grn">built · caught a real outlier</span></td></tr>
+            <tr><td>ICP scoring → ranked list of 111 prospects</td><td><span class="pill p-grn">built</span></td></tr>
+            <tr><td>All 9 deliverable templates, fully written</td><td><span class="pill p-acc">reference code</span></td></tr>
+            <tr><td>Confidence model and gap semantics</td><td><span class="pill p-acc">designed · demonstrated</span></td></tr>
+          </tbody></table>
+          <p style="margin-top:4px">What remains is <b>integration, not invention.</b> Building the connector and the resolution logic from scratch inside ten days would not be credible — and we would not promise it.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 5. TRUST ================= -->
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">05</span><span class="sec-t">Why it will not make things up</span><span class="rule"></span><span class="sec-x">the question every buyer asks, answered structurally rather than with a promise</span></div>
+    <div class="cols c3">
+      <div class="box"><h4>Confidence is enforced, not advisory</h4>
+        <table><tbody>
+          <tr><td style="width:16%"><span class="pill p-grn">3 High</span></td><td>Regulator filing, SEC document, official release. Safe for prospect-facing copy.</td></tr>
+          <tr><td><span class="pill p-amb">2 Med</span></td><td>Trade press or professional profile. Internal documents only, flagged.</td></tr>
+          <tr><td><span class="pill p-red">1 Gap</span></td><td>Published <b>as a gap</b> with a resolution path. Never in outbound.</td></tr>
+        </tbody></table>
+        <p style="margin-top:3.5px">A person cannot exist at confidence ≥2 unless the source's raw payload literally contains that name string. <b>An invented executive is structurally impossible.</b> Titles older than 180 days auto-downgrade.</p></div>
+      <div class="box"><h4>Generation fails loudly</h4>
+        <p>Each template declares a confidence floor per field. When a required field falls below it, generation <b>refuses</b> and records why — it does not quietly ship a weaker artefact.</p>
+        <p style="margin-top:3px">This is live in the prototype: <b>NewCold's outbound sequence is blocked</b> because its primary contact is Medium confidence and the account has no CRM owner. The refusal is the system working.</p>
+        <p style="margin-top:3px">Every rendered deliverable displays its own confidence floor and how many gaps affected it.</p></div>
+      <div class="box"><h4>The human gate stays</h4>
+        <p>Marketing drafts → reviews → publishes. Reps never see a draft. One person owns voice, positioning and accuracy, so six reps do not each invent their own version of the company story.</p>
+        <p style="margin-top:3px">Judgement that cannot be automated lives here: that <b>sustainability is the wrong door at Tyson</b>, and that <b>EPA's May 2026 deadline extension killed the compliance pitch at NewCold</b>.</p>
+        <p style="margin-top:3px"><b>In the prototype, 5 of 17 executive records are published as gaps.</b> Budget ~30 min per account of review, not zero.</p></div>
+    </div>
+  </div>
+
+  <!-- ================= 6. PLAN + GATE ================= -->
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">06</span><span class="sec-t">Ten days, then a two-week measurement window</span><span class="rule"></span><span class="sec-x">each day has a done-when; if a day slips, scope comes out and the date does not move</span></div>
+    <div class="days">
+      <div class="day"><div class="dn">D1</div><div class="dt">Foundations</div><div class="dd">App from prototype, Postgres schema, deploy, CSV import, customer suppression active</div></div>
+      <div class="day"><div class="dn">D2</div><div class="dt">Registry live</div><div class="dd">RMP connector behind the interface, resolution + validation gate wired, review queue UI</div></div>
+      <div class="day"><div class="dn">D3</div><div class="dt">Filings &amp; web</div><div class="dd">SEC EDGAR (10-K/8-K/DEF 14A) + company site connectors, provenance non-nullable</div></div>
+      <div class="day"><div class="dn">D4</div><div class="dt">Signals</div><div class="dd">News connector, event detection, classification, impact scoring, commercial translation</div></div>
+      <div class="day"><div class="dn">D5</div><div class="dt">Pain &amp; confidence</div><div class="dd">Map to 4 pillars, evidence-based severity, weak-fit detection, confidence on every fact</div></div>
+      <div class="day w2"><div class="dn">D6</div><div class="dt">Decision unit</div><div class="dd">Named people, role in deal, angle, provenance — unresolved roles stored as gaps</div></div>
+      <div class="day w2"><div class="dn">D7</div><div class="dt">Deliverables</div><div class="dd">3 templates built, confidence floors enforced with blocking and recorded reasons</div></div>
+      <div class="day w2"><div class="dn">D8</div><div class="dt">Verify</div><div class="dd">Post-generation claim check vs fact table, versioning, Site Portfolio Analysis</div></div>
+      <div class="day w2"><div class="dn">D9</div><div class="dt">Surfaces</div><div class="dd">Review gate (edit/approve/version/publish), rep library, CSV + PDF export</div></div>
+      <div class="day w2"><div class="dn">D10</div><div class="dt">Handover</div><div class="dd">10 accounts end-to-end and published, walkthrough, written handover, reps briefed</div></div>
+    </div>
+    <div class="cols c-60-40" style="margin-top:5px">
+      <div class="box" style="border-color:rgba(12,115,131,.35)">
+        <h4 style="color:var(--acc-d)">The gate to Phase 2 — measured, not asserted</h4>
+        <p style="margin-bottom:3px">Days 1–10 build it. The measurement happens in the <b>following two weeks</b>, when reps use the briefs on live opportunities. That window needs ~2h/week of marketer time and a 15-minute daily standup — no engineering.</p>
+        <div class="cols c2" style="gap:6px">
+          <ul>
+            <li><b>10 briefs</b> published through the review gate</li>
+            <li><b>≥8 of 10</b> rated "usable as-is or with minor edits"</li>
+            <li><b>≥3 live opportunities</b> worked from a published brief</li>
+          </ul>
+          <ul>
+            <li>Median review time <b>≤30 min</b> per account (45 hard ceiling)</li>
+            <li><b>Both reps</b> rate it more useful than their current process</li>
+            <li>A written Phase 2 recommendation with measured gap rate</li>
+          </ul>
+        </div>
+        <p style="margin-top:3px"><b>Negative test, pass/fail:</b> Gordon Food Service has 7 sites and <b>zero</b> recorded accidents — almost no signal. Its brief must honestly report that. <b>If the engine invents a buying window there, it fails.</b></p>
+      </div>
+      <div class="box" style="border-color:rgba(143,91,18,.35)">
+        <h4 style="color:var(--amb)">What we need from you — day-stamped, all blocking</h4>
+        <table><tbody>
+          <tr><td style="width:19%"><span class="pill p-red">Before D1</span></td><td><b>Authoritative customer list</b> including subsidiaries, DBAs and acquired entities <b>+ CRM CSV export.</b> We ask in writing before kickoff, not on day 1 — without it, customer suppression cannot be tested and no list can be trusted.</td></tr>
+          <tr><td><span class="pill p-amb">D3</span></td><td>Three real briefs or emails reps actually used, as a voice reference</td></tr>
+          <tr><td><span class="pill p-amb">D4</span></td><td>Legal sign-off on CC BY-SA data use and the attribution wording</td></tr>
+          <tr><td><span class="pill p-amb">D5</span></td><td>Two named cold-storage reps committed to the measurement window</td></tr>
+          <tr><td><span class="pill p-amb">D6</span></td><td>Approved proof points — which references may be named, to whom, in what framing</td></tr>
+          <tr><td><span class="pill p-ink">~6h</span></td><td>Marketer time across days 3, 7 and 9 for template critique and gate testing</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <div class="foot">
+    <div class="foot-l">
+      <b style="color:var(--ink2)">Data provenance and licensing.</b> Facility data originates from the <b>U.S. EPA Risk Management Program</b>, obtained under FOIA by the <b>Data Liberation Project</b> and served via rmpmap.org, licensed <b>CC BY-SA 4.0</b>. Dataset v3, exported 5 February 2026, data through 30 December 2025. EPA states the data is self-reported by facilities and "may contain errors or omissions" — the reason for the validation gate in §03. Attribution is carried as a standing footer on every derived deliverable and stored non-nullably on every source record. It is never presented as official EPA output. All financial, leadership and regulatory facts cited elsewhere are drawn from public sources — SEC filings, DOJ and EPA releases, investor-relations pages and trade press — each retained with its own citation and confidence rating. No prospect-confidential data is ingested at any point.
+    </div>
+    <div class="foot-r">
+      <b style="color:var(--ink2)">COLDPATH</b> · Account Intelligence Engine<br>
+      Prepared for Ndustrial · 11 September 2026<br>
+      <b style="color:var(--acc-d)">$10,000 fixed · 10 working days</b><br>
+      Companion: interactive prototype · Phase 1 spec · live dataset
+    </div>
+  </div>
+
+</div>
+<div class="noprint" style="max-width:210mm;margin:9px auto 0;color:#E8EEF2;font-size:11px;font-family:var(--sans);text-align:center">
+  Print or save as PDF — optimised for A4, one page. <button onclick="window.print()" style="font:inherit;padding:4px 12px;border-radius:4px;border:1px solid #9FB0BC;background:#fff;cursor:pointer;margin-left:8px">Print / Save PDF</button>
+</div>
+</body>
+</html>

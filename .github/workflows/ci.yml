@@ -1,0 +1,78 @@
+name: ci
+
+on:
+  push: { branches: [main] }
+  pull_request:
+
+# Concurrency: a superseded push should not keep burning a runner.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: app
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    # Integration tests each load a WASM Postgres (~300 MB) and the suite also
+    # runs against a real Postgres service. 2 GB is the floor; do not lower it.
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: coldpath_ci
+          POSTGRES_USER: coldpath_migrator
+          POSTGRES_PASSWORD: ci_only
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U coldpath_migrator -d coldpath_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 12
+
+    env:
+      DATABASE_URL: postgres://coldpath_migrator:ci_only@localhost:5432/coldpath_ci
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          # `defaults.run.working-directory` does not apply to `uses` steps.
+          cache-dependency-path: app/package-lock.json
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Typecheck (strict, noUncheckedIndexedAccess)
+        run: npm run typecheck
+
+      - name: Lint (includes the layer-boundary rules from PRODUCT-PLAN.md §2.2)
+        run: npm run lint
+
+      - name: Unit tests
+        run: npx vitest run tests/unit
+
+      - name: Connector parity vs the Python reference
+        run: npx vitest run tests/integration/connector-parity.test.ts
+
+      # Acceptance #10 (AUTH-SPEC §12): expired / wrong-audience / bad-signature /
+      # unparseable tokens denied with no fallback. Runs against a local mock IdP;
+      # no database, no network.
+      - name: OIDC protocol tests (mock IdP)
+        run: npx vitest run tests/integration/oidc.test.ts
+
+      - name: Build
+        run: npm run build
+
+      # PGlite-backed suite: RLS/tenancy AND the AUTH-SPEC §12 acceptance
+      # tests. Runs the same assertions as the vitest wrappers but serially in
+      # one process, which is what a 2 GB runner can hold.
+      - name: RLS + tenancy + auth acceptance (real Postgres engine)
+        run: node dist/scripts/verify-integration.js
+
+      - name: Confirm the container builds
+        run: docker build -t coldpath:ci .

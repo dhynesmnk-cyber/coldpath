@@ -1,0 +1,756 @@
+name,city,state,naics,ammonia_lb,program_level,accidents,recent_accidents,submissions,rmp_id,url,lat,lon,validated,validation_note,account
+Americold - Chesapeake,Chesapeake,VA,49312,42000,3,0,0,9,100000001749,www.Americold.com,36.780451,-076.371054,True,,Americold Realty Trust
+Americold - La Porte,La Porte,TX,49312,30000,3,0,0,11,100000010105,,29.669499,-095.017946,True,,Americold Realty Trust
+Americold Sanford,Sanford,NC,49312,18000,3,0,0,7,100000010374,www.Americold.com,35.517806,-79.213783,True,,Americold Realty Trust
+Americold - Sumter,Sumter,SC,49312,12000,3,1,0,23,100000011417,www.Americold.com,33.868205,-080.385631,True,,Americold Realty Trust
+"Americold,  Benson",Benson,NC,49312,35000,3,0,0,8,100000011569,https://www.americold.com/,35.414301,-078.514907,True,,Americold Realty Trust
+Americold - Lancaster,Mountville,PA,49312,18700,3,0,0,6,100000028436,www.americold.com,40.042676,-76.418601,True,,Americold Realty Trust
+"Americold, York - Willow Springs",York,PA,49312,10500,3,1,0,6,100000028463,www.americold.com,40.042510,-076.740170,True,,Americold Realty Trust
+"Americold Hatfield, PA",Hatfield,PA,49312,21600,3,2,0,16,100000028481,www.americold.com,40.291389,-075.300556,True,,Americold Realty Trust
+Americold - Douglas,Douglas,GA,49312,16000,3,1,0,7,100000028542,WWW.Americold.com,31.532711,-082.854133,True,,Americold Realty Trust
+Americold - Samuels,Fort Worth,TX,49312,12000,3,0,0,19,100000028631,Americold.com,32.775589,-097.335091,True,,Americold Realty Trust
+Americold - East Point,East Point,GA,49312,9000,3,1,0,17,100000028864,www.americold.com,33.690309,-84.430203,True,,Americold Realty Trust
+Americold - Houston,Houston,TX,49312,10000,3,0,0,7,100000029248,www.americold.com,29.951100,-095.384800,True,,Americold Realty Trust
+Americold - Blue Mound Road,Fort Worth,TX,49312,11000,3,0,0,7,100000029275,,32.829311,-097.341072,True,,Americold Realty Trust
+Americold - Salinas 2118,Salinas,CA,49312,22000,3,1,0,9,100000029328,www.americold.com,36.659745,-121.635542,True,,Americold Realty Trust
+Americold - Modesto 2115,Modesto,CA,49312,80000,3,1,1,15,100000029346,www.americold.com,37.635907,-120.962275,True,,Americold Realty Trust
+Americold - Sikeston,Sikeston,MO,49312,20174,3,0,0,6,100000042964,,36.926989,-089.620878,True,,Americold Realty Trust
+Americold-Dallas,Dallas,TX,49312,9500,3,1,0,10,100000052097,www.americold.com,32.788647,-96.674231,True,,Americold Realty Trust
+Americold - Gainesville,Gainesville,GA,49312,48000,3,0,0,8,100000061309,www.Americold.com,34.246586,-083.804358,True,,Americold Realty Trust
+"Americold, Belvidere",Belvidere,IL,49312,17167,3,0,0,8,100000061844,www.americold.com,42.251528,-088.882500,True,,Americold Realty Trust
+Americold-Jefferson,Jefferson,WI,49312,34884,3,0,0,7,100000062004,americold.com,42.989444,-088.811667,True,,Americold Realty Trust
+Americold- Vernon Plant 2102,Vernon,CA,49312,10000,3,1,0,14,100000066698,www.americold.com,34.005444,-118.210694,True,,Americold Realty Trust
+Americold Empire,Atlanta,GA,49312,24200,3,3,0,8,100000071673,www.Americold.com,33.660329,-084.394017,True,,Americold Realty Trust
+Americold Rockmart,Rockmart,GA,49312,42600,3,0,0,6,100000071735,www.Americold.com,34.025020,-085.049221,True,,Americold Realty Trust
+Americold  - Oxford,Oxford,AL,49312,17500,3,1,0,6,100000071815,,33.591270,-085.859023,True,,Americold Realty Trust
+Americold - Pleasantdale,Atlanta,GA,49312,110200,3,4,0,10,100000071904,,33.910278,-084.248546,True,,Americold Realty Trust
+Americold - Piedmont,Piedmont,SC,49312,16800,3,0,0,7,100000085846,americold.com,34.727494,-082.382989,True,,Americold Realty Trust
+Americold - Lynden 2340,Lynden,WA,49312,54020,3,1,0,7,100000093828,www.americold.com,48.945892,-122.455208,True,,Americold Realty Trust
+Americold - Johnson,Johnson,AR,49312,62945,3,1,0,11,100000102612,www.Americold.com,36.125556,-094.169444,True,,Americold Realty Trust
+Americold - Russellville 324,Russellville,AR,49312,20440,3,0,0,6,100000104317,www.Americold.com,35.271808,-93.093491,True,,Americold Realty Trust
+Americold - Chambersburg PA,Chambersburg,PA,49312,20000,3,0,0,7,100000117492,www.americold.com,39.908262,-077.656796,True,,Americold Realty Trust
+Americold - Napoleon,Napoleon,OH,49312,13500,3,1,0,11,100000138656,www.americold.com,41.412188,-084.099587,True,,Americold Realty Trust
+Americold - Fairfield OH,Fairfield,OH,49312,14800,3,0,0,8,100000140288,,39.328721,-084.505500,True,,Americold Realty Trust
+"Americold, LEMARS",Lemars,IA,49312,10500,3,0,0,6,100000141063,,42.772222,-096.185000,True,,Americold Realty Trust
+"Americold, Sioux City Plant 6",Sioux City,IA,49312,63000,3,0,0,6,100000141152,,42.426111,-96.373056,True,,Americold Realty Trust
+Americold - Lowell,Lowell,AR,49312,33964,3,2,0,7,100000141839,www.Americold.com,36.262778,-094.135000,True,,Americold Realty Trust
+Americold Fort Smith 45,Fort Smith,AR,49312,25847,3,0,0,8,100000142605,www.Americold.com,35.304195,-094.380998,True,,Americold Realty Trust
+"Americold, Sioux City Plant 1",Sioux City,IA,49312,45000,3,0,0,6,100000145853,,42.426691,-096.372998,True,,Americold Realty Trust
+Americold - Newport,Newport,MN,49312,22359,3,3,0,7,100000154931,www.americold.com,44.882806,-093.008333,True,,Americold Realty Trust
+"Americold, Plover - Plant # 0561",Plover,WI,49312,19700,3,1,0,7,100000159302,www.americold.com,44.428612,-089.672260,True,,Americold Realty Trust
+"Milwaukie, OR Plant # 80545",Milwaukie,OR,49312,20023,3,1,0,7,100000159311,9501 SE McLoughlin Blvd,45.454515,-122.641705,True,,Americold Realty Trust
+"Americold Ontario, OR  Plant # 80559",Ontario,OR,49312,23765,3,0,0,6,100000159339,www.americold.com,44.029969,-116.958601,True,,Americold Realty Trust
+"Americold, Salem    # 80548",Salem,OR,49312,54659,3,1,0,7,100000159366,www.americold.com,44.978889,-123.002222,True,,Americold Realty Trust
+"Americold, Woodburn   # 80556",Woodburn,OR,49312,27694,3,0,0,7,100000159375,9501 SE McLoughlin Blvd,45.135301,-122.839200,True,,Americold Realty Trust
+"Americold, Marshall   #5114",Marshall,MO,49312,18850,3,0,0,6,100000159393,,39.118553,-093.243255,True,,Americold Realty Trust
+"Americold, Leesport",Leesport,PA,49312,30000,3,0,0,6,100000159419,www.americold.com,40.443274,-075.958984,True,,Americold Realty Trust
+"Americold, Fremont",Fremont,NE,49312,30000,3,0,0,6,100000159437,,41.421648,-096.489616,True,,Americold Realty Trust
+"Americold, Sioux Falls -  Plant # 78421",Sioux Falls,SD,49312,57000,3,0,0,6,100000159473,www.americold.com,43.562923,-096.698307,True,,Americold Realty Trust
+Americold Syracuse Building 3,Syracuse,NY,49312,22983,3,0,0,6,100000159482,,43.118134,-076.266045,True,,Americold Realty Trust
+"Americold - Tarboro, NC",Tarboro,NC,49312,18591,3,0,0,7,100000159525,,35.874735,-077.562352,True,,Americold Realty Trust
+Murfreesboro - Plant # 75572,Murfreesboro,TN,49312,18830,3,0,0,6,100000159534,,35.799748,-086.390765,True,,Americold Realty Trust
+"Americold, Oklahoma City - Plant # 5116",Oklahoma City,OK,49312,12100,3,0,0,6,100000159543,,35.451783,-097.559834,True,,Americold Realty Trust
+"Americold, Amarillo  - Plant  #8408",Amarillo,TX,49312,12000,3,0,0,7,100000159552,,35.196164,-101.71715,True,,Americold Realty Trust
+Albertville  Plant # 75154,Albertville,AL,49312,13899,3,0,0,7,100000159623,www.americold.com,34.296177,-086.218816,True,,Americold Realty Trust
+Americold Fort Worth Railhead # 5166,Ft. Worth,TX,49312,14500,3,0,0,6,100000159632,,32.833159,-097.355608,True,,Americold Realty Trust
+AmeriCold Gadsden Plant # 5148,Gadsden,AL,49312,12000,3,0,0,6,100000159641,www.Americold.com,33.965264,-085.938522,True,,Americold Realty Trust
+"Americold, Clearfield, #80501",Clearfield,UT,49312,19361,3,4,0,7,100000159669,www.americold.com,41.090528,-112.011902,True,,Americold Realty Trust
+"Americold, Texarkana, Plant #78451",Texarkana,AR,49312,49500,3,0,0,6,100000159687,,33.413908,-093.997713,True,,Americold Realty Trust
+"Americold, Strasburg",Strasburg,VA,49312,40000,3,0,0,7,100000159696,www.americold.com,39.011526,-078.350810,True,,Americold Realty Trust
+Connell Plant # 80543,Connell,WA,49312,11040,3,0,0,7,100000159749,www.americold.com,46.650146,-118.872132,True,,Americold Realty Trust
+Moses Lake Plant # 80546,Moses Lake,WA,49312,33656,3,0,0,6,100000159758,www.americold.com,47.133273,-119.188444,True,,Americold Realty Trust
+Americold Allentown Ambassador Drive,Fogelsville,PA,49312,22983,3,0,0,6,100000159767,,40.591451,-075.620282,True,,Americold Realty Trust
+Americold Allentown Plant - Snowdrift Rd,Fogelsville,PA,49312,22983,3,0,0,7,100000159776,,40.588792,-075.613646,True,,Americold Realty Trust
+Americold Tomah - Plant # 0571,Tomah,WI,49312,33553,3,0,0,6,100000159785,www.americold.com,44.025276,-090.431389,True,,Americold Realty Trust
+"Americold, Springdale - Plant # 78418",Springdale,AR,49312,38000,3,0,0,8,100000159801,Americold.com,36.194181,-094.118731,True,,Americold Realty Trust
+"Americold, Russellville Elmira -  Plant #78417",Russellville,AR,49312,30000,3,0,0,6,100000159838,www.americold.com,35.274594,-93.106047,True,,Americold Realty Trust
+"Americold Westgate,  Plant # 75147",Atlanta,GA,49312,43458,3,0,0,7,100000159865,,33.707945,-084.606877,True,,Americold Realty Trust
+"Americold, West Memphis - Plant # 75139",West Memphis,AR,49312,16413,3,1,0,6,100000159874,Americold.com,35.124431,-90.230819,True,,Americold Realty Trust
+"Americold, Nampa  -  Plant # 80558",Nampa,ID,49312,32232,3,1,0,6,100000159883,www.americold.com,43.587986,-116.564463,True,,Americold Realty Trust
+"Americold, Fort Smith    # 75119",Ft. Smith,AR,49312,28364,3,2,0,8,100000159892,www.Americold.com,35.396121,-094.408814,True,,Americold Realty Trust
+Americold Burley Plant # 80557,Burley,ID,49312,32003,3,0,0,6,100000159909,www.americold.com,42.533724,-113.849761,True,,Americold Realty Trust
+"Americold, Ontario - CA   #75141",Ontario,CA,49312,28000,3,1,0,7,100000159918,www.americold.com,34.057541,-117.534107,True,,Americold Realty Trust
+"Americold, East Dubuque - Plant # 78405",East Dubuque,IL,49312,42575,3,0,0,6,100000159927,americold.com,42.467658,-090.598166,True,,Americold Realty Trust
+"Americold, Rochelle (AMC)",Rochelle,IL,49312,14500,3,0,0,6,100000159936,www.americold.com,41.907339,-089.034833,True,,Americold Realty Trust
+Americold - Indianapolis,Indianapolis,IN,49312,32000,3,1,0,13,100000159945,www.americold.com,39.721445,-086.068143,True,,Americold Realty Trust
+"Americold, Fort Dodge - Plant # 80565",Fort Dodge,IA,49312,13000,3,0,0,6,100000159963,americold.com,42.498840,-094.133660,True,,Americold Realty Trust
+"Americold, Garden City - Plant # 8407",Garden City,KS,49312,25000,3,0,0,6,100000160023,,37.99053,-100.893789,True,,Americold Realty Trust
+Americold Sebree   # 78401,Sebree,KY,49312,36534,3,0,0,6,100000160041,,37.626639,-087.526003,True,,Americold Realty Trust
+Ameriold Turlock II  Plant # 80549,Turlock,CA,49312,13440,3,0,0,7,100000160069,www.americold.com,37.489621,-120.875766,True,,Americold Realty Trust
+Turlock 1 Plant # 75570,Turlock,CA,49312,25000,3,0,0,7,100000160087,www.americold.com,37.485244,-120.845610,True,,Americold Realty Trust
+Americold - Gloucester Rogers Street,Gloucester,MA,49312,13000,3,0,0,10,100000160096,www.americold.com,42.612593,-070.658760,True,,Americold Realty Trust
+"Americold, Watsonville - Plant # 80553",Watsonville,CA,49312,12287,3,0,0,6,100000160103,www.americold.com,36.900723,-121.765350,True,,Americold Realty Trust
+"Gloucester, Rowe Square - Plant # 80508",Gloucester,MA,49312,18000,3,0,0,7,100000160158,,42.614009,-070.656107,True,,Americold Realty Trust
+Gateway  75101,Atlanta,GA,49312,40648,3,2,0,8,100000160176,,33.723613,-084.594336,True,,Americold Realty Trust
+Southgate Plant # 80516,Atlanta,GA,49312,11145,3,0,0,7,100000160201,,33.706995,-084.602845,True,,Americold Realty Trust
+Americold-Green Bay,Green Bay,WI,49312,18000,3,0,0,6,100000161629,920-730-4200,44.505442,-087.980354,True,,Americold Realty Trust
+Americold- Henderson,Henderson,NV,49312,13000,3,0,0,18,100000164555,www.americold.com,36.011761,-114.955586,True,,Americold Realty Trust
+"Americold, Babcock     # 0581",Babcock,WI,49312,13922,3,0,0,7,100000165313,www.americold.com,44.300344,-90.110278,True,,Americold Realty Trust
+Americold -  Nashville,Lebanon,TN,49312,13045,3,2,0,8,100000173572,www.Americold.com,36.184869,-086.271400,True,,Americold Realty Trust
+"Americold, Lula",Lula,GA,49312,27000,3,0,0,6,100000180733,www.Americold.com,34.377623,-083.727300,True,,Americold Realty Trust
+Americold -St.Paul,St. Paul,MN,49312,11000,3,0,0,7,100000181386,americold.com,44.940789,-93.071943,True,,Americold Realty Trust
+Americold-Brooklyn Park,Brooklyn Park,MN,49312,19100,3,0,0,5,100000181395,,45.083994,-093.380603,True,,Americold Realty Trust
+Americold-Darien,Darien,WI,49312,62200,3,0,0,8,100000184276,,42.591111,-088.732500,True,,Americold Realty Trust
+"Americold, York - Manchester",Manchester,PA,49311,27377,3,0,0,9,100000184908,www.americold.com,40.037823,-076.721618,True,,Americold Realty Trust
+Americols - Lakeville,Lakeville,MN,49312,36000,3,0,0,5,100000185952,,44.634207,-093.220245,True,,Americold Realty Trust
+Americold - Anaheim,Anaheim,CA,49312,13453,3,0,0,5,100000187978,www.americold.com,33.855000,-117.907778,True,,Americold Realty Trust
+"Americold, Rochelle-Caron Rd.",Rochelle,IL,49312,18000,3,0,0,7,100000188708,www.americold.com,41.91171,-89.045936,True,,Americold Realty Trust
+"Americold, Tradewater   #75194",Atlanta,GA,49312,19000,3,0,0,5,100000189468,www.americold.com,33.714056,-084.601614,True,,Americold Realty Trust
+"Americold, Fort Worth - Meacham    #75195",Fort Worth,TX,49312,21300,3,0,0,6,100000189654,,32.825181,-097.351478,True,,Americold Realty Trust
+Americold - CHILLICOTHE,Chillicothe,MO,49312,9500,3,0,0,6,100000191605,,39.777778,-093.537500,True,,Americold Realty Trust
+"Americold, Victorville     #75196",Victorville,CA,49312,15048,3,0,0,7,100000192347,www.americold.com,34.489288,-117.286571,True,,Americold Realty Trust
+Americold - Gouldsboro,Covington Township,PA,49312,25000,3,0,0,5,100000197119,www.americold.com,41.266464,-075.499452,True,,Americold Realty Trust
+Americold - Perryville MD,Perryville,MD,49312,18204,3,0,0,6,100000198975,,39.594909,-76.017458,True,,Americold Realty Trust
+Americold - Carson 2110,Carson,CA,49312,12000,3,0,0,5,100000202229,www.americold.com,33.807121,-118.242317,True,,Americold Realty Trust
+"Americold - Massillon, Erie  #75117",Massillon,OH,49312,12000,3,0,0,7,100000202283,www.americold.com,40.741692,-081.513452,True,,Americold Realty Trust
+Americold - Columbus,Columbus,OH,49312,18000,3,1,0,4,100000209446,,39.899896,-82.935215,True,,Americold Realty Trust
+Americold Tacoma 2130,Tacoma,WA,49312,22415,3,0,0,3,100000211291,www.americold.com,47.245728,-122.392453,True,,Americold Realty Trust
+Americold - Taunton MA,Taunton,MA,49312,9237,3,0,0,4,100000215448,www.americold.com,41.939109,-71.132057,True,,Americold Realty Trust
+Lineage Logistics - Rochelle,Rochelle,IL,49312,15000,3,0,0,9,100000001838,www.lineagelogistics.com,41.909167,-089.044722,True,,"Lineage, Inc."
+Lineage Logistics Milwaukee,Wauwatosa,WI,49312,10000,3,0,0,6,100000002392,www.lineagelogistics.com,43.074729,-088.055335,True,,"Lineage, Inc."
+Lineage Logistics Lyndhurst,Lyndhurst,VA,49312,13000,3,0,0,7,100000012336,https://www.lineagelogistics.com/,38.031238,-078.939101,True,,"Lineage, Inc."
+"Lineage Logistics- New Castle,DE Fufillment Center",New Castle,DE,49312,21000,3,0,0,8,100000013601,,39.658859,-75.594812,True,,"Lineage, Inc."
+Lineage  Jessup,Jessup,MD,49312,30000,3,0,0,6,100000040494,,39.157222,-076.785833,True,,"Lineage, Inc."
+Lineage Lyons Illinois,Lyons,IL,49312,22802,3,0,0,8,100000050632,,41.807614,-87.830707,True,,"Lineage, Inc."
+"Terminal Freezers, LLC dba Lineage- Oxnard",Oxnard,CA,99999,44550,3,2,0,8,100000065966,www.lineagelogistics.com,34.200361,-119.169889,True,,"Lineage, Inc."
+Lineage Logistics Batavia,Batavia,IL,49312,32645,3,0,0,8,100000071487,www.lineagelogistics.com,41.863096,-088.288703,True,,"Lineage, Inc."
+Lineage Logistics - Edwardsville,Edwardsville,KS,49312,106515,3,0,0,7,100000071539,www.lineagelogistics.com,39.057721,-094.804438,True,,"Lineage, Inc."
+"Lineage - Ottumwa, IA",Ottumwa,IA,49312,35485,3,0,0,6,100000071655,www.lineagelogestics.com,41.005022,-092.392220,True,,"Lineage, Inc."
+Lineage Logistics Friona,Friona,TX,49312,21835,3,0,0,7,100000074368,www.linelogistics.com.,34.639294,-102.708924,True,,"Lineage, Inc."
+Lineage Hilltop,Moss Landing,CA,49312,19000,3,0,0,8,100000075143,,36.865324,-121.776871,True,,"Lineage, Inc."
+Lineage - Vernon 1/2/3,Vernon,CA,49312,33000,3,0,0,6,100000077267,onelineage.com,34.001450,-118.123730,True,,"Lineage, Inc."
+Lineage  -  Vernon 5&6,Vernon,CA,49312,11000,3,0,0,6,100000077427,onelineage.com,34.001430,-118.140640,True,,"Lineage, Inc."
+Lineage Logistics - Mira Loma,Mira Loma,CA,49312,75900,3,0,0,10,100000093999,www.lineagelogistics.com.com,34.027674,-117.520657,True,,"Lineage, Inc."
+Lineage Logistics - Dodge City,Dodge City,KS,49312,26014,3,0,0,7,100000094079,www.lineagelogistics.com,37.736055,-099.960028,True,,"Lineage, Inc."
+Lineage Logistics - Denison,Denison,IA,49312,13000,3,0,0,7,100000094113,www.lineagelogistics.com,42.022829,-095.362818,True,,"Lineage, Inc."
+Lineage  - Des Moines,Des Moines,IA,49312,20720,3,1,0,7,100000094168,www.onelineage.com,41.634082,-093.594004,True,,"Lineage, Inc."
+Lineage Logistics - Geneva,Geneva,IL,49312,75000,3,0,0,12,100000094248,www.lineagelogistics.com,41.893717,-88.268064,True,,"Lineage, Inc."
+Lineage Logistics - McAllen Ware,McAllen,TX,49312,11937,3,0,0,6,100000096059,www.lineagelogistics.com,26.147421,-098.272867,True,,"Lineage, Inc."
+Lineage Logistics - El Paso,El Paso,TX,49312,24300,3,0,0,6,100000097272,"10421 WALNUT LN, Forney, TX 75126",31.919716,-106.376594,True,,"Lineage, Inc."
+Lineage - Iowa City,Iowa City,IA,49312,24618,3,0,0,6,100000097708,www.lineagelogistics.com,41.635158,-091.493703,True,,"Lineage, Inc."
+Lineage - Hartford,Hartford,MI,49312,15000,3,0,0,6,100000100311,www.onelineage.com,42.210000,-086.144617,True,,"Lineage, Inc."
+Lineage - Lafayette,Lafayette,IN,49312,15000,3,0,0,7,100000100758,www.onelineage.com,40.373889,-086.859167,True,,"Lineage, Inc."
+Lineage - Benton Harbor,Sodus,MI,49312,45000,3,1,0,9,100000101196,www.onelineage.com,42.065556,-086.399167,True,,"Lineage, Inc."
+Lineage Richland,Richland,MS,49312,45465,3,1,0,10,100000101221,www.lineagelogistics.com,32.254416,-90.154892,True,,"Lineage, Inc."
+Lineage - Logansport,Logansport,IN,49312,12000,3,1,0,8,100000101276,www.onelineage.com,40.733611,-086.395556,True,,"Lineage, Inc."
+Lineage Logistics Sandston,Sandston,VA,49312,35000,3,0,0,8,100000102514,www.lineagelogistics.com,37.508278,-077.343861,True,,"Lineage, Inc."
+Lineage Logistics - Tar Heel,Tar Heel,NC,49312,35000,3,0,0,10,100000102658,www.lineagelogistics.com,34.753611,-78.805278,True,,"Lineage, Inc."
+Lineage  Smithfield,Smithfield,VA,49312,35000,3,2,0,7,100000102818,,37.003732,-076.628576,True,,"Lineage, Inc."
+Lineage Norfolk,Norfolk,VA,49312,45000,3,0,0,7,100000102872,http://www.lineagelogistics.com,36.931794,-76.329274,True,,"Lineage, Inc."
+Lineage Logistics - Greeley,Greeley,CO,49312,21230,3,0,0,7,100000104344,www.lineagelogistics.com,40.388943,-104.679729,True,,"Lineage, Inc."
+Lineage - Grand Island,Grand Island,NE,49312,23138,3,1,0,6,100000105664,www.lineagelogistics.com,40.948432,-98.352138,True,,"Lineage, Inc."
+Lineage - Prosser WA.,Prosser,WA,49312,12000,3,0,0,8,100000106173,,46.220263,-119.735240,True,,"Lineage, Inc."
+"Lineage Logistics - Louisville, Winstead",Louisville,KY,49312,67500,3,0,0,7,100000106529,www.lineagelogistics.com,38.132843,-085.891834,True,,"Lineage, Inc."
+Lineage- Tacoma,Tacoma,WA,49312,10971,3,0,0,8,100000109759,www.onelineage.com,47.246490,-122.402649,True,,"Lineage, Inc."
+Lineage Logistics  - Attalla,Attalla,AL,49312,42925,3,1,0,9,100000111149,www.lineagelogistics.com,33.999470,-086.117470,True,,"Lineage, Inc."
+Lineage Logistics - McDonough,McDonough,GA,49312,50000,3,1,0,9,100000111318,www.lineagelogistics.com,33.400532,-084.144273,True,,"Lineage, Inc."
+Lineage - West Omaha,Omaha,NE,49312,69685,3,2,0,7,100000111363,www.onelineage.com,41.202480,-096.118281,True,,"Lineage, Inc."
+Lineage - Allentown,Allentown,PA,49312,70000,3,1,0,9,100000111675,www.onelineage.com,40.566461,-075.600058,True,,"Lineage, Inc."
+Lineage Seafreeze,Seattle,WA,311712,14900,3,1,0,7,100000112512,lineagelogistics.com,47.542105,-122.337384,True,,"Lineage, Inc."
+Lineage South Omaha,Omaha,NE,49312,37840,3,1,0,7,100000119775,www.lineagelogistics.com,41.199593,-095.950889,True,,"Lineage, Inc."
+Lineage Logistics - Forest Grove,Forest Grove,OR,49312,35000,3,1,1,6,100000137238,Lineagelogistics.com,45.524560,-123.075230,True,,"Lineage, Inc."
+Lineage Charleston Remount,North Charleston,SC,49312,15000,3,0,0,13,100000144122,www.lineagelogistics.com,32.901690,-079.979116,True,,"Lineage, Inc."
+Lineage-Quincy,Quincy,WA,49312,100000,3,2,0,7,100000144881,www.lineagelogistics.com,47.238308,-119.828396,True,,"Lineage, Inc."
+Lineage - Hart,Hart,MI,49312,43000,3,2,1,7,100000145728,www.onelineage.com,43.688756,-086.359270,True,,"Lineage, Inc."
+Lineage-Woodland,Woodland,WA,49312,26200,3,0,0,8,100000146344,www.lineagelogistics.com,45.9155,-122.7546,True,,"Lineage, Inc."
+Lineage Logistics - Lincoln,Lincoln,NE,49312,10885,3,1,0,7,100000154735,www.lineagelogistics.com,40.847457,-096.737354,True,,"Lineage, Inc."
+"Lineage Logistics, MTC LLC",New Castle,DE,49312,12280,3,0,0,7,100000155958,,39.709639,-075.541583,True,,"Lineage, Inc."
+Lineage Logistics - Fort Worth,Fort Worth,TX,49312,59874,3,0,0,8,100000160853,www.lineagelogistics.com,32.831787,-97.349147,True,,"Lineage, Inc."
+Lineage Logistics Boonville - American,Boonville,IN,49312,14000,3,1,0,5,100000169621,www.lineagelogistics.com,38.045556,-087.305000,True,,"Lineage, Inc."
+Lineage Logistics,Milwaukee,WI,49312,15000,3,0,0,5,100000172261,,43.191925,-088.049747,True,,"Lineage, Inc."
+Lineage Logistics - Riverside Building #3,Jurupa Valley,CA,49312,14000,3,0,0,5,100000175295,www.lineagelogistics.com,34.012511,-117.38004,True,,"Lineage, Inc."
+Lineage-Othello,Othello,WA,49312,10500,3,0,0,7,100000176533,www.lineagelogistics.com,46.8419,-119.1731,True,,"Lineage, Inc."
+Lineage Logistics - Bandini,Vernon,CA,49312,20000,3,0,0,5,100000177373,www.lineagelogistics.com,34.002973,-118.192647,True,,"Lineage, Inc."
+Lineage Logistics Murfreesboro,Murfreeboro,TN,49312,15698,3,0,0,7,100000178951,720 Butler Drive,35.797890,-086.384036,True,,"Lineage, Inc."
+Lineage - Statesville,Statesville,NC,49312,50000,3,1,0,8,100000183222,www.lineagelogistics.com,35.817058,-080.962395,True,,"Lineage, Inc."
+Lineage,Conklin,NY,49312,11000,3,0,0,7,100000184249,,42.043889,-075.815000,True,,"Lineage, Inc."
+Lineage Logistics - Haines City,Haines City,FL,49312,12000,3,0,0,5,100000184604,www.lineagelogistics.com,28.106229,-81.631440,True,,"Lineage, Inc."
+Lineage - Altoona,Altoona,IA,49312,13000,3,1,0,6,100000184702,www.lineagelogistics.com,41.6643098,-093.455284,True,,"Lineage, Inc."
+Lineage Cranberry TWP,Cranberry Township,PA,49312,25000,3,0,0,7,100000184757,,40.70764,-80.11586,True,,"Lineage, Inc."
+Lineage Logistics Springfield,Springfield,OH,49312,15980,3,0,0,5,100000186611,www.lineagelogistics.com,39.839348,-083.853364,True,,"Lineage, Inc."
+Lineage Logistics - Gaston,Gaston,SC,49312,18483,3,0,0,6,100000187754,www.Lineagelogistics.com,33.843333,-081.026111,True,,"Lineage, Inc."
+Lineage - Mount Pleasant,Mount Pleasant,IA,49312,30000,3,0,0,5,100000188316,www.lineagelogistics.com,40.972909,-091.521508,True,,"Lineage, Inc."
+New Orleans Cold Storage,New Orleans,LA,49312,50000,3,0,0,5,100000188879,,29.996921,-090.014436,True,,"Lineage, Inc."
+Lineage Logistics University Park ILL,University Park,IL,49312,36747,3,0,0,5,100000189002,www.lineagelogistics.com,41.452859,-087.750357,True,,"Lineage, Inc."
+Lineage - Jax Dignan,Jacksonville,FL,49312,16000,3,0,0,6,100000189841,www.onelineage.com,30.325303,-081.723244,True,,"Lineage, Inc."
+Lineage Logistics - Henderson,Henderson,CO,49312,12100,3,0,0,12,100000189921,www.lineagelogistics.com,39.858469,-104.896120,True,,"Lineage, Inc."
+Lineage Logistics,McFarland,WI,49312,30000,3,0,0,5,100000190214,www.lineagelogistics.com,43.029444,-089.303056,True,,"Lineage, Inc."
+Arlington,Arlington,TN,49312,19045,3,0,0,6,100000190312,http://www.lineagelogistics.com,35.283491,-089.675299,True,,"Lineage, Inc."
+Lineage Logistics Albany-2,Albany,GA,49312,23000,3,0,0,4,100000191972,www.lineagelogistics.com,31.559707,-84.117457,True,,"Lineage, Inc."
+Lineage  - Manteca,Manteca,CA,49312,35000,3,0,0,5,100000192212,www.onelineage.com,37.789280,-121.194506,True,,"Lineage, Inc."
+Lineage Logistics Solon,Solon,OH,49312,9579,3,0,0,4,100000192249,www.lineagelogistics.com,41.382578,-081.467309,True,,"Lineage, Inc."
+"Lineage Logistics- Grand Forks, ND",Grand Forks,ND,49312,14227,3,0,0,6,100000192472,,47.912170,-097.105040,True,,"Lineage, Inc."
+"Lineage Logistics- Stilwell, Ok.",Stilwell,OK,49312,18100,3,0,0,5,100000192481,,35.803720,-094.626250,True,,"Lineage, Inc."
+Lineage Logistics - Portland 1,Portland,OR,49312,16600,3,0,0,5,100000192506,www.lineagelogistics.com,45.540200,-122.482900,True,,"Lineage, Inc."
+Lineage Chicago Western Avenue,Chicago,IL,49312,20000,3,0,0,4,100000195497,www.onelineage.com,41.84386,-087.685398,True,,"Lineage, Inc."
+Lineage Logistics - Charlotte,Charlotte,NC,49312,28000,3,0,0,7,100000195594,,35.1115640,-080.945314,True,,"Lineage, Inc."
+Lineage Logistics - Macon,Macon,GA,49312,15000,3,0,0,5,100000197627,https://lineagelogistics.com/,32.697528,-083.660417,True,,"Lineage, Inc."
+Lineage Logistics - Sierra Pine,Vernon,CA,49312,18000,3,0,0,4,100000198537,,34.010072,-118.212957,True,,"Lineage, Inc."
+Lineage Logistics Louisville - Industry Rd,Louisville,KY,49312,6000,3,2,0,7,100000199448,www.lineagelogistics.com,38.220000,-085.771667,True,,"Lineage, Inc."
+Lineage Logistics - Tremonton,Tremonton,UT,49312,15895,3,0,0,5,100000199554,,41.721622,-112.197878,True,,"Lineage, Inc."
+Hanson Logistics -  Hobart Division,Hobart,IN,49312,13000,3,0,0,4,100000200793,www.lineagelogistics.com,41.498226,-087.308884,True,,"Lineage, Inc."
+Lineage Logistics - McAllen Military,McAllen,TX,49312,12738,3,1,0,5,100000201042,"4000 W. Military Hwy, McAllen TX 75126",26.153866,-098.275098,True,,"Lineage, Inc."
+M&L Commodities dba Lineage Logistics - Stockton,Stockton,CA,49312,20000,3,0,0,4,100000205128,lineagelogistics.com,37.949698,-121.327364,True,,"Lineage, Inc."
+Lineage Logistics Baltimore,Baltimore,MD,49312,32173,3,0,0,4,100000207581,,39.269452,-76.553558,True,,"Lineage, Inc."
+Lineage Logistics,Orefield,PA,49312,15000,3,0,0,4,100000208713,,40.651094,-075.598931,True,,"Lineage, Inc."
+"Lineage Logistics, LLC",Chicago,IL,49312,11700,3,1,0,4,100000209188,https://www.lineagelogistics.com/,41.81792,-87.73464,True,,"Lineage, Inc."
+Lineage Logestics - Sunnyvale,Sunnyvale,TX,49312,45000,3,0,0,4,100000209455,www.lineagelogistics.com,32.774794,-96.567439,True,,"Lineage, Inc."
+Lineage Logistics - Centralia,Centralia,WA,49312,45000,3,0,0,4,100000209464,www.lineagelogistics.com,46.76090,-122.99850,True,,"Lineage, Inc."
+"Southern Cold Storage, LLC",Baton Rouge,LA,49312,8000,3,0,0,5,100000210103,www.lineagelogistics.com,30.470220,-91.116720,True,,"Lineage, Inc."
+Lineage Logistics - Hunter Park,Riverside,CA,49312,47000,3,0,0,3,100000213716,www.lineagelogistics.com,34.001840,-117.331714,True,,"Lineage, Inc."
+"Sysco San Diego, Inc.",Poway,CA,49312,11000,3,0,0,6,100000023501,www.sysco.com,32.937392,-117.052776,True,,Sysco Corporation
+"Sysco Atlanta, LLC",College Park,GA,31141,15500,3,0,0,7,100000092099,,33.631525,-84.460958,True,,Sysco Corporation
+"Sysco Grand Rapids, LLC",Grand Rapids,MI,32518,18000,3,0,0,7,100000094872,sysco.com,42.894639,-85.538742,True,,Sysco Corporation
+Sysco Minnesota Inc.,Mounds View,MN,49312,15000,3,1,0,7,100000104166,sysco.com,45.122336,-093.207060,True,,Sysco Corporation
+"Sysco Cincinnati, LLC",Cincinnati,OH,42249,15000,3,1,0,8,100000105441,www.sysco.com,39.257889,-084.439917,True,,Sysco Corporation
+Sygma-Dallas/Ft. Worth,Fort Worth,TX,49312,16000,3,0,0,8,100000110033,www.sygmanetwork.com,32.66785,-097.326361,True,,Sysco Corporation
+"Sysco Portland, Inc.",Wilsonville,OR,49312,14382,3,0,0,7,100000122547,www.syscoportland.com,45.3300,-122.7616,True,,Sysco Corporation
+"Sysco New Mexico, LLC",Albuquerque,NM,42241,15200,3,0,0,6,100000135329,www.sysco.com,35.127744,-106.627233,True,,Sysco Corporation
+Sysco Central Florida Inc.,Ocoee,FL,49312,12497,3,0,0,9,100000152862,www.sysco.com,28.559350,-081.548900,True,,Sysco Corporation
+Buckhead Meat of Florida,Auburndale,FL,49312,19000,3,0,0,6,100000153987,www.sysco.com,28.072217,-081.778933,True,,Sysco Corporation
+"Sysco San Francisco, Inc.",Fremont,CA,49312,11000,3,1,0,9,100000156706,www.sysco.com,37.512023,-121.980659,True,,Sysco Corporation
+"Sysco Kansas City, Inc.",Olathe,KS,49312,11600,3,1,0,6,100000168203,www.sysco.com,38.902083,-094.785000,True,,Sysco Corporation
+The SYGMA Network - Columbus,Columbus,OH,49312,22000,3,0,0,7,100000168356,www.sysco.com,39.971550,-83.064647,True,,Sysco Corporation
+"Sysco Arkansas, a Division of Sysco USA II, LLC",Little Rock,AR,42241,13500,3,4,0,7,100000171306,www.sysco.com,34.693422,-092.340391,True,,Sysco Corporation
+"Sysco Nashville, LLC",Nashville,TN,49312,15000,3,0,0,5,100000176748,www.sysco.com,36.180374,-086.880788,True,,Sysco Corporation
+"Sysco Columbia, LLC",Columbia,SC,49312,14400,3,1,0,5,100000178737,,33.947925,-80.924255,True,,Sysco Corporation
+"SYSCO Intermountain, Inc.",West Jordan,UT,42241,13860,3,0,0,6,100000184258,www.sysco.com,40.579758,-112.040361,True,,Sysco Corporation
+"Sysco Las Vegas, Inc.",Las Vegas,NV,49312,12000,3,0,0,5,100000186531,www.sysco.com,36.268145,-115.04934,True,,Sysco Corporation
+"Sysco West Coast Florida, Inc.",Palmetto,FL,49312,20000,3,0,0,5,100000189887,www.sysco.com,27.576694,-082.53319,True,,Sysco Corporation
+"Sysco New Orleans, LLC",New Orleans,LA,49312,15000,3,0,0,5,100000190009,www.sysco.com,29.959389,-90.201639,True,,Sysco Corporation
+Sysco Northeast Redistribution Center,Front Royal,VA,49312,43600,3,0,0,5,100000192007,https://www.sysco.com/,38.994015,-78.169585,True,,Sysco Corporation
+"Sysco Albany, LLC",Halfmoon,NY,42441,12000,3,0,0,5,100000192329,www.sysco.com,42.897114,-73.768304,True,,Sysco Corporation
+"Sysco Virginia, LLC",Harrisonburg,VA,42441,12500,3,1,0,4,100000193131,www.sysco.com,38.379972,-078.923583,True,,Sysco Corporation
+"Sysco Central Illinois, Inc.",Lincoln,IL,49312,12000,3,0,0,4,100000196003,www.sysco.com,40.149474,-089.406356,True,,Sysco Corporation
+"Sysco Raleigh, LLC",Selma,NC,49312,17070,3,0,0,6,100000196129,Sysco.com,35.535788,-078.307452,True,,Sysco Corporation
+Freshpoint Southern California,City of Industry,CA,42441,10607,3,0,0,5,100000198877,https://www.freshpoint.com/southerncalifornia/,34.040312,-117.980943,True,,Sysco Corporation
+Sysco Louisville Inc.,Louisville,KY,49312,11000,3,2,0,7,100000200374,www.sysco.com,38.141944,-085.753611,True,,Sysco Corporation
+Sysco South Redistribution Center,Alachua,FL,49312,25000,3,0,0,4,100000201159,,29.770657,-82.519493,True,,Sysco Corporation
+"Sysco East Texas, a Division of Sysco USA 1, Inc.",Longview,TX,49312,17000,3,0,0,4,100000204511,www.sysco.com,32.429694,-094.716816,True,,Sysco Corporation
+"Sysco Charlotte, LLC",Concord,NC,49312,14500,3,0,0,4,100000208928,,35.42336,-80.65308,True,,Sysco Corporation
+SYSCO Jackson LLC,Jackson,MS,42441,12752,3,1,0,3,100000215091,www.sysco.com,32.338784,-090.243812,True,,Sysco Corporation
+"Sysco Eastern Wisconsin, LLC",Jackson,WI,42241,14500,3,0,0,6,100000047727,www.sysco.com,43.318570,-88.187250,True,,Sysco Corporation
+"Sysco Memphis, LLC",Memphis,TN,49312,12500,3,1,0,7,100000076927,www.sysco.com,35.028047,-089.925669,True,,Sysco Corporation
+Sysco North Texas,Lewisville,TX,42242,20000,3,0,0,6,100000180449,www.sysco.com,33.064839,-96.873403,True,,Sysco Corporation
+Sysco Central Alabama,Calera,AL,42241,13300,3,0,0,6,100000184971,www.sysco.com,33.152444,-086.756250,True,,Sysco Corporation
+"SYSCO Ventura, Inc.",Oxnard,CA,42241,12000,3,0,0,7,100000185587,www.sysco.com,34.199923,-119.132922,True,,Sysco Corporation
+"Sysco South Florida, Inc.",Medley,FL,42441,23500,3,0,0,6,100000188897,www.sysco.com,25.887905,-080.381436,True,,Sysco Corporation
+"Sysco Baltimore, LLC",Jessup,MD,42441,18500,3,0,0,5,100000189155,www.sysco.com,39.15235,-076.78336,True,,Sysco Corporation
+"Sysco Connecticut, LLC",Rocky Hill,CT,42441,13600,3,0,0,3,100000189235,www.sysco.com,41.635125,-072.679217,True,,Sysco Corporation
+"Sysco  Oklahoma, LLC",Norman,OK,42441,12900,3,0,0,5,100000189262,www.sysco.com,35.261100,-097.460900,True,,Sysco Corporation
+Sysco Montana Inc.,Billings,MT,42441,13257,3,0,0,5,100000189486,www.sysco.com,45.764917,-108.555361,True,,Sysco Corporation
+"Sysco Cleveland, Inc.",Cleveland,OH,42441,18000,3,0,0,5,100000192034,www.sysco.com,41.426500,-081.840194,True,,Sysco Corporation
+Sysco Jacksonville Inc.,Jacksonville,FL,42441,20834,3,2,0,8,100000193747,,30.347139,-081.738250,True,,Sysco Corporation
+"Sysco Iowa, Inc.",Ankeny,IA,42441,14000,3,0,0,4,100000193961,,41.710850,-093.59115,True,,Sysco Corporation
+"Sysco Indianapolis, LLC",Indianapolis,IN,42441,12500,3,0,0,5,100000194069,www.sysco.com,39.870528,-086.229028,True,,Sysco Corporation
+"Sysco Denver, Inc.",Denver,CO,42441,24000,3,0,0,5,100000195077,www.sysco.com,39.787230,-104.879626,True,,Sysco Corporation
+"Sysco Gulf Coast, Inc.",Geneva,AL,42441,13000,3,0,0,4,100000195479,5800 Evergreen Drive,31.053350,-085.912224,True,,Sysco Corporation
+"Sysco St. Louis, LLC",St. Charles,MO,42441,11729,3,0,0,4,100000197468,www.sysco.com,38.831892,-090.514656,True,,Sysco Corporation
+"Sysco Hampton Roads, Inc.",Suffolk,VA,42441,14100,3,0,0,5,100000198001,,36.888690,-076.434042,True,,Sysco Corporation
+"Sysco Southeast Florida, LLC.",Riviera Beach,FL,42441,16520,3,0,0,4,100000198225,http://www.sysco.com/,26.768222,-080.087083,True,,Sysco Corporation
+"Sysco Eastern Maryland, LLC.",Pocomoke City,MD,42449,10200,3,0,0,6,100000198902,https://sysco.com,38.082917,-075.603000,True,,Sysco Corporation
+"Sysco Central Pennsylvania, LLC.",Harrisburg,PA,42441,11873,3,0,0,4,100000199607,www.syscocentralpa.com,40.271694,-076.822917,True,,Sysco Corporation
+"Sysco Syracuse, LLC.",Warners,NY,42441,18000,3,0,0,5,100000201284,www.sysco.com,43.086390,-076.338310,True,,Sysco Corporation
+"Sysco Knoxville, LLC",Knoxville,TN,42441,15802,3,0,0,4,100000201587,www.sysco.com,35.986139,-083.946111,True,,Sysco Corporation
+Sysco Pittsburgh,Harmony,PA,42441,15835,3,0,0,5,100000205725,www.sysco.com,40.800056,-080.120250,True,,Sysco Corporation
+"Sysco Houston, Inc.",Houston,TX,42441,40000,3,0,0,4,100000210461,,29.936186,-095.423049,True,,Sysco Corporation
+"Sysco Philadelphia,LLC",Philadelphia,PA,42441,36000,3,0,0,3,100000214181,,39.90693,-75.15939,True,,Sysco Corporation
+"Sysco Detroit, LLC",Canton,MI,42249,12000,3,0,0,7,100000081225,www.sysco.com,42.266778,-83.45075,True,,Sysco Corporation
+"Sysco Food Services, Cooler",Des Plaines,IL,42249,12900,3,0,0,6,100000161228,www.sysco.com,42.046987,-087.907333,True,,Sysco Corporation
+"Sysco Food Services, Freezer",Des Plaines,IL,42449,14500,3,0,0,4,100000204003,,42.043480,-87.911090,True,,Sysco Corporation
+Wal-Mart Distribution Center #6042,Pauls Valley,OK,49312,36000,3,0,0,6,100000121575,,34.701319,-097.253046,True,,Walmart Inc.
+Wal-Mart Distribution Center #6084,Los Lunas,NM,49312,38600,3,0,0,6,100000121628,"14601 E. 88th Place N, Suite 302",34.82609,-106.77141,True,,Walmart Inc.
+Wal-Mart Distribution Center #6097,London,KY,49312,46000,3,0,0,6,100000121673,,37.14116,-084.17511,True,,Walmart Inc.
+Walmart Distribution Center #6047,Bedford,PA,49312,48000,3,0,0,6,100000121842,,40.094444,-078.522778,True,,Walmart Inc.
+Walmart Distribution Center #6073,Pageland,SC,49312,40000,3,0,0,6,100000121986,,34.79742,-080.41466,True,,Walmart Inc.
+Walmart Distribution Center #6083,Temple,TX,49312,45000,3,0,0,6,100000122164,,31.142172,-097.363919,True,,Walmart Inc.
+Walmart Distribution Center #6082,Clarksville,AR,49312,39000,3,0,0,6,100000122627,,35.428831,-093.532908,True,,Walmart Inc.
+Walmart Distribution Center #6059,Olney,IL,49312,59000,3,0,0,6,100000122887,,38.711269,-088.120139,True,,Walmart Inc.
+Walmart Distribution Center #6072,New Albany,MS,49312,40000,3,0,0,6,100000125161,,34.48833,-089.06461,True,,Walmart Inc.
+Walmart Distribution Center #6071,Winter Haven,FL,49312,38000,3,0,0,6,100000133321,,28.07258,-081.68423,True,,Walmart Inc.
+Walmart Distribution Center #6085,Tomah,WI,49312,35000,3,1,1,6,100000167188,,43.99456,-090.47051,True,,Walmart Inc.
+Walmart Distribution Center #6095,Opelika,AL,49312,35000,3,0,0,6,100000168515,,32.697222,-085.324167,True,,Walmart Inc.
+Walmart Distribution Center #6096,Johnstown,NY,49312,39500,3,0,0,6,100000169024,,42.988045,-74.405803,True,,Walmart Inc.
+Walmart Distribution Center #6090,Corinne,UT,49312,35000,3,0,0,6,100000169391,,41.561389,-112.14669,True,,Walmart Inc.
+Wal-Mart Distribution Center #6056,Terrell,TX,49312,38000,3,0,0,7,100000169701,,32.73011,-096.33586,True,,Walmart Inc.
+Walmart Distribution Center #6055,Monroe,GA,49312,35000,3,1,0,5,100000170414,,33.807222,-83.677778,True,,Walmart Inc.
+Wal-Mart Distribution Center #6062,Shelbyville,TN,49312,40000,3,0,0,5,100000174642,,35.568611,-086.461389,True,,Walmart Inc.
+Wal-Mart Distribution Center #6057,Robert,LA,49312,45000,3,0,0,5,100000175124,,30.51133,-090.32199,True,,Walmart Inc.
+Wal-Mart Distribution Center #6065,Harrisonville,MO,49312,38000,3,0,0,5,100000175669,,38.614167,-094.355000,True,,Walmart Inc.
+Walmart Distribution Center #6074,Auburn,IN,49312,40000,3,0,0,5,100000175776,,41.36802,-085.11070,True,,Walmart Inc.
+Wal-Mart Distribution Center #6099,Macclenny,FL,49312,36000,3,0,0,5,100000177658,,30.295059,-082.082551,True,,Walmart Inc.
+Walmart Distribution Center #6064,Cleburne,TX,49312,40000,3,0,0,6,100000178498,,32.404603,-097.426757,True,,Walmart Inc.
+Walmart Distribution Center #6091,Henderson,NC,49312,40000,3,0,0,5,100000178675,,36.28899,-078.38632,True,,Walmart Inc.
+Walmart Distribution Center #7012,Washington Ct House,OH,49312,50000,3,0,0,5,100000178693,,39.519853,-83.400590,True,,Walmart Inc.
+Walmart Distribution Center #7010,New Caney,TX,49312,80000,3,0,0,5,100000181411,,30.173624,-095.282921,True,,Walmart Inc.
+Walmart Distribution Center #7016,Gordonsville,VA,49312,40000,3,0,0,5,100000181554,,37.98405,-078.20003,True,,Walmart Inc.
+Walmart Distribution Center #7017,Wintersville,OH,49312,35000,3,0,0,6,100000182072,,40.415693,-080.734487,True,,Walmart Inc.
+Walmart Distribution Center #7013,Casa Grande,AZ,49312,40000,3,0,0,5,100000182802,,32.867226,-111.768848,True,,Walmart Inc.
+Walmart Distribution Center #7019,Brundidge,AL,49312,65000,3,1,0,5,100000184294,,31.718567,-085.837056,True,,Walmart Inc.
+Wal-Mart Distribution Center #7021,Grandview,WA,49312,36000,3,0,0,5,100000185202,,46.27711,-119.92366,True,,Walmart Inc.
+Wal-Mart Distribution Center #7018,North Platte,NE,49312,34005,3,0,0,5,100000189048,,41.093889,-100.730278,True,,Walmart Inc.
+Walmart Distribution Center #7023,Arcadia,FL,42441,80000,3,0,0,5,100000190704,,27.042500,-081.955549,True,,Walmart Inc.
+Walmart Distribution Center #7015,Ochelata,OK,49312,89000,3,0,0,5,100000191213,www.walmart.com,36.576401,-95.932784,True,,Walmart Inc.
+Walmart Distribution Center #7024,Sterling,IL,49312,89000,3,0,0,4,100000194023,,41.776647,-089.790339,True,,Walmart Inc.
+Walmart Distribution Center #7014,Lewiston,ME,49312,70000,3,0,0,4,100000195031,,44.060556,-070.192222,True,,Walmart Inc.
+Walmart Distribution Center #7048,McCarran,NV,49312,45000,3,0,0,5,100000195451,,39.53940,-119.47297,True,,Walmart Inc.
+Wal-Mart Distribution Center #7030,Pottsville,PA,49312,80000,3,0,0,4,100000197716,,40.731199,-076.318133,True,,Walmart Inc.
+Walmart Distribution Center #7055,Gas City,IN,49312,80000,3,0,0,4,100000198608,"14601 E. 88th Place N, Suite 302",40.476194,-085.583111,True,,Walmart Inc.
+Walmart Distribution Center #7077,Cheyenne,WY,49312,64000,3,0,0,4,100000198813,,41.119995,-104.899902,True,,Walmart Inc.
+"United States Cold Storage, Smyrna",Smyrna,TN,49312,29754,3,0,0,7,100000050473,www.uscold.com,36.003333,-086.530000,True,,United States Cold Storage
+"United States Cold Storage, Laredo III",Laredo,TX,49312,21547,3,0,0,6,100000050552,www.uscold.com,27.551389,-099.511111,True,,United States Cold Storage
+"United States Cold Storage, Tulare",Tulare,CA,49312,22649,3,0,0,6,100000050767,www.uscold.com,36.185833,-119.336667,True,,United States Cold Storage
+Colorado Boxed Beef,Dallas,TX,49312,33664,3,1,0,7,100000051034,,32.811111,-96.877778,True,,United States Cold Storage
+"United States Cold Storage, Arlington",Arlington,TX,49312,12459,3,1,0,8,100000051105,www.uscoldstorage.com,32.720556,-097.049167,True,,United States Cold Storage
+"United States Cold Storage, Ft. Worth",FT. Worth,TX,49312,28204,3,2,0,9,100000051169,www.uscold.com,32.818889,-097.320000,True,,United States Cold Storage
+"United States Cold Storage,  Bakersfield",Bakersfield,CA,49312,22957,3,1,0,8,100000051203,uscoldstorage.com,35.312778,-119.075278,True,,United States Cold Storage
+"United States Cold Storage, Minooka",Minooka,IL,49312,15700,3,1,1,9,100000051301,www.uscold.com,41.450556,-088.276944,True,,United States Cold Storage
+"United States Cold Storage, Lumberton",Lumberton,NC,49312,85000,3,0,0,9,100000053149,www.uscold.com,34.608333,-079.042778,True,,United States Cold Storage
+"United States Cold Storage, Milford",Milford,DE,49312,44900,3,1,0,8,100000053265,www.uscold.com,38.921111,-075.451667,True,,United States Cold Storage
+"United States Cold Storage, Warsaw",Warsaw,NC,49312,43694,3,0,0,9,100000053871,www.uscold.com,35.013611,-078.111944,True,,United States Cold Storage
+"United States Cold Storage, Laredo II",Laredo,TX,49312,10916,3,0,0,6,100000057573,www.uscold.com,27.545556,-099.512500,True,,United States Cold Storage
+"United States Cold Storage, Tracy",Tracy,CA,49312,19981,3,0,0,8,100000057895,www.uscold.com,37.744722,-121.409167,True,,United States Cold Storage
+"United States Cold Storage, LaVergne",LaVergne,TN,49312,38000,3,0,0,6,100000058849,www.uscold.com,36.020000,-086.599167,True,,United States Cold Storage
+"United States Cold Storage, Miller Circle",Bethlehem,PA,49312,17000,3,0,0,7,100000159446,www.uscold.com,40.681363,-075.365078,True,,United States Cold Storage
+United States Cold Storage - McDonough,McDonough,GA,49312,14700,3,0,0,7,100000168418,www.uscold.com,33.390831,-084.166114,True,,United States Cold Storage
+"Sodus Cold Storage Co., Inc.",Sodus,NY,49312,14693,3,0,0,7,100000174143,,43.236806,-077.061639,True,,United States Cold Storage
+"United States Cold Storage, LLC - Quakertown West",Quakertown,PA,49312,16000,3,0,0,5,100000189404,www.uscold.com,40.440278,-075.425000,True,,United States Cold Storage
+"United States Cold Storage, Tulare North",Tulare,CA,49312,37700,3,0,0,5,100000193328,https://www.uscold.com/,36.192778,-119.333611,True,,United States Cold Storage
+"United States Cold Storage, Harrisonburg",Harrisonburg,VA,49312,90000,3,0,0,5,100000200249,,38.396216,-078.897527,True,,United States Cold Storage
+"United States Cold Storage, Wilmington",Wilmington,IL,49312,18800,3,0,0,6,100000205734,www.uscold.com,41.320833,-088.135833,True,,United States Cold Storage
+"U.S. Foods, Inc. Las Vegas",North Las Vegas,NV,49312,24000,3,0,0,8,100000019222,www.usfoods.com,36.216806,-115.162944,True,,US Foods Holding Corp.
+"U.S. Foods, Inc. - Knoxville",Alcoa,TN,49311,14700,3,1,1,7,100000037578,www.usfoods.com,35.778662,-083.986702,True,,US Foods Holding Corp.
+"U.S. Foods, Inc. - Topeka",Topeka,KS,49312,23000,3,0,0,6,100000042134,www.usfoods.com,39.088759,-095.734596,True,,US Foods Holding Corp.
+"US Foodservice, Inc.",La Mirada,CA,49312,19000,3,0,0,6,100000049413,www.usfoods.com,33.883743,-118.007496,True,,US Foods Holding Corp.
+"US Foods, Inc. - Fort Mill",Fort Mill,SC,49312,47000,3,0,0,6,100000065662,,34.983197,-080.950860,True,,US Foods Holding Corp.
+"US Foods, Inc.",Boca Raton,FL,49312,15500,3,0,0,7,100000106119,,26.414383,-080.091419,True,,US Foods Holding Corp.
+"US Foods, Inc. - Montgomery",Montgomery,AL,42241,12600,3,1,0,6,100000106431,www.usfoods.com,32.313594,-086.360613,True,,US Foods Holding Corp.
+"US Foods, Inc., Columbia",Lexington,SC,42241,15000,3,0,0,6,100000106547,www.usfoods.com,33.935398,-081.292567,True,,US Foods Holding Corp.
+"U.S. Foods, Inc. - Charlotte",Charlotte,NC,42241,19946,3,0,0,6,100000106583,,35.327306,-080.845194,True,,US Foods Holding Corp.
+"US Foods, Inc. - Zebulon",Zebulon,NC,42241,12950,3,0,0,6,100000106707,,35.814834,-078.266052,True,,US Foods Holding Corp.
+"US Foods, Inc. - Woodburn",Woodburn,OR,49312,30000,3,0,0,7,100000113218,www.usfoods.com,45.130833,-122.844722,True,,US Foods Holding Corp.
+"US Foods, Inc.",Centennial,CO,49312,12000,3,0,0,7,100000154744,,39.599297,-104.850058,True,,US Foods Holding Corp.
+"U.S. Foods, Inc. - Oklahoma City",Oklahoma City,OK,49312,15198,3,0,0,6,100000165037,,35.574251,-097.449296,True,,US Foods Holding Corp.
+"US Foods, Inc. - Fairburn",Fairburn,GA,49311,18000,3,0,0,6,100000178728,www.usfoods.com,33.541170,-084.559060,True,,US Foods Holding Corp.
+"US Foods, Inc. - Detroit",Wixom,MI,49312,25000,3,0,0,7,100000180813,www.usfoods.com,42.495817,-083.556838,True,,US Foods Holding Corp.
+US Foods of Allentown,Allentown,PA,42242,12000,3,0,0,6,100000182562,,40.634389,-75.432500,True,,US Foods Holding Corp.
+"US Foods, Inc. Lexington",Lexington,NC,49312,12500,3,0,0,3,100000215787,,35.779515,-80.325253,True,,US Foods Holding Corp.
+"US Foods of Garland, TX",Garland,TX,42441,11326,3,0,0,4,100000201523,www.usfoods.com,32.9057031,-96.6579133,True,,US Foods Holding Corp.
+"US Foods of Plymouth, MN",Plymouth,MN,42441,12000,3,0,0,4,100000204389,www.usfoods.com,45.050100,-093.403333,True,,US Foods Holding Corp.
+"U.S. Foods of Salt Lake City, UT",Ogden,UT,42441,12500,3,0,0,4,100000204735,,41.207528,-111.999389,True,,US Foods Holding Corp.
+JBS Tolleson Beef Processing,Tolleson,AZ,31161,50000,3,1,0,12,100000001650,,33.441389,-112.252778,True,,JBS USA
+JBS - Grand Island Beef Processing Facility,Grand Island,NE,311611,158000,3,0,0,9,100000012684,,40.922583,-098.318861,True,,JBS USA
+JBS - Cactus Beef Processing Facility,Cactus,TX,311611,250000,3,0,0,10,100000170851,,36.051556,-102.010528,True,,JBS USA
+JBS Plainwell Distribution Center,Plainwell,MI,49312,15000,3,0,0,4,100000215304,,42.42323,-85.64910,True,,JBS USA
+"JBS USA - Worthington, MN  Pork Facility",Worthington,MN,311611,141342,3,1,0,6,100000007253,,43.634389,-095.566333,True,,JBS USA
+JBS - Souderton Beef Processing,Souderton,PA,31161,80000,3,1,0,10,100000039683,,40.294444,-075.341667,True,,JBS USA
+JBS - Greeley Beef Processing Facility,Greeley,CO,311611,158000,3,0,0,9,100000041643,,40.443306,-104.691222,True,,JBS USA
+"JBS Beardstown, IL Pork Facility",Beardstown,IL,31161,90000,3,0,0,8,100000043561,www.jbssa.com,39.993100,-090.404200,True,,JBS USA
+JBS-Greeley Value Added,Greeley,CO,311611,53823,3,0,0,7,100000081868,,40.443583,-104.688472,True,,JBS USA
+"JBS Green Bay, Inc.",Green Bay,WI,31161,82000,3,1,0,9,100000099939,www.jbs.com,44.481510,-087.982995,True,,JBS USA
+JBS Hyrum Beef Facility,Hyrum,UT,311611,30000,3,0,0,11,100000113405,,41.643444,-111.859778,True,,JBS USA
+JBS Plainwell Beef Processing Facility,Plainwell,MI,31161,50000,3,1,0,9,100000117786,,42.4209834,-085.649933,True,,JBS USA
+JBS Marshalltown Pork Facility,Marshalltown,IA,311611,715862,3,1,0,7,100000127524,,42.054417,-092.897944,True,,JBS USA
+Swift Pork Company,Louisville,KY,31161,80000,3,4,2,7,100000140938,,38.256000,-085.726944,True,,JBS USA
+JBS USA - Omaha Beef Processing Facility,Omaha,NE,311611,21569,3,0,0,9,100000146978,,41.209528,-095.965667,True,,JBS USA
+JBS Prepared Foods -  Booneville Facility,Booneville,MS,31199,33000,3,0,0,7,100000117429,jbsfoodsgroup.com,34.668333,-088.555000,True,,JBS USA
+Plumrose dba JBS Prepared Foods - Council Bluffs 1,Council Bluffs,IA,42242,16000,3,0,0,7,100000143105,www.jbsfoodgroups.com,41.2417,-095.88430,True,,JBS USA
+JBS Prepared Foods - Elkhart Facility,Elkhart,IN,31199,13000,3,0,0,7,100000186684,https://jbsfoodsgroup.com/,41.648705,-085.934801,True,,JBS USA
+Rochelle Distrubution Center,Rochelle,IL,49312,15000,3,0,0,10,100000001829,www.tyson.com,41.907500,-089.040556,True,,"Tyson Foods, Inc."
+"Tyson Fresh Meats, inc. - Finney Co.KS",Holcomb,KS,311611,52569,3,4,0,19,100000009616,,38.000000,-101.026111,True,,"Tyson Foods, Inc."
+TCCS Sioux City IA.,Sioux City,IA,49312,13474,3,1,0,8,100000045453,www.tyson.com,42.440357,-096.373204,True,,"Tyson Foods, Inc."
+"TYSON FOODS, INC. RUSSELLVILLE, AR. (TVDC)",RUSSELLVILLE,AR,311615,27000,3,0,0,7,100000051597,www.tyson.com,35.260443,-93.067572,True,,"Tyson Foods, Inc."
+TYSON DISTRIBUTION CENTER,ROGERS,AR,311615,63454,3,0,0,8,100000052079,www.tyson.com,36.316914,-94.121943,True,,"Tyson Foods, Inc."
+"The Hillshire Brands Company, Kansas City, KS",Kansas City,KS,311612,71106,3,0,0,9,100000110159,www.tyson.com,39.094722,-094.686666,True,,"Tyson Foods, Inc."
+"Tyson Foods, Inc. TVDC West",Russellville,AR,49312,40000,3,0,0,7,100000159712,www.tyson.com,35.260550,-093.069140,True,,"Tyson Foods, Inc."
+"TYSON FOODS, INC. RUSSELLVILLE DISTRIBUTION CENTER",RUSSELLVILLE,AR,311615,11200,3,1,0,8,100000163609,www.tyson.com,35.277695,-93.123850,True,,"Tyson Foods, Inc."
+"Tyson Foods Olathe, KS Distribution",Olathe,KS,49312,98000,3,0,0,7,100000173144,www.tyson.com,38.838435,-94.823706,True,,"Tyson Foods, Inc."
+Tyson Forwarding Warehouse,Tolleson,AZ,49312,17000,3,0,0,4,100000193818,,33.438333,-112.288611,True,,"Tyson Foods, Inc."
+Macon Distribution Center,Macon,GA,49312,13300,3,0,0,10,100000196021,www.tysonfoods.com,32.731058,-83.727698,True,,"Tyson Foods, Inc."
+Tyson warehousing Inc North East Mixing Center,Pottsville,PA,49312,13100,3,0,0,4,100000200267,www.tyson.com,40.736111,-076.304167,True,,"Tyson Foods, Inc."
+"Tyson Fresh Meats,Pasco,WA",Wallula,WA,311611,28664,3,3,0,15,100000006405,www.tyson.com,46.136944,-118.913611,True,,"Tyson Foods, Inc."
+"Tyson Fresh Meats, inc. Joslin, IL.",Hillsdale,IL,311611,114522,3,1,0,54,100000011168,www.tyson.com,41.554204,-090.224590,True,,"Tyson Foods, Inc."
+"The Hillshire Brands Company - Newbern, TN",Newbern,TN,31161,51166,3,0,0,7,100000139469,www.hillshirebrands.com,36.139167,-089.272222,True,,"Tyson Foods, Inc."
+Williams Country Sausage,Union City,TN,31161,20000,3,0,0,5,100000189565,,36.479444,-089.162500,True,,"Tyson Foods, Inc."
+"Tyson Refrigerated Processed Meats, Portwall",Houston,TX,31199,11000,3,0,0,10,100000176187,www.Tyson.com,29.784306,-095.280282,True,,"Tyson Foods, Inc."
+Swan Island Dairy,Portland,OR,49312,25000,3,1,0,6,100000077212,www.kroger.com,45.558222,-122.697944,True,,The Kroger Co.
+Fred Meyer - Puyallup Distribution Center,Puyallup,WA,49312,38000,3,0,0,8,100000080958,www.kroger.com,47.208194,-122.295028,True,,The Kroger Co.
+Kroger Memphis Distribution Center,Memphis,TN,49312,36100,3,0,0,6,100000093882,www.kroger.com,35.010000,-089.868056,True,,The Kroger Co.
+Ralphs Grocery Company - Riverside,Riverside,CA,99999,63000,3,2,0,18,100000097931,www.kroger.com,33.930922,-117.303696,True,,The Kroger Co.
+Harris Teeter Greensboro Frozen Foods Distribution,Greensboro,NC,49312,17300,3,0,0,8,100000100614,www.harristeeter.com,36.095278,-079.929167,True,,The Kroger Co.
+Ralphs Compton Facility,Compton,CA,99999,56000,3,0,0,7,100000115378,www.Ralphs.com,33.869945,-118.239738,True,,The Kroger Co.
+Fred Meyer - Clackamas Distribution Center,Clackamas,OR,49312,15000,3,4,0,8,100000124233,www.kroger.com,45.406667,-122.543333,True,,The Kroger Co.
+Layton Ice Cream,Layton,UT,49312,23000,3,2,0,7,100000139165,www.kroger.com,41.064000,-111.982778,True,,The Kroger Co.
+Harris Teeter Greensboro Perishable Foods Dist.,Greensboro,NC,49312,12410,3,0,0,8,100000155486,www.harristeeter.com,36.093333,-079.920556,True,,The Kroger Co.
+Windigo Logistics,Tolleson,AZ,49312,12000,3,0,0,11,100000156877,,33.440556,-112.273639,True,,The Kroger Co.
+Kroger Cincinnati Fresh Center,Blue Ash,OH,49312,16500,3,0,0,7,100000179353,,39.262457,-084.361707,True,,The Kroger Co.
+Kroger GLRDC,Delaware,OH,49312,30000,3,2,0,5,100000181947,,40.285664,-083.025286,True,,The Kroger Co.
+"Roundy's, Inc.",Oconomowoc,WI,49312,45500,3,0,0,4,100000190697,www.roundys.com,43.060779,-88.473979,True,,The Kroger Co.
+Harris Teeter Indian Trail Distribution Center,Indian Trail,NC,49312,20000,3,0,0,5,100000195326,www.harristeeter.com,35.065556,-080.650833,True,,The Kroger Co.
+Tamarack Farms Dairy,Newark,OH,311511,12500,3,0,0,6,100000090126,,40.038889,-082.460833,True,,The Kroger Co.
+Hunter Farms Dairy,High Point,NC,31152,32100,3,1,0,8,100000091562,www.harristeeter.com,35.980278,-080.020833,True,,The Kroger Co.
+Westover Dairy,Lynchburg,VA,311513,10200,3,6,0,8,100000171921,,37.397778,-079.165000,True,,The Kroger Co.
+Lathrop Logistics,Lathrop,CA,49312,16000,3,0,0,6,100000026465,www.cswg.com,37.806124,-121.268458,True,,C&S Wholesale Grocers
+"C&S Wholesale Grocers, Inc. - North East, MD",North East,MD,49312,15000,3,0,0,5,100000065127,www.cswg.com,39.624195,-075.951218,True,,C&S Wholesale Grocers
+C&S Harrington RE LLC,Harrington,DE,49312,50000,3,0,0,6,100000066126,,38.917748,-075.578597,True,,C&S Wholesale Grocers
+"C&S Wholesale Services, Inc. - Miami",Miami,FL,49312,42500,3,0,0,7,100000108484,www.cswg.com,25.883481,-80.255453,True,,C&S Wholesale Grocers
+"C&S Wholesale Services, Inc. - Hammond",Hammond,LA,31151,10800,3,0,0,18,100000109679,www.cswg.com,30.500278,-090.514444,True,,C&S Wholesale Grocers
+C&S Wholesale Grocers - Westfield,Westfield,MA,42242,56000,3,2,0,7,100000127882,www.cswg.com,42.175233,-072.739662,True,,C&S Wholesale Grocers
+"DuBois Logistics, LLC",Dubois,PA,42242,18000,3,0,0,6,100000133866,www.cswg.com,41.121533,-78.734263,True,,C&S Wholesale Grocers
+C&S Wholesale Grocers - Aberdeen,Aberdeen,MD,42241,14400,3,2,0,6,100000135132,www.cswg.com,39.489686,-076.182358,True,,C&S Wholesale Grocers
+C&S Wholesale Grocers - North Hatfield,Hatfield,MA,42241,54000,3,1,0,7,100000155805,www.cswg.com,42.397703,-72.620602,True,,C&S Wholesale Grocers
+GS 777 Freeport Pkwy LLC,Coppell,TX,49312,25000,3,0,0,8,100000164458,,32.951694,-097.010917,True,,C&S Wholesale Grocers
+"Stockton Logistics, LLC",Stockton,CA,49312,26000,3,0,0,7,100000167945,www.cswg.com,37.905111,-121.266611,True,,C&S Wholesale Grocers
+"C&S Wholesale Services, Inc. - Baldwin",Jacksonville,FL,49312,37000,3,0,0,6,100000173117,www.cswg.com,30.300186,-81.943767,True,,C&S Wholesale Grocers
+Sundial Logistics,Milwaukie,OR,42241,11500,3,0,0,7,100000183482,,45.428889,-122.62711,True,,C&S Wholesale Grocers
+"C&S Wholesale Grocers, Inc. - York",York,PA,49312,27000,3,0,0,5,100000196673,www.cswg.com,40.066454,-076.762786,True,,C&S Wholesale Grocers
+C&S Wholesale Services Inc.,Plant City,FL,49312,21900,3,0,0,5,100000202666,,27.9913638,-82.1025000,True,,C&S Wholesale Grocers
+"DFA Dairy Brands Fluid, LLC dba Pet Dairy",Spartanburg,SC,311511,16000,3,0,0,7,100000108359,,34.979860,-081.996580,True,,Dairy Farmers of America
+"DFA Dairy Brands Fluid, LLC dba Alta-Dena Certifie",City of Industry,CA,311513,44000,3,1,0,8,100000143249,,34.008194,-117.918667,True,,Dairy Farmers of America
+"Portales Dairy Products, LLC",Portales,NM,311514,13000,3,1,0,7,100000189173,,34.170199,-103.372039,True,,Dairy Farmers of America
+"DFA Dairy Brands Fluid , LLC dba Kemps",Le Mars,IA,311511,35100,3,1,0,7,100000092703,,42.779500,-096.182800,True,,Dairy Farmers of America
+DFA Dairy Brands Fluid LLC dba Country Fresh LLC,Grand Rapids,MI,31152,43775,3,0,0,8,100000107234,,42.917572,-085.671782,True,,Dairy Farmers of America
+"DFA Dairy Brands Fluid, LLC dba PET Dairy",High Point,NC,31151,18500,3,3,1,8,100000109116,804-489-2754,35.923361,-80.012389,True,,Dairy Farmers of America
+"DFA Dairy Brands Fluid, LLC dba Meadow Gold Dairy",Englewood,CO,311511,20000,3,4,0,7,100000124073,,39.642417,-105.003278,True,,Dairy Farmers of America
+"DFA Dairy Brands Fluid, LLC dba Gandy's",Lubbock,TX,311511,14213,3,2,0,8,100000149644,,33.595833,-101.870556,True,,Dairy Farmers of America
+"DFA Dairy Brands Fluid, LLC dba Swiss Premium Dair",Lebanon,PA,311511,13000,3,1,0,9,100000157581,,40.331849,-076.458826,True,,Dairy Farmers of America
+"DFA Dairy Brands Fluid, LLC. dba T.G. Lee Dairy",Orlando,FL,31151,24000,3,0,0,7,100000158376,,28.546152,-081.350929,True,,Dairy Farmers of America
+Dairy Farmers of America - Cabool,Cabool,MO,31151,25569,3,0,0,6,100000166786,www.dfamilk.com,37.120330,-092.107657,True,,Dairy Farmers of America
+Dairy Farmers of America - Springfield,Springfield,MO,31151,29202,3,0,0,6,100000166795,www.dfamilk.com,37.212742,-093.301392,True,,Dairy Farmers of America
+Kellers Creamery,Winnsboro,TX,31151,25071,3,0,0,5,100000169587,,32.957681,-095.273181,True,,Dairy Farmers of America
+Costco Wholesale - Tracy Depot 172,Tracy,CA,49312,14000,3,0,0,10,100000073706,www.costco.com,37.718929,-121.528992,True,,Costco Wholesale Corporation
+Costco Wholesale - Mira Loma Depot #961,Mira Loma,CA,49312,14000,3,0,0,7,100000108858,www.costco.com,34.0147848,-117.537897,True,,Costco Wholesale Corporation
+Costco Wholesale - Sumner Depot #285,Sumner,WA,49312,20000,3,0,0,6,100000159124,www.costco.com,47.222283,-122.241303,True,,Costco Wholesale Corporation
+Costco Wholesale - Tolleson,Tolleson,AZ,49312,18000,3,0,0,5,100000171404,www.costco.com,33.441390,-112.241783,True,,Costco Wholesale Corporation
+Costco Wholesale Depot #263,Union City,GA,49312,22000,3,0,0,5,100000173714,www.costco.com,33.618361,-084.535704,True,,Costco Wholesale Corporation
+Costco Wholesale - Morris,Morris,IL,49312,20000,3,0,0,5,100000176365,www.costco.com,41.396023,-088.428011,True,,Costco Wholesale Corporation
+Costco Wholesale - West Palm Beach,West Palm Beach,FL,49312,25000,3,0,0,6,100000183892,www.costco.com,26.763291,-080.131345,True,,Costco Wholesale Corporation
+Costco Wholesale - Dallas,Dallas,TX,49312,23000,3,0,0,6,100000183972,www.costco.com,32.69275,-096.961333,True,,Costco Wholesale Corporation
+Costco Wholesale Meat Plant - Tracy,Tracy,CA,49312,40000,3,0,0,5,100000190367,www.costco.com,37.720760,-121.529828,True,,Costco Wholesale Corporation
+Costco Wholesale - Salt Lake City,Salt Lake City,UT,49312,15000,3,0,0,4,100000193505,www.costco.com,40.760899,-112.028633,True,,Costco Wholesale Corporation
+Costco Wholesale Frederick Combo Depot #1053,Monrovia,MD,49312,20000,3,0,0,4,100000209231,,39.374713,-077.280922,True,,Costco Wholesale Corporation
+Tracy Distribution Center,Tracy,CA,49312,60000,3,0,0,13,100000062282,13801,37.714877,-121.516629,True,,Albertsons/Safeway
+Albertsons Distribution Center #8220,Tolleson,AZ,49312,42979,3,0,0,8,100000074153,,33.444667,-112.273222,True,,Albertsons/Safeway
+Jewel-Osco Distribution Center #37811,Melrose Park,IL,49312,35000,3,0,0,13,100000106734,www.albertsons.com,41.916861,-087.856417,True,,Albertsons/Safeway
+Albertsons Portland Distribution Center,Portland,OR,49312,68490,3,2,0,7,100000119294,,45.538955,-122.484019,True,,Albertsons/Safeway
+Acme Distribution Center #38311,Denver,PA,49312,40170,3,0,0,6,100000164074,https://www.acmemarkets.com,40.209361,-076.081195,True,,Albertsons/Safeway
+Tom Thumb Alliance Distribution Center,Roanoke,TX,49312,20000,3,2,0,8,100000174376,www.safeway.com,32.996246,-097.248917,True,,Albertsons/Safeway
+Denver Distribution Center,Denver,CO,49312,26000,3,0,0,8,100000182456,13801 Avenue V,39.779972,-104.936389,True,,Albertsons/Safeway
+Auburn Distribution Center,Auburn,WA,49312,58500,3,0,0,6,100000191099,13801 Avenue V,47.278333,-122.233611,True,,Albertsons/Safeway
+Shaws Distribution Center #32711,Methuen,MA,49312,13277,3,0,0,6,100000195781,www.shaws.com,42.720000,-071.211111,True,,Albertsons/Safeway
+Albertsons - Riverside Commissary,Riverside,CA,311412,52000,3,0,0,3,100000199796,www.albertsons.com,33.900911,-117.284025,True,,Albertsons/Safeway
+"Performance Food Group, CDC, McKinney",McKinney,TX,49312,10500,3,0,0,6,100000038283,pfgcdc.com,33.213333,-096.608611,True,,Performance Food Group
+Kenneth O. Lester Co.- PFG Customized Distribution,Lebanon,TN,49312,12000,3,0,0,7,100000042321,,36.183561,-086.274911,True,,Performance Food Group
+"Performance Food Group, CDC, Gainesville",Gainesville,FL,49312,11820,3,0,0,8,100000151186,,29.702667,-082.276361,True,,Performance Food Group
+Performance Foodservice - Arizona,Phoenix,AZ,49312,14070,3,0,0,8,100000159678,,33.443272,-112.220079,True,,Performance Food Group
+Performance Food Service Boston,Taunton,MA,49312,25000,3,0,0,6,100000173402,https://www.performancefoodservice.com/,41.943611,-071.136964,True,,Performance Food Group
+"Performance Food Group, CDC, Kendallville",Kendallville,IN,49312,13200,3,1,0,7,100000191534,,41.441591,-085.210014,True,,Performance Food Group
+"Performance Food Group, Rock Hill, SC",Rock Hill,SC,49312,15000,3,0,0,4,100000192837,www.pfgc.com,34.914444,-080.997778,True,,Performance Food Group
+"Performance Food Group, Shafter California",Shafter,CA,49312,15000,3,0,0,3,100000193211,,35.503611,-119.207222,True,,Performance Food Group
+Performance Foodservice-Thoms Proestler Company,Rock Island,IL,49312,17000,3,0,0,5,100000194265,www.performancefoodservice.com,41.442156,-090.636028,True,,Performance Food Group
+Performance Foodservice Florence,Florence,SC,42441,17440,3,0,0,5,100000194461,https://www.performancefoodservice.com/Our-Locations/Florence,34.276087,-079.68966,True,,Performance Food Group
+"Smithfield Packaged Meats Corp. - Sioux City, IA",Sioux City,IA,49312,33000,3,0,0,11,100000140732,,42.484173,-096.382429,True,,United Global Foods
+"Smithfield Packaged Meats Corp. - Peru, IN",Peru,IN,49312,26000,3,1,0,7,100000189477,,40.7192822,-086.024958,True,,United Global Foods
+"Smithfield Distribution, LLC",Crete,NE,49312,31000,3,0,0,6,100000199215,,40.58295,-096.96363,True,,United Global Foods
+"Smithfield Packaged Meats Corp. - Sioux Falls, SD",Sioux Falls,SD,31161,300000,3,2,1,14,100000004336,,43.563889,-096.718889,True,,United Global Foods
+"Smithfield Packaged Meats Corp. - Cudahy, WI",Cudahy,WI,311612,83000,3,3,0,10,100000013317,,42.955278,-087.863056,True,,United Global Foods
+"Smithfield Fresh Meats Corp. - Smithfield, VA",Smithfield,VA,31161,110000,3,2,0,10,100000038112,,36.993608,-076.628908,True,,United Global Foods
+"Smithfield Fresh Meats Corp. - Monmouth, IL",Monmouth,IL,31161,52135,3,0,0,11,100000079023,http://www.smithfieldfoods.com,40.928377,-090.641269,True,,United Global Foods
+"Smithfield Fresh Meats Corp. - Crete, NE",Crete,NE,31161,150000,3,0,0,13,100000088754,www.smithfield.com,40.579722,-096.964722,True,,United Global Foods
+"Smithfield Fresh Meats Corp. - Milan, Missouri",Milan,MO,31161,108000,3,0,0,13,100000088843,www.smithfield.com,40.218240,-093.118800,True,,United Global Foods
+"UNFI Distribution Company, LLC - Pittsburgh",New Stanton,PA,49312,33000,3,0,0,6,100000067447,www.unfi.com,40.210163,-079.613084,True,,United Natural Foods Inc.
+Hopkins Distribution Co. LLC(Freezer Facility),Hopkins,MN,49312,27000,3,0,0,7,100000105799,,44.92215,-093.399437,True,,United Natural Foods Inc.
+"Associated Grocers of Florida, Inc. - Pompano",Pompano Beach,FL,49312,10500,3,2,0,6,100000108965,www.unfi.com,26.216460,-80.143122,True,,United Natural Foods Inc.
+Hopkins Distribution Co. LLC (Perishable Facility),Hopkins,MN,49312,21864,3,0,0,7,100000154619,,44.91872,-93.40990,True,,United Natural Foods Inc.
+UNFI - Quincy Perishables Distribution Center,Quincy,FL,49312,12000,3,0,0,4,100000204548,www.unfi.com,30.5852777,-084.593888,True,,United Natural Foods Inc.
+"UNFI Distribution Company, LLC - Indianola",Indianola,MS,42441,18500,3,0,0,4,100000208982,www.unfi.com,33.445778,-090.630194,True,,United Natural Foods Inc.
+Tony's Fine Foods/UNFI,West Sacramento,CA,49312,24000,3,0,0,4,100000211273,www.tonysfinefoods.com,38.590917,-121.560722,True,,United Natural Foods Inc.
+"UNFI Distribution Company, LLC Joliet",Joliet,IL,42441,28000,3,0,0,4,100000205994,www.unfi.com,41.5091667,-088.018056,True,,United Natural Foods Inc.
+"United Natural Foods, Inc. - Allentown",Anniston,AL,44511,22900,3,1,0,4,100000198243,www.unfi.com,33.624444,-085.798611,True,,United Natural Foods Inc.
+"Osceola Food, LLC",Osceola,IA,311612,71000,3,1,0,14,100000049583,,41.024444,-093.786389,True,,Hormel Foods Corporation
+Rochelle Foods L.L.C.,Rochelle,IL,31161,49000,3,3,1,7,100000046096,,41.909377,-089.052438,True,,Hormel Foods Corporation
+Hormel Foods Corporation Austin Plant,Austin,MN,31161,140000,3,0,0,9,100000047077,,43.676917,-92.965457,True,,Hormel Foods Corporation
+Lloyd's Barbeque Company LLC,Mendota Heights,MN,31199,17000,3,0,0,5,100000193783,1455 Mendota Heights Road,44.866630,-093.170810,True,,Hormel Foods Corporation
+Swiss American Sausage Company,Lathrop,CA,31199,16000,3,3,0,4,100000200757,,37.803274,-121.295036,True,,Hormel Foods Corporation
+Burke Corporation,Nevada,IA,31199,34000,3,0,0,5,100000201024,,42.008277,-093.438778,True,,Hormel Foods Corporation
+"Dan's Prize, Inc - Browerville",Browerville,MN,31199,14000,3,0,0,4,100000202167,https://www.hormelfoods.com/,46.069720,-094.865450,True,,Hormel Foods Corporation
+Gordon Food Service Plant City,Plant City,FL,49312,58256,3,0,0,9,100000072565,www.gfs.com,28.003783,-082.110033,True,,Gordon Food Service
+Miami Freezer Facility,Miami,FL,49312,10000,3,0,0,3,100000085702,https://gfs.com/en-us/,25.883889,-80.245722,True,,Gordon Food Service
+Gordon Food Service-Springfield,Springfield,OH,49311,31780,3,0,0,6,100000126419,,39.90998,-083.716928,True,,Gordon Food Service
+Gordon Food Service - Brighton,Brighton,MI,49312,23000,3,0,0,5,100000127301,,42.500139,-083.692500,True,,Gordon Food Service
+Gordon Food Service - Shepherdsvile KY,Shepherdsville,KY,42441,50498,3,0,0,5,100000193248,www.gfs.com,37.977330,-085.677890,True,,Gordon Food Service
+"Perkins Paper, LLC",Taunton,MA,49312,10603,3,0,0,4,100000205878,,41.931230,-071.125080,True,,Gordon Food Service
+Gordon Food Service - Kenosha,Kenosha,WI,49312,32600,3,0,0,4,100000210577,,42.597583,-87.94193,True,,Gordon Food Service
+"Hiland Dairy - Springfield, MO",Springfield,MO,311511,42400,3,0,0,6,100000025475,,37.241639,-93.275888,True,,Prairie Farms Dairy
+"Prairie Farms Dairy - Olney, IL",Olney,IL,311511,10100,3,0,0,6,100000029319,,38.730366,-088.086899,True,,Prairie Farms Dairy
+Muller-Pinehust Dairy,Rockford,IL,311511,13800,3,0,0,6,100000035464,,42.247718,-089.132598,True,,Prairie Farms Dairy
+Prairie Farms Dairy - Somerset,Somerset,KY,31151,15300,3,0,0,8,100000109045,www.prairiefarms.com,37.087139,-084.596818,True,,Prairie Farms Dairy
+Prairie Farms Dairy- Battle Creek,Battle Creek,MI,31151,15000,3,0,0,5,100000188539,www.prairiefarms.com,42.339973,-085.270981,True,,Prairie Farms Dairy
+East Side Jersey Dairy - Orrville,Orrville,OH,31151,16000,3,3,0,4,100000195852,www.prairiefarms.com,40.842015,-081.765064,True,,Prairie Farms Dairy
+"Prairie Farms - Hammond, LA",Hammond,LA,31151,14740,3,1,0,4,100000213743,www.prairiefarms.com,30.503208,-90.515824,True,,Prairie Farms Dairy
+"DOT Foods, Inc. (Vidalia)",Vidalia,GA,49312,16000,3,0,0,7,100000068035,www.dotfoods.com,32.224835,-082.429695,True,,DOT Foods
+"DOT Foods Inc., (Mt. Sterling)",Mount Sterling,IL,49312,28500,3,1,0,18,100000090279,www.dotfoods.com,39.977764,-90.756245,True,,DOT Foods
+DOT Foods Inc. (Williamsport),Williamsport,MD,49312,15000,3,0,0,6,100000122128,www.dotfoods.com,39.618911,-077.804245,True,,DOT Foods
+"DOT Foods, Inc. (Ardmore)",Ardmore,OK,49312,12000,3,0,0,6,100000196174,www.dotfoods.com,34.138059,-097.135759,True,,DOT Foods
+Dot Foods Distribution Center,Modesto,CA,49312,11000,3,0,0,5,100000206421,www.dotfoods.com,37.598847,-120.986015,True,,DOT Foods
+"DOT Foods, Inc. (Cambridge City, IN)",Cambridge City,IN,42442,13000,3,0,0,4,100000207082,www.dotfoods.com,39.850846,-85.150802,True,,DOT Foods
+"DOT Foods, Inc.",Burley,ID,42441,10000,3,0,0,4,100000208125,www.dotfoods.com,42.517844,-113.811953,True,,DOT Foods
+"SFC Global Supply Chain, Inc.",SALINA,KS,49312,9800,3,0,0,6,100000193943,www.schwans.com,38.781104,-97.634580,True,,Schwan's Company
+"SFC Global Supply Chain, Inc.",Florence,KY,31141,145000,3,9,1,9,100000123109,http://www.schwans.com,38.973889,-84.634722,True,,Schwan's Company
+Convenience/Specialty Food Plant,Marshall,MN,31141,15000,3,0,0,7,100000123644,SchwansCompany.com,44.468395,-095.793379,True,,Schwan's Company
+"SCHWAN'S FOOD MANUFACTURING, INC.",PASADENA,TX,31141,45000,3,1,0,9,100000123699,3600 Park 42 Dr.,29.691820,-095.226932,True,,Schwan's Company
+"SFC GLOBAL SUPPLY CHAIN, INC.",SALINA,KS,31141,112700,3,8,2,13,100000123724,www.schwanscompany.com,38.783611,-097.635556,True,,Schwan's Company
+"SCHWAN'S FOOD MANUFACTURING, INC.",MARSHALL,MN,31141,80000,3,2,1,6,100000124812,SchwansCompany.com,44.466013,-095.790708,True,,Schwan's Company
+DG Distribution GA LLC,Atlanta,GA,49312,18000,3,0,0,8,100000028695,,33.684503,-84.324657,True,,Dollar General
+Dollar General MO LLC,Berkeley,MO,49312,26000,3,1,0,6,100000038309,,38.766389,-90.340667,True,,Dollar General
+"DG Fresh Distribution AL, LLC",Montgomery,AL,49312,45000,3,0,0,5,100000112898,,32.293469,-86.353575,True,,Dollar General
+DG West Sacramento Fresh DC,West Sacramento,CA,49312,11300,3,1,0,2,100000123573,,38.563220,-121.564486,True,,Dollar General
+DG Distribution IN LLC,Westville,IN,49312,23126,3,0,0,6,100000177275,,41.515312,-86.896866,True,,Dollar General
+DG Distribution NC LLC,Clayton,NC,31199,34000,3,0,0,7,100000192294,,35.665863,-78.479451,True,,Dollar General
+Saputo Dairy Foods USA,Sulphur Springs,TX,31151,15120,3,2,0,7,100000046201,www.saputo.com,33.1225647,-95.585342,True,,Saputo Inc.
+Saputo Cheese USA Inc. - Gustine,Gustine,CA,31199,10584,3,1,0,8,100000046933,,37.256020,-120.996841,True,,Saputo Inc.
+Saputo Cheese USA Inc. - Murray,Murray,KY,31151,16000,3,0,0,8,100000048879,www.saputo.com,36.618031,-88.298128,True,,Saputo Inc.
+Saputo Cheese USA Inc. - Plant City,Plant City,FL,31151,60000,3,0,0,5,100000108563,www.saputo.com,27.996671,-82.157129,True,,Saputo Inc.
+Saputo Cheese USA Inc. - Waupun,Waupun,WI,31151,12950,3,0,0,9,100000143748,www.Saputo.com,43.671141,-088.793811,True,,Saputo Inc.
+Saputo Cheese USA Inc.- Frederick,Frederick,MD,31151,12000,3,0,0,4,100000147539,www.saputo.com,39.41265,-77.400883,True,,Saputo Inc.
+"Rich Products, Brunswick Plant",Brunswick,GA,311412,38000,3,4,0,13,100000078284,www.rich.com,31.219722,-81.511667,True,,Rich Products
+Rich Products Corporation - Hilliard Facility,Hilliard,OH,311813,44000,3,2,0,6,100000092883,www.Richs.com,40.038528,-083.142167,True,,Rich Products
+Rich Products Corporation - Brownsville Facility,Brownsville,TX,31141,21500,3,1,0,9,100000161978,www.Richs.com,25.917280,-097.472520,True,,Rich Products
+Rich Products Corporation - Murfreesboro Facility,Murfreesboro,TN,311991,35000,3,1,0,8,100000048414,www.richs.com,35.800469,-086.386570,True,,Rich Products
+Rich Products Corporation - Fresno Facility,Fresno,CA,31199,25000,3,0,0,10,100000064743,www.Richs.com,36.730995,-119.777740,True,,Rich Products
+Taylor 2,Salinas,CA,42248,18000,3,2,0,8,100000143052,taylorfarms.com,36.656639,-121.632611,True,,Taylor Fresh Foods
+Taylor Farms California,SALINAS,CA,31199,12000,3,2,1,6,100000174269,www.taylorfarmsfoodservice.com,36.656667,-121.628611,True,,Taylor Fresh Foods
+Taylor Farms Retail,San Juan Bautista,CA,115114,27500,3,0,0,7,100000187861,http://www.ebfarm.com,36.873056,-121.55333,True,,Taylor Fresh Foods
+Taylor Farms Retail,Yuma,AZ,115114,15000,3,0,0,5,100000204753,www.taylorfarms.com,32.648611,-114.575000,True,,Taylor Fresh Foods
+Taylor Farms Retail,Salinas,CA,49312,35000,3,1,0,3,100000214555,www.taylorfarms.com,36.658582,-121.622599,True,,Taylor Fresh Foods
+Interstate Warehousing Denver,Denver,CO,49312,15900,3,1,0,7,100000168374,www.tippmanngroup.com,39.823889,-104.869167,True,,Tippmann Group
+Interstate Warehousing Cincinnati,Hamilton,OH,49312,12100,3,0,0,7,100000185239,www.tippmanngroup.com,39.335833,-084.505000,True,,Tippmann Group
+Interstate Warehousing Newport News,Newport News,VA,49312,14700,3,0,0,7,100000185293,,37.177222,-076.589444,True,,Tippmann Group
+Interstate Warehousing Joliet,Joliet,IL,49312,11300,3,0,0,5,100000188655,www.tippmanngroup.com,41.515170,-088.142380,True,,Tippmann Group
+Interstate Warehousing Murfreesboro,Murfreesboro,TN,49312,15000,3,0,0,6,100000194951,,35.775900,-086.384600,True,,Tippmann Group
+"ALDI, Inc",Center Valley,PA,49312,13000,3,0,0,7,100000053096,www.aldi.us,40.554067,-075.399883,True,,ALDI US
+Aldi Incorporated Springfield Division Warehouse,Springfield,OH,49312,13000,3,1,0,8,100000141125,,39.903611,-083.725278,True,,ALDI US
+"Aldi, Incorporated",O'Fallon,MO,45291,13000,3,0,0,4,100000197208,www.aldi.us,38.810000,-090.654722,True,,ALDI US
+"ALDI, Inc.",Jefferson,GA,49312,10300,3,0,0,3,100000213949,,34.18355,-83.58348,True,,ALDI US
+ALDI Inc. - Tully Facility,Tully,NY,44511,13000,3,0,0,4,100000198957,,42.785500,-076.118100,True,,ALDI US
+"Publix Super Markets, Inc.-Lakeland Facility",Lakeland,FL,311511,138000,3,0,0,42,100000044436,www.publix.com,28.038818,-082.006926,True,,Publix Super Markets
+"Publix Super Markets,Inc.-Deerfield Beach Facility",Deerfield,FL,311511,200000,3,0,0,6,100000044542,www.publix.com,26.309013,-080.124144,True,,Publix Super Markets
+"Publix Super Markets, Inc.-Jacksonville Warehouse",Jacksonville,FL,49312,80000,3,0,0,7,100000044604,www.publix.com,30.313686,-081.821747,True,,Publix Super Markets
+"Publix Super Markets, Inc.-Dacula Facility",Dacula,GA,49312,131400,3,0,0,16,100000045346,www.publix.com,33.990876,-083.939785,True,,Publix Super Markets
+Nestle Prepared Foods Company,Streetsboro,OH,49312,38020,3,0,0,8,100000162165,,41.244806,-081.377944,True,,Nestlé USA (Stouffer)
+Nestle Prepared Foods Company,Gaffney,SC,49312,55000,3,0,0,7,100000176631,,35.050278,-81.685722,True,,Nestlé USA (Stouffer)
+Nestle Prepared Foods Company,Jonesboro,AR,49312,30000,3,1,0,7,100000181536,,35.819569,-090.576883,True,,Nestlé USA (Stouffer)
+Nestle Prepared Food Company,Gaffney,SC,31141,301831,3,3,1,7,100000046639,,35.055744,-081.686003,True,,Nestlé USA (Stouffer)
+Cargill Meat Solutions,Mt. Crawford,VA,49312,60000,3,0,0,8,100000130306,www.cargill.com,38.37625,-78.9347,True,,"Cargill, Inc."
+Cargill Meat Solutions,Dodge City,KS,31161,130000,3,3,0,13,100000091839,www.cargill.com,37.736454,-99.955897,True,,"Cargill, Inc."
+Cargill Meat Solutions Corporation,Marshall,MO,31161,85000,3,0,0,7,100000100507,www.cargill.com,39.118300,-093.247500,True,,"Cargill, Inc."
+Cargill Meat Solutions Corporation - Wyalusing,Wyalusing,PA,31161,42000,3,1,0,27,100000108689,,41.683889,-76.240833,True,,"Cargill, Inc."
+Nestle Pizza Division,Little Chute,WI,31141,90000,3,0,0,8,100000031262,,44.285833,-088.323889,True,,Nestlé USA
+Nestle Prepared Foods,Mt. Sterling,KY,31141,101700,3,3,0,8,100000127329,www.nestle.com,38.092778,-83.901389,True,,Nestlé USA
+"Nestle Professional, L.J. Minor Factory",Cleveland,OH,311423,12000,3,0,0,9,100000076883,www.nestle.com,41.475461,-81.699081,True,,Nestlé USA
+"Nestle Professional - Trenton, MO",Trenton,MO,31199,16000,3,0,0,7,100000169596,,40.079999,-093.609794,True,,Nestlé USA
+Ocean Breeze Cooling,Oxnard,CA,49312,12000,3,0,0,7,100000121968,,34.190833,-119.172778,True,,Western Precooling Systems
+Western Precooling Systems - Yuma Shop,Yuma,AZ,49312,85000,3,0,0,6,100000122119,,32.680991,-114.563418,True,,Western Precooling Systems
+Cal West Cooling,Oxnard,CA,49312,12500,3,0,0,8,100000124581,,34.193201,-119.173486,True,,Western Precooling Systems
+Western Precooling Systems-Commercial Cooler,Oxnard,CA,49312,13000,3,0,0,6,100000182125,,34.190480,-119.171060,True,,Western Precooling Systems
+SFI - Logan Plant and UDC,Logan,UT,311513,26688,3,0,0,23,100000066484,,41.4451,-111.51318,True,,Schreiber Foods
+SFI - Shippensburg Plant,Shippensburg,PA,311513,15581,3,1,0,14,100000183071,,40.045914,-077.510233,True,,Schreiber Foods
+Schreiber Foods - Fairview Facility,Carthage,MO,311513,60000,3,0,0,5,100000194933,,37.152911,-094.326686,True,,Schreiber Foods
+SFI- Richland Center West,Richland Center,WI,31151,20000,3,1,1,12,100000093864,,43.1939,-090.2259,True,,Schreiber Foods
+Americold - Mobile,Mobile,AL,49312,13000,3,1,0,7,100000029355,americold.com,30.642633,-088.081511,True,,Art Al Holding
+Americold Pendergrass,Pendergrass,GA,49312,40000,3,0,0,8,100000054451,,34.158889,-083.672222,True,,Art Al Holding
+Americold - Cartersville,Cartersville,GA,49312,40000,3,0,0,7,100000089726,,34.232425,-084.791211,True,,Art Al Holding
+"Americold Logistics - Plant City, Frontage",Plant City,FL,49312,9550,3,1,0,8,100000133367,,28.038011,-082.124270,True,,Art Al Holding
+SARSC Combo Warehouse,San Antonio,TX,49312,18000,3,0,0,6,100000124714,,29.425000,-098.401336,True,,H E Butt Grocery
+SARSC Milk Plant,San Antonio,TX,311511,36828,3,1,0,7,100000124956,HEB.com,29.476111,-098.400000,True,,H E Butt Grocery
+HRSC Milk Plant,Houston,TX,311511,18000,3,0,0,6,100000124965,HEB.com,29.831944,-095.541111,True,,H E Butt Grocery
+San Antonio Retail Support Center South,San Antonio,TX,49312,9000,3,0,0,6,100000176926,www.heb.com,29.473611,-098.400556,True,,H E Butt Grocery
+SpartanNash,Grand Rapids,MI,49312,30000,3,0,0,6,100000060097,www.spartannash.com,42.820995,-085.689407,True,,SpartanNash
+"Nash Finch Company - Lumberton, NC Division",Lumberton,NC,42241,15000,3,1,0,6,100000177961,www.spartannash.com,34.659053,-079.107658,True,,SpartanNash
+SpartanNash - Severn Distribution Center,Severn,MD,49312,14077,3,0,0,9,100000181297,"500, Macy Dr",39.121082,-076.691991,True,,SpartanNash
+SpartanNash Company - Lima Facility,Lima,OH,42441,12555,3,0,0,5,100000210791,www.spartannash.com,40.760900,-084.0822,True,,SpartanNash
+"Frozen Vegetables - Beaver Dam, WI",Beaver Dam,WI,49312,30000,3,0,0,6,100000003113,,43.479154,-088.830402,True,,Conagra Foods Packaged Foods
+"Indianapolis, Indiana Table Spreads",Indianapolis,IN,311225,36000,3,1,0,7,100000020693,,39.869018,-086.234588,True,,Conagra Foods Packaged Foods
+"Jackson, TN - Frozen Foods",Jackson,TN,31141,100000,3,2,0,8,100000051613,,35.635374,-088.777504,True,,Conagra Foods Packaged Foods
+"McCain Foods USA, Inc., Othello, Washington",Othello,WA,31141,37200,3,1,0,8,100000032485,,46.837246,-119.173621,True,,McCain Foods
+"McCain Foods USA, Inc., Rice Lake, Wisconsin",Rice Lake,WI,31141,29000,3,3,0,6,100000040813,www.mccain.com,45.487809,-91.737359,True,,McCain Foods
+"McCain Foods USA, Inc., Burley, Idaho",Burley,ID,31141,90000,3,0,0,16,100000102444,,42.533889,-113.844444,True,,McCain Foods
+Target Food Distribution Center T3881,Upper Marlboro,MD,49312,32000,3,0,0,7,100000062567,www.target.com,38.866108,-076.728814,True,,Target
+Target Food Distribution Center T3892,Lake City,FL,49312,52000,3,0,0,4,100000202372,www.target.com,30.233674,-082.634966,True,,Target
+Target FDC T3895,Cedar Falls,IA,49312,38760,3,1,0,7,100000204815,www.target.com,42.477577,-092.472479,True,,Target
+Meijer DC88,Newport,MI,49312,25000,3,0,0,11,100000005512,,41.991583,-083.320694,True,,Meijer Distribution
+Meijer Tipp City Distribution Complex,Tipp City,OH,49312,54000,3,0,0,11,100000005558,,39.977103,-084.205853,True,,Meijer Distribution
+Meijer Distribution Pleasant Prairie,Pleasant Prairie,WI,49312,30000,3,0,0,7,100000037211,,42.537500,-087.895833,True,,Meijer Distribution
+Ben E. Keith Foods,Fort Worth,TX,49312,35000,3,1,0,5,100000190401,www.benekeith.com,32.638333,-097.315000,True,,Ben E Keith
+Ben E. Keith Co.,Edmond,OK,49312,35000,3,0,0,4,100000193275,benekeith.com,35.614310,-097.511560,True,,Ben E Keith
+Ben E. Keith Foods - Amarillo,Amarillo,TX,311991,22775,3,0,0,5,100000199288,www.benekeith.com,35.2352616,-101.739320,True,,Ben E Keith
+Sunview Cold Storage Earlimart Facility,Earlimart,CA,49312,18682,3,0,0,7,100000055147,,35.886482,-119.274523,True,,Sunview Cold Storage
+Sunview Cold Storage Peterson North Facility,McFarland,CA,49312,51050,3,0,0,10,100000055272,,35.704102,-119.228992,True,,Sunview Cold Storage
+Sunview Cold Storage Peterson South Facility,McFarland,CA,49312,18609,3,0,0,6,100000187166,,35.701465,-119.226611,True,,Sunview Cold Storage
+Long Prairie Packing Company,Long Prairie,MN,31161,15000,3,1,0,10,100000042704,,45.976939,-94.866879,True,,American Foods Group
+"Green Bay Dressed Beef, LLC",Green Bay,WI,311611,39000,3,2,0,9,100000052863,,44.510761,-087.981187,True,,American Foods Group
+Cimpl Meats,Yankton,SD,311611,34000,3,1,0,7,100000138629,,42.875636,-097.378376,True,,American Foods Group
+"BJ's Distribution - Orlando, FL",Orlando,FL,49312,31450,3,0,0,6,100000176356,www.bjs.com,28.408308,-081.361386,True,,BJs Wholesale Club
+"BJ's Distribution - Elkton, MD",Elkton,MD,49312,22000,3,0,0,5,100000189967,www.bjs.com,39.653233,-075.805361,True,,BJs Wholesale Club
+"BJ's Distribution - Rocky Hill, CT",Rocky Hill,CT,49312,28600,3,0,0,4,100000203086,www.bjs.com,41.640945,-72.666524,True,,BJs Wholesale Club
+"Ambassador Services, Inc.",Cape Canaveral,FL,49312,12000,3,0,0,6,100000010267,www.Enstructure.com,28.407500,-080.605667,True,,Enstructure
+Seaonus Cold Storage,Jacksonville,FL,49312,50000,3,0,0,6,100000018009,www.seaonus.com,30.345472,-081.708756,True,,Enstructure
+Seaonus Refrigerated Services - Mobile,Mobile,AL,49312,18000,3,0,0,5,100000184025,www.seaonus.com,30.704893,-088.040480,True,,Enstructure
+Chelan Facility,Chelan,WA,49312,28000,3,1,0,8,100000147833,,47.494252,-119.85971,True,,Chelan Fruit Cooperative
+Brewster Facility,Brewster,WA,49312,23215,3,0,0,7,100000180118,,48.061474,-119.465874,True,,Chelan Fruit Cooperative
+Okanogan Facility,Okanogan,WA,49312,23827,3,0,0,6,100000180127,,48.213760,-119.344125,True,,Chelan Fruit Cooperative
+WinCo Foods Woodburn Distribution Center #92,Woodburn,OR,42241,20000,3,0,0,7,100000166508,www.wincofoods.com,45.146778,-122.888000,True,,WinCo Foods
+WinCo Foods LLC,Modesto,CA,49312,32500,3,0,0,7,100000185701,www.wincofoods.com,37.574730,-120.987436,True,,WinCo Foods
+WinCo Foods Boise Distribution Center DC91,Boise,ID,49312,22000,3,0,0,4,100000208795,www.wincofoods.com,43.518790,-116.154620,True,,WinCo Foods
+"SFC Global Supply Chain, Inc.",Suwanee,GA,49312,19000,3,0,0,7,100000162236,,34.030732,-084.041577,True,,SFC Global Supply Chain
+"SFC Global Supply Chain, Inc.",DEER PARK,TX,31141,12000,3,2,0,7,100000123797,www.schwans.com,29.706707,-095.136935,True,,SFC Global Supply Chain
+"Better Baked Foods of Erie, LLC",Erie,PA,31141,40000,3,0,0,9,100000155734,https://www.schwanscompany.com/brands-and-businesses/global-supply-chain.htm,42.120843,-80.021081,True,,SFC Global Supply Chain
+Penske Logistics - Shelbyville,Shelbyville,IN,49312,37500,3,0,0,7,100000028971,www.penskelogistics.com,39.588389,-085.806556,True,,Penske Logistics
+Penske Logistics - Union City,Union City,CA,49312,12623,3,3,0,10,100000054406,www.gopenske.com,37.595052,-122.042918,True,,Penske Logistics
+Penske Logistics,Groveport,OH,49312,20000,3,0,0,4,100000211255,,39.84044,-82.93274,True,,Penske Logistics
+"UNFI Distribution Company, LLC - Champaign DC",Urbana,IL,49312,30000,3,0,0,8,100000047095,www.unfi.com,40.140012,-088.221817,True,,UNFI
+UNFI Distribution Company LLC - Fort Wayne,Fort Wayne,IN,49312,21000,3,0,0,12,100000078943,www.unfi.com,41.124793,-085.168048,True,,UNFI
+UNFI - Green Bay Warehouse,Green Bay,WI,49312,18000,3,0,0,6,100000170334,www.supervalu.com,44.492500,-088.040833,True,,UNFI
+"California Dairies, Inc.",Fresno,CA,311512,11300,3,0,0,8,100000067143,,36.727379,-119.793038,True,,California Dairies
+"California Dairies, Inc. Turlock South",Turlock,CA,31151,16600,3,0,0,6,100000164314,,37.491767,-120.887184,True,,California Dairies
+"California Dairies, Inc. Visalia",Visalia,CA,31151,39000,3,0,0,5,100000200828,,36.343078,-119.392772,True,,California Dairies
+McLane Distribution MidWest,Danville,IL,42241,15950,3,0,0,7,100000133287,,40.131203,-87.547382,True,,McLane
+McLane Distribution Southwest,Temple,TX,42241,37776,3,0,0,7,100000133349,,31.1344385,-97.361172,True,,McLane
+McLane Distribution SunEast,Kissimmee,FL,42241,12900,3,0,0,6,100000134277,,28.250024,-81.489453,True,,McLane
+Shamrock Foods Arizona Distribution Center,Phoenix,AZ,49312,36190,3,4,0,12,100000043106,,33.476610,-112.121979,True,,Shamrock Foods
+Shamrock Foods Company - Albuquerque,Albuquerque,NM,49312,15000,3,0,0,5,100000199082,,35.071997,-106.794437,True,,Shamrock Foods
+Dairy Maid,PHOENIX,AZ,31193,13500,3,0,0,3,100000212478,,33.575454,-112.101641,True,,Shamrock Foods
+Sun Pacific Lerdo Highway Cold Storage,Bakersfield,CA,49312,21000,3,0,0,6,100000049887,,35.500244,-119.145465,True,,Sun Pacific
+Sun Pacific Tulare,Tulare,CA,49313,25150,3,1,0,11,100000129461,,36.239014,-119.280113,True,,Sun Pacific
+Sun Pacific Maricopa Packing House,Bakersfield,CA,49312,15900,3,0,0,13,100000184579,,35.068679,-119.129605,True,,Sun Pacific
+KOCH FOODS FRANKLIN PARK,Franklin Park,IL,49312,15000,3,0,0,9,100000182651,,41.916776,-087.864620,True,,Koch Foods
+"Koch Foods, Inc.  (Distribution Center)",Morton,MS,49312,32000,3,0,0,4,100000193587,,32.313833,-089.662361,True,,Koch Foods
+Koch Foods - Chattanooga,Chattanooga,TN,311615,11000,3,0,0,6,100000193827,,35.032121,-085.305283,True,,Koch Foods
+"North Country Dairy, LLC",North Lawrence,NY,311513,18000,3,2,0,9,100000036294,,44.804142,-074.675128,True,,Upstate Niagara Cooperative
+"Upstate Niagara Cooperative, Inc.",Buffalo,NY,31151,16685,3,0,0,6,100000179228,www.upstateniagara.com,42.905604,-78.773791,True,,Upstate Niagara Cooperative
+"Upstate Niagara Cooperative, Inc. Culture Facility",West Seneca,NY,31151,16000,3,0,0,6,100000193872,www.upstateniagara.com,42.843678,-078.7311,True,,Upstate Niagara Cooperative
+Fieldale Farms Cornelia Complex,Cornelia,GA,311615,12950,3,0,0,9,100000096754,www.fieldalefarms.com,34.508170,-083.535980,True,,Fieldale Farms
+Fieldale Farms Further Processing,Gainesville,GA,311615,19800,3,2,0,9,100000097067,,34.286110,-083.800095,True,,Fieldale Farms
+Fieldale Farms Murrayville Complex,Murrayville,GA,311615,17400,3,0,0,9,100000097227,,34.411249,-083.901512,True,,Fieldale Farms
+ADUSA Distribution LLC-DC59 Chester,Chester,NY,49312,19923,3,0,0,8,100000178657,,41.346643,-074.285493,True,,ADUSA Distribution
+Food Lion Distribution Center DC20,Disputanta,VA,49312,14040,3,0,0,5,100000183883,,37.161861,-077.284389,True,,ADUSA Distribution
+Food Lion Distribution Center # 30,Elloree,SC,42441,12840,3,0,0,5,100000188496,www.foodlion.com,33.527330,-080.568820,True,,ADUSA Distribution
+Stemilt Growers Miller Street Facility,Wenatchee,WA,49312,18000,3,1,0,8,100000007798,stemilt.com,47.445278,-120.324167,True,,Stemilt Growers
+Euclid Ave. Plant,Wenatchee,WA,115114,13167,3,0,0,6,100000203497,,47.4676,-120.322,True,,Stemilt Growers
+Ward St. North CA,East Wenatchee,WA,49312,12300,3,0,0,5,100000205244,Stemilt.com,47.2419,-120.1053,True,,Stemilt Growers
+"Sister Schubert's Homemade Rolls, Inc.",Luverne,AL,49312,16609,3,0,0,5,100000184454,,31.734140,-086.282300,True,,T Marzetti
+"Sister Schubert's Homemade Rolls, Inc.",Horse Cave,KY,49312,13000,3,0,0,7,100000199322,,37.160555,-085.916072,True,,T Marzetti
+"Marzetti Frozen Pasta, Inc.",Altoona,IA,31141,11000,3,1,0,6,100000174759,,41.645472,-093.472944,True,,T Marzetti
+"Associated Wholesale Grocers, Inc",Goodlettsville,TN,49312,5000,3,2,0,12,100000041126,www.awginc.com,36.320000,-086.704722,True,,Associated Wholesale Grocers
+"Associated Wholesale Grocers, Inc.",Springfield,MO,49312,13000,3,0,0,8,100000093347,,37.225998,-093.229629,True,,Associated Wholesale Grocers
+"Associated Wholesale Grocers, Inc.",Kansas City,KS,49312,12500,3,2,0,19,100000110649,5000 Kansas Ave.,39.091222,-094.691417,True,,Associated Wholesale Grocers
+"The Pictsweet Company - Brownsville, TN Warehouse",Brownsville,TN,42241,15000,3,0,0,6,100000174731,,35.551870,-089.240626,True,,Pictsweet Farms
+The Pictsweet Company,Monte Alto,TX,31141,180000,3,0,0,6,100000081449,,26.376430,-097.968790,True,,Pictsweet Farms
+"Magic Valley Fresh Frozen, Inc. (Military)",McAllen,TX,31141,180000,3,0,0,2,100000081305,,26.151514,-98.271228,True,,George Calhoon
+"Magic Valley Fresh Frozen, Inc. (Trophy)",McAllen,TX,31141,15000,3,0,0,2,100000188129,,26.248019,-98.233958,True,,George Calhoon
+J.R. Simplot Company,Grand Forks,ND,31141,80000,3,1,1,9,100000111434,www.simplot.com,47.933611,-097.082500,True,,JR Simplot
+"Simplot Ontario, OR",Ontario,OR,31141,88000,3,1,0,6,100000127784,175 NE 6th Avenue,44.031306,-116.956417,True,,JR Simplot
+Kraft Heinz,Massillon,OH,31141,130000,3,0,0,7,100000111997,,040.779647,-081.539570,True,,Kraft Heinz
+Quality Chef Foods Division of Kraft Heinz Company,Cedar Rapids,IA,31141,32000,3,1,0,6,100000166517,,41.932053,-091.636131,True,,Kraft Heinz
+Fresh Mark Salem,Salem,OH,311612,123665,3,0,0,14,100000121236,www.freshmark.com,40.883611,-080.846944,True,,Fresh Mark
+Fresh Mark Cold Storage,Massillon,OH,49312,27000,3,0,0,6,100000179503,,40.783583,-081.495944,True,,Fresh Mark
+Hilmar Cheese Company Dalhart,Dalhart,TX,49312,21932,3,1,1,5,100000199723,www.hilmarcheese.com,36.086133,-102.503200,True,,Hilmar Cheese
+Hilmar Cheese Company,Hilmar,CA,311513,65000,3,0,0,21,100000127515,,37.421613,-120.850431,True,,Hilmar Cheese
+Reddy Ice-Harrisonburg (402),Harrisonburg,VA,312113,70000,3,0,0,7,100000146335,www.reddyice.com,38.399931,-078.895944,True,,Reddy Ice
+Reddy Ice-Las Vegas (104),Las Vegas,NV,312113,13600,3,0,0,7,100000146932,www.reddyice.com,36.185974,-115.128931,True,,Reddy Ice
+Lineage FRS Unadilla,Unadilla,GA,49312,35000,3,0,0,4,100000193426,www.lineagelogistics.com,32.241880,-083.746058,True,,Flint River Services
+Lineage Logistics Rincon,Rincon,GA,49312,42000,3,0,0,4,100000197226,www.lineagelogistics.com,32.335611,-081.250278,True,,Flint River Services
+Tanimura and Antle Fresh Foods Inc.,Salinas,CA,49312,45000,3,0,0,16,100000108322,taproduce.com,36.619832,-121.644854,True,,Tanimura & Antle Fresh Foods
+Tanimura and Antle Fresh Foods Inc.,Cantua Creek,CA,49312,30500,3,0,0,9,100000163119,taproduce.com,36.4429,-120.3956,True,,Tanimura & Antle Fresh Foods
+"Boars Head Provisions Co., Inc. - Forrest City, AR",Forrest City,AR,311991,37000,3,0,0,7,100000030496,,34.996528,-090.813694,True,,Boars Head Provisions
+"Boars Head Provisions Co., Inc. - Holland, MI",Holland,MI,311991,38000,3,0,0,7,100000168873,,42.801667,-086.096333,True,,Boars Head Provisions
+Bellingham Cold Storage Co. - Squalicum,Bellingham,WA,49312,50000,3,0,0,6,100000122574,www.bellcold.com,48.762389,-122.500167,True,,BCS Operations
+Bellingham Cold Storage Co. - Orchard Facility,Bellingham,WA,49312,25000,3,0,0,10,100000141973,www.bellcold.com,48.779722,-122.478222,True,,BCS Operations
+"Cedar Grove Warehouse, Inc-Buhl, ID",Buhl,ID,311411,55000,3,0,0,8,100000117571,www.cedargrovewarehouse.com,42.597792,-114.745935,True,,Cedar Grove Warehouse
+Cedar Grove Warehouse Inc.,Schofield,WI,49312,12000,3,0,0,6,100000153683,www.cedargrovewarehouse.com,44.918476,-089.600740,True,,Cedar Grove Warehouse
+Morrow Cold Storage,Boardman,OR,49312,16300,3,0,0,4,100000201747,,45.844261,-119.674231,True,,Lamb Weston Holdings
+Lamb Weston American Falls Facility,American Falls,ID,311411,50000,3,0,0,20,100000028052,,42.765556,-112.913333,True,,Lamb Weston Holdings
+"Bozzuto's, Inc. Warehouse Distribution Facility",Cheshire,CT,49312,40000,3,0,0,7,100000088095,www.bozzutos.com,41.537479,-072.898271,True,,Bozzutos
+Bozzuto's Inc. North Haven Facility,North Haven,CT,49312,22600,3,0,0,4,100000206779,www.bozzutos.com,41.357784,-072.861896,True,,Bozzutos
+"National Beef Packing Company, LLC, Hummels Wharf",Selinsgrove,PA,311611,31000,3,3,1,7,100000175623,,40.830111,-076.838389,True,,National Beef Packing
+"National Beef Packing Company, LLC, Moultrie",Moultrie,GA,31199,31000,3,1,0,7,100000176025,,31.194611,-083.792694,True,,National Beef Packing
+True Leaf Farms Yuma #2,Yuma,AZ,42248,39900,3,0,0,7,100000179736,,32.653580,-114.575715,True,,True Leaf Farms
+"True Leaf Farms, LLC",Yuma,AZ,49312,17000,3,0,0,4,100000185328,,32.674159,-114.588896,True,,True Leaf Farms
+Michigan Natural Storage - Paw Paw,Paw Paw,MI,49312,13000,3,0,0,6,100000055726,www.naturalstorage.com,42.208889,-085.963333,True,,Michigan Natural Storage
+Michigan Natural Storage,Wyoming,MI,49312,40000,3,0,0,4,100000208143,,42.9409,-85.6993,True,,Michigan Natural Storage
+Danone North America,Minster,OH,31151,35000,3,3,0,7,100000117358,www.danone.com,40.383619,-084.374847,True,,Danone North America
+WWF Operating Company LLC,Mount Crawford,VA,311511,17600,3,0,0,10,100000129265,,38.366389,-078.937778,True,,Danone North America
+Dickinson Frozen Foods (IdaCold LLC),Nampa,ID,49312,12500,3,0,0,7,100000139003,,43.609425,-116.498644,True,,Oregon Potato
+National Frozen Foods Corporation,Albany,OR,31141,40000,3,0,0,7,100000061666,www.nffc.com,44.613611,-123.110556,True,,Oregon Potato
+"Boar's Head Provisions Co., Inc. - Jarratt",Jarratt,VA,311991,33000,3,1,0,21,100000003952,,36.826806,-077.523278,True,,Boar's Head
+"Boar's Head Provisions Co., Inc. - Petersburg",Petersburg,VA,49312,19000,3,1,0,5,100000193417,,37.175860,-077.412540,True,,Boar's Head
+Food Lion - (Distribution Center # 7),Greencastle,PA,49312,34000,3,0,0,5,100000194274,www.foodlion.com,39.766139,-077.738361,True,,Food Lion
+Food Lion - (Distribution Center # 4),Dunn,NC,49312,17000,3,1,0,4,100000201168,,35.276880,-078.632500,True,,Food Lion
+"Mar-Jac Poultry, Inc.",Gainesville,GA,49312,20500,3,0,0,7,100000056681,www.marjacpoultry.com,34.279722,-083.828333,True,,MarJac Poultry
+"Mar-Jac Poultry MS, LLC",Hattiesburg,MS,31161,30000,3,0,0,9,100000158385,www.marjacpoultry.com,31.305968,-089.277997,True,,MarJac Poultry
+"Seneca Foods Corp.-Cold Storage, Rochester,MN",Rochester,MN,49312,18300,3,0,0,7,100000042731,,43.990175,-092.458282,True,,Seneca Foods
+"Seneca Foods Corporation, Montgomery, Minnesota",Montgomery,MN,31141,30000,3,1,0,7,100000115467,,44.431944,-93.578056,True,,Seneca Foods
+MWCold Pendleton,Pendleton,IN,49312,18400,3,0,0,6,100000195246,,39.999304,-085.76710,True,,Merchandise Warehouse
+Merchandise Warehouse Company Incorporated,Indianapolis,IN,49312,29000,3,0,0,5,100000200294,,39.747690,-086.167761,True,,Merchandise Warehouse
+Wayne-Sanderson Farms - Pendergrass,Pendergrass,GA,11239,20000,3,0,0,12,100000062987,www.waynesandersonfarms.com,34.17884,-083.672158,True,,Wayne Sanderson Farms
+Wayne-Sanderson Farms - Union Springs Fresh Plant,Union Springs,AL,311615,26291,3,0,0,13,100000065181,www.waynesandersonfarms.com,32.136702,-85.723152,True,,Wayne Sanderson Farms
+"Ajinomoto Foods North America, Inc.",Oakland,MS,31161,29500,3,0,0,7,100000186032,,34.073500,-089.905972,True,,Ajinomoto Foods North America
+Ajinomoto Foods,Carthage,MO,311611,15000,3,1,0,14,100000135551,,37.101389,-94.31462,True,,Ajinomoto Foods North America
+Llano Logistics,Lubbock,TX,49312,22000,3,2,0,6,100000173082,www.UnitedSupermarkets.com,33.541111,-101.813056,True,,United Supermarkets
+"Llano Logistic, Inc.",Roanoke,TX,49312,22304,3,0,0,4,100000212334,12598 W NORRISTOWN ST,32.996583,-97.243083,True,,United Supermarkets
+DHL Supply Chain,Aurora,IL,49312,29000,3,0,0,5,100000005861,www.dhl.com,41.782543,-88.371418,True,,DHL Supply Chain
+DHL Supply Chain,Dayton,OH,49312,15000,3,0,0,4,100000175936,www.dhl-usa.com/supplychain,39.774722,-84.283612,True,,DHL Supply Chain
+Cheney Brothers Inc. (Riviera Beach),Riviera Beach,FL,49312,19000,3,0,0,6,100000054754,www.cheneybrothers.com,26.767820,-080.092630,True,,Byron C Russell
+Cheney Brothers Inc. (Ocala),Ocala,FL,49311,25000,3,0,0,5,100000196094,www.cheneybrothers.com,29.189520,-082.171450,True,,Byron C Russell
+"Sunrise Farms, Inc.",Harris,IA,11231,18000,3,0,0,10,100000155574,,43.352306,-095.442778,True,,Sonstegard Foods
+"Estherville Foods, Inc.",Estherville,IA,311999,26000,3,0,0,6,100000179273,www.sonstegardfoods.com,43.403833,-094.840278,True,,Sonstegard Foods
+"Vertical Cold Storage, Richardson",Richardson,TX,49312,17028,3,1,0,7,100000010052,https://www.verticalcold.com/richardson-tx-dallas,32.9555,-96.7191,True,,Vertical Cold Storage
+"Vertical Cold Storage LLC, Marshville",Marshville,NC,312113,26000,3,0,0,12,100000145014,www.verticalcold.com,34.9839,-80.3926,True,,Vertical Cold Storage
+Nor-Am Cold Storage,Schuyler,NE,49312,29000,3,0,0,5,100000190081,www.nor-am.com,41.450744,-97.099126,True,,NorAm Cold Storage
+Nor-Am Cold Storage,Le Mars,IA,49312,13000,3,0,0,5,100000191277,www.nor-am.com,42.768166,-096.186310,True,,NorAm Cold Storage
+Joseph Cold Storage #1,Bakersfield,CA,49312,21000,3,1,0,6,100000171262,,35.506332,-119.149837,True,,Joseph Cold Storage 1
+Joseph Cold Storage #2,Delano,CA,49312,20450,3,0,0,6,100000174704,,35.796793,-119.18291,True,,Joseph Cold Storage 1
+Central Storage & Warehouse LLC,Madison,WI,49312,20000,3,1,0,7,100000125116,www.csw-wi.com,43.08253,-089.30893,True,,Central Storage & Warehouse
+"Central Storage & Warehouse , LLC",Wisconsin Rapids,WI,31141,21000,3,0,0,4,100000196753,,44.402500,-089.850278,True,,Central Storage & Warehouse
+Hannaford Brothers,South Portland,ME,49312,11913,3,0,0,4,100000194684,,43.620130,-070.288158,True,,Delhaize America
+"Delhaize America, DC #10",Salisbury,NC,49312,27000,3,0,0,4,100000210737,www.foodlion.com,35.675680,-080.52949,True,,Delhaize America
+Forum Clackamas Distribution Center,Clackamas,OR,49312,17000,3,0,0,12,100000062219,,45.401295,-122.562714,True,,Forum Clackamas Campus
+Forum Clackamas Freezer,Clackamas,OR,49312,20000,3,0,0,5,100000190624,,45.398889,-122.5625,True,,Forum Clackamas Campus
+Weis Markets-Meat,Sunbury,PA,49312,12178,3,0,0,5,100000188174,www.weismarkets.com,40.854167,-076.798056,True,,Weis Markets
+Weis Markets Milton Distribution Center,Milton,PA,49312,24000,3,0,0,6,100000212682,www.weismarkets.com,40.984693,-76.851532,True,,Weis Markets
+NUNES COOLING INC.,SALINAS,CA,49312,20000,3,1,0,10,100000078649,,36.661243,-121.637431,True,,NUNES COOLING
+NUNES COOLING INC.,Cantua Creek,CA,49312,15000,3,0,0,6,100000168533,,36.429731,-120.391189,True,,NUNES COOLING
+Golub Corporation,Schenectady,NY,49312,15802,3,0,0,7,100000149653,www.pricechopper.com,42.785252,-073.993536,True,,Golub
+Price Chopper- Rotterdam Freezer,Schenectady,NY,49312,19001,3,0,0,5,100000193578,www.pricechopper.com,42.784583,-073.990222,True,,Golub
+"Suzanna's Kitchen, Inc.",Duluth,GA,31141,14000,3,1,0,7,100000166606,www.suzannaskitchen.com,33.976556,-084.164111,True,,Bradley Howard
+Suzanna's Kitchen II,Duluth,GA,31141,19125,3,0,0,9,100000185532,,33.980501,-84.170840,True,,Bradley Howard
+Tops Frozen Distribution Center,West Seneca,NY,49312,11800,3,0,0,9,100000028739,,42.842500,-078.722778,True,,Tops Markets
+Tops Markets Distribution Center,Lancaster,NY,49312,20000,3,0,0,8,100000099635,www.topsmarkets.com,42.940556,-078.631944,True,,Tops Markets
+"Overhill Farms, Inc.",Vernon,CA,31199,20000,3,0,0,6,100000181885,,34.006583,-118.224080,True,,Overhill Farms
+"Overhill Farms, Inc. - Plant 2",Vernon,CA,31199,10500,3,0,0,3,100000211282,,34.004503,-118.213989,True,,Overhill Farms
+"Knouse Foods, Orrtanna Plant",ORRTANNA,PA,31199,18000,3,1,0,6,100000107984,WWW.KNOUSE.COM,39.847871,-077.355658,True,,Knouse Foods Cooperative
+"Knouse Foods, Peach Glen Plant",PEACH GLEN,PA,31199,12000,3,0,0,6,100000164056,WWW.KNOUSE.COM,40.019417,-077.232722,True,,Knouse Foods Cooperative
+"FPL FOOD, LLC",Augusta,GA,49312,14000,3,0,0,7,100000160167,,33.454797,-081.941594,True,,FPL FOOD
+"FPL FOOD, LLC",Augusta,GA,31161,15000,3,0,0,9,100000129498,,33.447222,-081.978611,True,,FPL FOOD
+Tip Top Poultry - Rockmart Division,Rockmart,GA,31161,12000,3,0,0,6,100000053443,,34.012089,-085.062953,True,,Tip Top Poultry
+Tip Top Poultry - Marietta Division,Marietta,GA,31161,16000,3,0,0,6,100000101418,,33.959196,-084.514154,True,,Tip Top Poultry
+Wayne-Sanderson Farms - Decatur Fresh Processing,Decatur,AL,11239,16000,3,0,0,10,100000063094,www.waynesandersonfarms.com,34.607828,-087.042784,True,,WayneSanderson Farms
+Wayne Sanderson Farms - Albertville,Albertville,AL,31161,12000,3,0,0,13,100000065234,waynesandersonfarms.com,34.262033,-086.204063,True,,WayneSanderson Farms
+VDF Manteno Cold Storage,Manteno,IL,49312,14000,3,0,0,6,100000025643,300 W. 6th Street,41.242500,-087.818500,True,,Van Drunen Farms
+Van Drunen Farms Crown Point,Crown Point,IN,49312,13500,3,0,0,5,100000184677,www.vandrunen.com,41.4282,-87.3413,True,,Van Drunen Farms
+Fresh Express - Morrow GA,Morrow,GA,311991,16000,3,1,0,6,100000125946,,33.563389,-084.346028,True,,Fresh Express
+Grand Prairie Texas Facility,Grand Prairie,TX,49312,11312,3,0,0,6,100000170343,,32.700432,-097.038798,True,,Fresh Express
+Hy-Vee Perishables Center,Chariton,IA,49312,14000,3,2,0,12,100000166161,www.Hy-Vee.com,41.031501,-93.335486,True,,HyVee
+Perishable Distributors of Iowa,Ankeny,IA,49312,13000,3,0,0,7,100000172074,"2741 S E PDI PLACE, 2741 S E PDI PLACE",41.700556,-093.585278,True,,HyVee
+Dandy Cooling Company~Cross Dock Services,Salinas,CA,49312,12000,3,0,0,7,100000122066,,36.649747,-121.631714,True,,Dandy Cooling
+"Yuma Express Cooling, LLC - Site #2",Yuma,AZ,49312,14000,3,1,0,7,100000127873,1761 Moccasin Trail Cir.,32.683482,-114.563421,True,,Dandy Cooling
+"Wegmans Food Markets, Inc. Frozen Foods",Rochester,NY,49312,15010,3,0,0,7,100000096264,www.Wegmans.com,43.120326,-077.696884,True,,Wegmans Food Markets
+"Wegmans Food Markets, Inc. Fresh Foods Facility",Rochester,NY,49312,10200,3,0,0,8,100000175678,WWW.WEGMANS.COM,43.121018,-077.699670,True,,Wegmans Food Markets
+Underwood Fruit & Warehouse Company,Bingen,WA,49312,13983,3,1,0,6,100000084829,,45.720556,-121.477778,True,,Underwood Fruit & Warehouse
+The Dalles Fruit Company,Dallesport,WA,49312,10135,3,0,0,3,100000208401,,45.623056,-121.139167,True,,Underwood Fruit & Warehouse
+KOCH FOODS MORRISTOWN,MORRISTOWN,TN,49312,16300,3,1,0,4,100000193881,,36.20599,-083.30624,True,,KOCH MEAT
+Koch Foods Berteau,Chicago,IL,49312,7497,3,0,0,11,100000201373,,41.957179,-087.738815,True,,KOCH MEAT
+Wawona Frozen Foods - Ranch,Clovis,CA,49312,11168,3,0,0,4,100000211736,www.wawona.com,36.854449,-119.707851,True,,Wawona Frozen Foods
+Wawona Frozen Foods - Main Plant,Clovis,CA,31141,11000,3,0,0,8,100000197253,www.wawona.com,36.844132,-119.714383,True,,Wawona Frozen Foods
+Molson Coors USA LLC -- Golden Brewery,Golden,CO,31212,410000,3,5,0,54,100000139735,molsoncoors.com,39.756667,-105.219167,True,,Molson Coors Beverage USA
+"Tropicana Manufacturing Company, Inc.",Bradenton,FL,311411,400000,3,3,0,34,100000073001,www.paipartners.com,27.488056,-082.554722,True,,PAI Partners
