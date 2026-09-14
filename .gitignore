@@ -1,0 +1,7 @@
+# Python bytecode from the reference connector
+__pycache__/
+*.py[cod]
+
+# OS and editor noise
+.DS_Store
+Thumbs.db

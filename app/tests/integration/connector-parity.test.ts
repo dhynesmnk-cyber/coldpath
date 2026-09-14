@@ -145,6 +145,36 @@ describe('REGRESSION: entity resolution does not over-merge', () => {
       expect(names, `${n} must survive as its own account`).toContain(n);
     }
   });
+  /**
+   * INGESTION-GATES.md §9 #1, the over-reach half — the measured sibling of the
+   * VersaCold defect above, and the more damaging direction.
+   *
+   * `us cold storage` is a substring of "Sod-us cold storage", so Sodus Cold
+   * Storage Co., Inc. (Sodus NY, 14,693 lb, single site, a genuine independent
+   * prospect) was absorbed into United States Cold Storage — an existing
+   * CUSTOMER — and suppressed from outbound. Nothing errored and nothing was
+   * queued; the only symptom was a prospect list one company shorter.
+   */
+  it('Sodus Cold Storage is not absorbed into the US Cold Storage customer', () => {
+    const uscs = byName.get('United States Cold Storage');
+    expect(uscs).toBeDefined();
+    expect(uscs?.aliases, 'Sodus must not appear as an alias of a customer')
+      .not.toContain('Sodus Cold Storage Co., Inc.');
+    for (const a of actual.accounts) {
+      if (!a.isCustomer) continue;
+      for (const alias of a.aliases) {
+        expect(/\bsodus\b|\bseaonus\b/i.test(alias), `${alias} absorbed into customer ${a.account}`).toBe(false);
+      }
+    }
+  });
+
+  it('no site is attributed to a customer account it only matched mid-word', () => {
+    const suspect = actual.sites.filter(
+      (s) => /^(sodus|seaonus)/i.test(s.name) && KNOWN_CUSTOMERS.has(s.account ?? ''),
+    );
+    expect(suspect.map((s) => `${s.name} -> ${s.account}`)).toEqual([]);
+  });
+
   it('multi-alias accounts really were merged', () => {
     const multi = actual.accounts.filter((a) => a.aliases.length > 1);
     // The live pull produced 51 such accounts; the port must reproduce that.

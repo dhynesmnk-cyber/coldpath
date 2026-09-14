@@ -4,7 +4,7 @@ Production codebase. See `../PRODUCT-PLAN.md` for architecture and milestones; t
 
 **Status: M1 core complete.** Foundations, schema, tenancy and RLS (M0), plus the identity layer: OIDC client, session management, RBAC middleware, identity lifecycle and the AUTH-SPEC §12 acceptance suite. What M1 still needs from Ndustrial: an IdP choice and OIDC client registration (§13 of AUTH-SPEC), then live sign-on against it.
 
-Verification at this commit: typecheck clean, lint clean, 59 vitest tests (unit + a 16-test OIDC protocol suite against a local mock IdP + 19 connector-parity), and 40/40 plain-node integration checks (19 RLS + 21 acceptance).
+Verification at this commit: typecheck clean, lint clean, 65 vitest tests (unit + a 16-test OIDC protocol suite against a local mock IdP + 21 connector-parity), and 40/40 plain-node integration checks (19 RLS + 21 acceptance).
 
 ---
 
@@ -87,12 +87,12 @@ scripts/
   migrate-prod.ts        production migration entrypoint (privileged role)
   verify-integration.ts  runs the RLS assertions without a test framework
 tests/
-  unit/                  24 tests — resolution, matching, rounding, outlier gate
+  unit/                  28 tests — resolution, matching, rounding, outlier gate
   integration/
     harness.ts           builds a migrated two-tenant PGlite instance
     rls.checks.ts        19 runner-agnostic assertions incl. the negative control
     rls.test.ts          vitest wrapper
-    connector-parity.test.ts   19 tests diffing the TS port against the Python CSV
+    connector-parity.test.ts   21 tests diffing the TS port against the Python CSV
   fixtures/
     rmp-facilities.json          1,382 real facilities from the live EPA pull
     coldchain_rmp_accounts.csv   the Python reference output
@@ -104,7 +104,17 @@ tests/
 
 **Licence: CC BY-SA 4.0.** Source: U.S. EPA Risk Management Program, obtained under FOIA by the Data Liberation Project. Redistribution must remain CC BY-SA compatible, and EPA states the data is self-reported and "may contain errors or omissions" — which is precisely why the numeric validation gate exists.
 
-The reference CSVs are the output of `../coldpath/phase1/connectors/epa_rmp.py`. **If you change resolution logic, change both implementations and regenerate the reference.** The parity test exists so a divergence is caught immediately rather than discovered in production as a missing prospect or an emailed customer.
+The reference CSVs are the output of `../phase1/connectors/epa_rmp.py`. **If you change resolution logic, change both implementations and regenerate the reference.** The parity test exists so a divergence is caught immediately rather than discovered in production as a missing prospect or an emailed customer.
+
+Regenerate with:
+
+```bash
+python3 ../phase1/connectors/regen_reference.py
+```
+
+That runs the Python reference against the **committed fixture**, not the live EPA API, so the only delta in the output is your logic delta. Running `epa_rmp.py` directly re-pulls from EPA and mixes upstream drift into the same diff — do that only when a fresh pull is what you actually want.
+
+Note what the parity test does and does not prove. It pins the TypeScript port to the committed CSVs; it does not re-run the Python. So the Python can drift from its own committed output without the test noticing — which had already happened once, and is why the regeneration path above exists and is verified to reproduce the reference byte-for-byte.
 
 ## What is deliberately not here yet
 

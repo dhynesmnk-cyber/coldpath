@@ -111,7 +111,53 @@ RTO_BY_STATE = {
 #
 # This map is a SEED. In production it is a database table maintained by the
 # marketer, and every unresolved facility is surfaced for human assignment.
-CANONICAL_PARENTS = [
+# The patterns below are SOURCES, compiled through _guard() so that none of them
+# can match mid-word. They were plain unanchored regexes used with re.search(),
+# and because this pass runs FIRST and returns immediately, a substring match
+# here is final — it bypasses the distinctive-token protection entirely.
+#
+# `us cold storage` therefore matched "Sod-us cold storage": Sodus Cold Storage
+# Co., Inc. of Sodus, NY, an independent single-site operator and a genuine
+# prospect, was absorbed into the United States Cold Storage account — an
+# existing CUSTOMER — and silently suppressed from outbound. Same family:
+# `aldi` matched Rinaldi/Baldinger/Garibaldi/Aldine, `nestl` matched Nestlerode,
+# `tyson` matched Tysons Corner, `jbs` matched WJBS.
+#
+# The guards are asymmetric, and deliberately so:
+#   LEADING  applies to every pattern; nothing legitimate starts mid-word.
+#   TRAILING applies only to _WORD_FINAL. A blanket trailing guard would break
+#            two CORRECT matches: "U.S. Foodservice" (the former name of US
+#            Foods) and "Performance Foodservice" (Performance Food Group's
+#            operating brand), so suffix continuation stays legal by default.
+#
+# Mirrors app/src/lib/resolve/canonical.ts. Both must change together — the
+# parity test diffs this implementation against the TypeScript port.
+
+# Canonical tokens that are complete words and must not absorb a suffix.
+_WORD_FINAL = {
+    "costco", "tyson", "jbs", "hormel", "aldi", "saputo", "publix", "schwan",
+    "nestl[e\u00e9]", "lineage", "tippmann", "pictsweet", "stouffer", "safeway",
+    "albertsons", "sysco", "kroger", "cargill",
+}
+
+
+def _guard(source):
+    """Compile one raw alternation so it cannot match mid-word.
+
+    Applied per alternative, not to the whole source: `safeway|albertsons`
+    needs a guard either side of the pipe, not one wrapping the group.
+    """
+    parts = []
+    for alt in source.split("|"):
+        start_anchored = alt.startswith("^")
+        body = alt[1:] if start_anchored else alt
+        lead = "^" if start_anchored else r"(?<![a-z0-9])"
+        tail = r"(?![a-z0-9])" if body in _WORD_FINAL else ""
+        parts.append(lead + body + tail)
+    return re.compile("|".join(parts))
+
+
+CANONICAL_PARENT_SOURCES = [
     (r"americold", "Americold Realty Trust"),
     (r"lineage", "Lineage, Inc."),
     (r"united states cold storage|us cold storage", "United States Cold Storage"),
@@ -129,7 +175,7 @@ CANONICAL_PARENTS = [
     (r"aldi", "ALDI US"),
     (r"koch foods", "Koch Foods"),
     (r"saputo", "Saputo Inc."),
-    (r"nestl", "Nestlé USA"),
+    (r"nestl[eé]", "Nestlé USA"),
     (r"publix", "Publix Super Markets"),
     (r"dollar general", "Dollar General"),
     (r"gordon food", "Gordon Food Service"),
@@ -147,6 +193,9 @@ CANONICAL_PARENTS = [
     (r"rich products", "Rich Products"),
     (r"pictsweet", "Pictsweet Farms"),
 ]
+
+# Anchoring is a property of the structure, not something each row remembers.
+CANONICAL_PARENTS = [(_guard(src), canonical) for src, canonical in CANONICAL_PARENT_SOURCES]
 
 # Existing Ndustrial customers. Populated from CRM in production, never hardcoded.
 KNOWN_CUSTOMERS = {
@@ -202,7 +251,7 @@ def canonicalise(name: str | None) -> tuple[str, str, str] | None:
         return None
     low = name.lower()
     for pattern, canonical in CANONICAL_PARENTS:
-        if re.search(pattern, low):
+        if pattern.search(low):
             return match_key(canonical), canonical, "rule"
     key = match_key(name)
     if not key or key in JUNK_NAMES:
@@ -262,11 +311,29 @@ def max_ammonia_lb(facility: dict) -> int:
 
     This is the closest public proxy for refrigeration plant size, and it is
     the single most useful qualification field in the dataset.
+
+    Two record shapes carry the same fact and BOTH must be read:
+
+      live API   {"chemicalId": 56, "chemicalName": ..., "quantity": 410000}
+      frozen pull {"id": 56, "name": ..., "qty": 410000}   <- the committed fixture
+
+    Reading only the live shape meant every facility in the committed fixture
+    reported 0 lb, because the fixture is stored compact. The symptom was not an
+    error: single-site accounts that qualify ONLY on a large ammonia charge
+    silently vanished (Molson Coors Golden Brewery at 410,000 lb and Tropicana
+    Manufacturing at 400,000 lb both dropped out), so this reference could not
+    reproduce its own committed CSVs from its own committed input. Mirrors
+    maxAmmoniaLb() in app/src/connectors/epa-rmp/aggregate.ts, which reads both.
     """
     charges = [
         c.get("quantity") or 0
         for c in (facility.get("chemicals") or [])
         if c.get("chemicalId") in AMMONIA_IDS or "mmonia" in (c.get("chemicalName") or "")
+    ]
+    charges += [
+        c.get("qty") or 0
+        for c in (facility.get("_chem") or [])
+        if c.get("id") in AMMONIA_IDS or "mmonia" in (c.get("name") or "")
     ]
     return max(charges, default=0)
 
