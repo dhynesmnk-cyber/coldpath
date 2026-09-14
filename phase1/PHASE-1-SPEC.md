@@ -3,7 +3,7 @@
 **Client:** Ndustrial · **Vertical:** Cold storage & logistics
 **Duration:** 2 weeks (10 working days) · **Solo engineer, full-time**
 **Client-side contribution:** ~6 hours of marketer time for template critique and review-gate testing
-**Document status:** Ready to build · **Companion artefacts:** `../index.html` (working prototype), `data/` (real seed dataset), `connectors/epa_rmp.py` (working, tested connector)
+**Document status:** Ready to build · **Companion artefacts:** `../archive/index.html` (working prototype), `data/` (real seed dataset), `connectors/epa_rmp.py` (working, tested connector)
 
 ---
 
@@ -403,7 +403,7 @@ Three levels, applied per fact, enforced at generation.
 
 ## 9. Deliverable templates (3 types)
 
-Each template below is the exact section structure to build. The prototype (`../index.html`) contains fully-written reference examples for Kroger, Tyson and NewCold across all nine types — those are the quality bar. Three are built in Phase 1; the other six are specified and demonstrated but deferred.
+Each template below is the exact section structure to build. The prototype (`../archive/index.html`) contains fully-written reference examples for Kroger, Tyson and NewCold across all nine types — those are the quality bar. Three are built in Phase 1; the other six are specified and demonstrated but deferred.
 
 **Why these three.** The Account Brief is the artefact a rep actually reads before working an account. The Executive One-Pager is what makes a time-critical approach possible. The Site Portfolio Analysis is the one no competitor can produce, because it is built on the RMP registry. Together they test every part of the hypothesis.
 
@@ -623,4 +623,4 @@ The pilot is designed so that Phase 2 can be scoped from measurement rather than
 
 ---
 
-*Companion artefacts: `../index.html` (working prototype — three fully researched live accounts, 18 generated deliverables, five working ingestion paths) · `INGESTION-GATES.md` (49 gate rules) · `AUTH-SPEC.md` (authentication, roles, data tiers, attribution integrity) · `what-is-this/` (first-run explainers) · `data/coldchain_rmp_accounts.csv` (114 real scored accounts) · `data/coldchain_rmp_sites.csv` (755 real facilities) · `data/coldchain_rmp_review_queue.csv` (5 records needing human judgement) · `connectors/epa_rmp.py` (built and tested connector)*
+*Companion artefacts: `../archive/index.html` (working prototype — three fully researched live accounts, 18 generated deliverables, five working ingestion paths) · `INGESTION-GATES.md` (49 gate rules) · `AUTH-SPEC.md` (authentication, roles, data tiers, attribution integrity) · `what-is-this/` (first-run explainers) · `data/coldchain_rmp_accounts.csv` (114 real scored accounts) · `data/coldchain_rmp_sites.csv` (755 real facilities) · `data/coldchain_rmp_review_queue.csv` (5 records needing human judgement) · `connectors/epa_rmp.py` (built and tested connector)*

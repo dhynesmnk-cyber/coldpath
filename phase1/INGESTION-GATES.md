@@ -2,7 +2,7 @@
 
 **Purpose:** define every checkpoint data must pass before it is trusted, and every condition under which it is refused.
 **Scope:** four data paths plus one specification path — CRM CSV, BD research reports, LinkedIn Sales Navigator capture, SalesIntel feed, and the SalesIntel field specification that governs it.
-**Companion:** `../index.html` (working in-browser implementation of all four paths) · `what-is-this/` (first-run explainers)
+**Companion:** `../archive/index.html` (working in-browser implementation of all four paths) · `what-is-this/` (first-run explainers)
 
 ---
 
@@ -325,7 +325,7 @@ In the live RMP run this machinery was already exercised end-to-end: **5 records
 
 **Authentication caveat.** The prototype's PIN gate is **obfuscation, not authentication** — both codes are in the page source and the session is a `localStorage` entry. Gate L2 in the prototype is satisfied by a self-selected name after a shared code, which makes captures distinguishable but not attributable. `AUTH-SPEC.md` specifies what replaces it, and why L2, R8, S1, S4 and S5 all depend on real server-asserted identity.
 
-**Implementation status:** all five paths are working in the browser in `../index.html` — real CSV parsing, real field mapping, real entity resolution against the 114-account registry, real LinkedIn field extraction with attribution, real document classification, real verification-window evaluation, and real field-specification parsing with alternative-name matching. Sample fixtures with deliberate faults are built into each path so the gates can be watched firing rather than taken on trust.
+**Implementation status:** all five paths are working in the browser in `../archive/index.html` — real CSV parsing, real field mapping, real entity resolution against the 114-account registry, real LinkedIn field extraction with attribution, real document classification, real verification-window evaluation, and real field-specification parsing with alternative-name matching. Sample fixtures with deliberate faults are built into each path so the gates can be watched firing rather than taken on trust.
 
 **The review queue is unified.** Refusals, deferrals and conflicts from all five paths and from account research land in one severity-ranked list, surfaced both on the Ingest overview and on the Command dashboard. A gate whose output is only visible on a screen nobody opened is not a gate.
 
@@ -368,4 +368,4 @@ The build does not ship until all of these pass. Each corresponds to a real, mea
 
 ---
 
-*Companion artefacts: `../index.html` (working in-browser implementation of all five ingestion paths, with live gate results) · `what-is-this/` (first-run explainers, one per process) · `AUTH-SPEC.md` (authentication, roles, data tiers, attribution integrity) · `PHASE-1-SPEC.md` (build specification)*
+*Companion artefacts: `../archive/index.html` (working in-browser implementation of all five ingestion paths, with live gate results) · `what-is-this/` (first-run explainers, one per process) · `AUTH-SPEC.md` (authentication, roles, data tiers, attribution integrity) · `PHASE-1-SPEC.md` (build specification)*
