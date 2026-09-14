@@ -4,7 +4,7 @@ Production codebase. See `../PRODUCT-PLAN.md` for architecture and milestones; t
 
 **Status: M1 core complete.** Foundations, schema, tenancy and RLS (M0), plus the identity layer: OIDC client, session management, RBAC middleware, identity lifecycle and the AUTH-SPEC §12 acceptance suite. What M1 still needs from Ndustrial: an IdP choice and OIDC client registration (§13 of AUTH-SPEC), then live sign-on against it.
 
-Verification at this commit: typecheck clean, lint clean, 112 vitest tests, and 43/43 plain-node integration checks (19 RLS + 24 acceptance) — run twice, against PGlite **and** against a real Postgres 16 server.
+Verification at this commit: typecheck clean, lint clean, 113 vitest tests, and 43/43 plain-node integration checks (19 RLS + 24 acceptance) — run twice, against PGlite **and** against a real Postgres 16 server. The Python reference is verified to reproduce the committed CSVs byte-for-byte (see "Parity is two legs" below).
 
 ---
 
@@ -29,6 +29,7 @@ Requires Node 20.11+. No database server needed for local development — tests 
 | `npm run build` | Compile to `dist/` and copy `.sql` migrations |
 | `npm run verify:integration` | Build, then run the RLS + AUTH-SPEC §12 acceptance suite against PGlite |
 | `npm run verify:postgres` | The same suite against a REAL Postgres server (needs `DATABASE_URL`) |
+| `python3 ../phase1/connectors/regen_reference.py --check` | Verify the reference CSVs still reproduce from the Python |
 | `npm run db:generate` | Generate a migration from schema changes |
 
 ## Memory
@@ -122,12 +123,24 @@ The reference CSVs are the output of `../phase1/connectors/epa_rmp.py`. **If you
 Regenerate with:
 
 ```bash
-python3 ../phase1/connectors/regen_reference.py
+python3 ../phase1/connectors/regen_reference.py           # rewrite
+python3 ../phase1/connectors/regen_reference.py --check    # verify, write nothing
 ```
 
 That runs the Python reference against the **committed fixture**, not the live EPA API, so the only delta in the output is your logic delta. Running `epa_rmp.py` directly re-pulls from EPA and mixes upstream drift into the same diff — do that only when a fresh pull is what you actually want.
 
-Note what the parity test does and does not prove. It pins the TypeScript port to the committed CSVs; it does not re-run the Python. So the Python can drift from its own committed output without the test noticing — which had already happened once, and is why the regeneration path above exists and is verified to reproduce the reference byte-for-byte.
+### Parity is two legs, not one
+
+```
+leg 1   TypeScript(fixture) == committed CSV     tests/integration/connector-parity.test.ts
+leg 2   committed CSV       == Python(fixture)   regen_reference.py --check   (CI)
+```
+
+Only together do they give TypeScript == Python, which is what "parity" claims. Leg 1 alone is what the repo had, and it left a real hole: the Python could drift from its own committed output invisibly. That is not hypothetical — `max_ammonia_lb()` read only the live API's chemical shape and not the frozen pull's, so every facility in the fixture reported 0 lb and two accounts silently vanished from the reference. Nothing failed.
+
+Leg 2 runs in CI, ordered before leg 1 so a stale reference is reported before the port is blamed for disagreeing with it. The parity test deliberately does **not** shell out to Python: its value is that it needs no database and no toolchain, and a test that skips itself when `python3` is absent would be a check that cannot fail.
+
+The fixture itself is pinned by SHA-256 in the parity test, because it is the shared input to both implementations — edit a value in place and both sides move together, so counts alone would not notice.
 
 ## Session retention needs a scheduler
 

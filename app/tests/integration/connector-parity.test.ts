@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
@@ -9,10 +10,25 @@ import type { RmpFacility } from '@/connectors/epa-rmp/types.js';
 /**
  * PARITY TEST — PRODUCT-PLAN.md §10 risk #3.
  *
- * The Python connector (phase1/connectors/epa_rmp.py) is the reference
- * implementation. It was run against the live EPA RMP API and its output is
- * committed as CSV. This test runs the TypeScript port against the SAME
- * 1,382-facility input and diffs every field of every account.
+ * WHAT THIS PROVES, AND WHAT IT DOES NOT.
+ *
+ * This file runs the TypeScript port against the committed fixture and diffs
+ * every field of every account against the committed reference CSVs. That is
+ * one leg of the proof:
+ *
+ *     leg 1 (here)  TypeScript(fixture) == committed CSV
+ *     leg 2 (CI)    committed CSV       == Python(fixture)
+ *
+ * Only together do they give TypeScript == Python, which is what "parity"
+ * claims. This file deliberately does NOT execute the Python: its value is that
+ * it needs no database and no toolchain, and a test that skips itself when
+ * python3 is absent would be a check that cannot fail.
+ *
+ * Leg 2 is `python3 phase1/connectors/regen_reference.py --check`, run in CI.
+ * Without it the Python could drift from its own committed output invisibly —
+ * which already happened once: max_ammonia_lb() read only the live API's
+ * chemical shape, so every facility in the fixture reported 0 lb and two
+ * accounts silently vanished. Nothing failed.
  *
  * The port is not done until this passes. No database is required — it reads two
  * fixtures — so it runs under vitest in any environment.
@@ -40,6 +56,23 @@ describe('fixture integrity', () => {
     expect(fixture.facilities.length).toBe(1382);
     expect(fixture.meta.count).toBe(1382);
     expect(fixture.meta.licence).toBe('CC BY-SA 4.0');
+  });
+
+  /**
+   * The fixture is the SHARED INPUT to both implementations, which is exactly
+   * why counts alone do not protect it: edit a value in place and both sides
+   * move together, so every parity assertion still passes while the reference
+   * quietly stops corresponding to the documented 13 September 2026 EPA pull.
+   *
+   * A checksum is the only assertion here that an in-place edit cannot satisfy.
+   * If this fails because you deliberately re-pulled from EPA, update the hash
+   * in the same commit as the new fixture and regenerate the reference CSVs.
+   */
+  it('is the exact 13 September 2026 pull, byte for byte', () => {
+    const bytes = readFileSync(`${dir}/rmp-facilities.json`);
+    const digest = createHash('sha256').update(bytes).digest('hex');
+    expect(digest).toBe('967979bb5af6c323facf2f98c98bcae29d5646fad820d58eaf36d9035f2ce65f');
+    expect(fixture.meta.pulled).toBe('2026-09-13');
   });
   it('has a committed Python reference to compare against', () => {
     expect(expected.length).toBe(117);
