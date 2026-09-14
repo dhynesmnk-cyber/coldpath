@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "COLDPATH — account intelligence engine for the cold chain",
+  "description": "COLDPATH \u2014 account intelligence engine for the cold chain",
   "scripts": {
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
@@ -17,7 +17,8 @@
     "build": "tsc -p tsconfig.build.json && npm run copy:sql",
     "copy:sql": "node -e \"require('fs').cpSync('src/db/migrations','dist/src/db/migrations',{recursive:true})\"",
     "test:lowmem": "COLDPATH_LOW_MEMORY=1 NODE_OPTIONS=--max-old-space-size=192 vitest run",
-    "verify:integration": "npm run build && node --max-old-space-size=384 dist/scripts/verify-integration.js"
+    "verify:integration": "npm run build && node --max-old-space-size=384 dist/scripts/verify-integration.js",
+    "verify:postgres": "npm run build && node dist/scripts/verify-postgres.js"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",

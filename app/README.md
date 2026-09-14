@@ -4,7 +4,7 @@ Production codebase. See `../PRODUCT-PLAN.md` for architecture and milestones; t
 
 **Status: M1 core complete.** Foundations, schema, tenancy and RLS (M0), plus the identity layer: OIDC client, session management, RBAC middleware, identity lifecycle and the AUTH-SPEC §12 acceptance suite. What M1 still needs from Ndustrial: an IdP choice and OIDC client registration (§13 of AUTH-SPEC), then live sign-on against it.
 
-Verification at this commit: typecheck clean, lint clean, 69 vitest tests (unit + a 20-test OIDC protocol suite against a local mock IdP + 21 connector-parity), and 41/41 plain-node integration checks (19 RLS + 22 acceptance).
+Verification at this commit: typecheck clean, lint clean, 110 vitest tests, and 41/41 plain-node integration checks (19 RLS + 22 acceptance) — run twice, against PGlite **and** against a real Postgres 16 server.
 
 ---
 
@@ -27,7 +27,8 @@ Requires Node 20.11+. No database server needed for local development — tests 
 | `npm test` | Full vitest suite |
 | `npm run test:lowmem` | Same suite, serialised in one process (for <2 GB machines) |
 | `npm run build` | Compile to `dist/` and copy `.sql` migrations |
-| `npm run verify:integration` | Build, then run the RLS + AUTH-SPEC §12 acceptance suite against real Postgres via PGlite |
+| `npm run verify:integration` | Build, then run the RLS + AUTH-SPEC §12 acceptance suite against PGlite |
+| `npm run verify:postgres` | The same suite against a REAL Postgres server (needs `DATABASE_URL`) |
 | `npm run db:generate` | Generate a migration from schema changes |
 
 ## Memory
@@ -39,6 +40,18 @@ On a constrained machine use `npm run test:lowmem`, which sets `COLDPATH_LOW_MEM
 Below roughly 1.5 GB even low-memory vitest gets OOM-killed on the DB-backed files (observed: exit 137 in a 1 GB cgroup — vitest's runtime plus a WASM Postgres does not fit). There, the sanctioned path is `npm run build && npm run verify:integration`: the plain-node verifier runs the identical RLS and acceptance assertions against one PGlite instance in ~5 seconds, plus the non-DB suites (`vitest run tests/unit tests/integration/oidc.test.ts tests/integration/connector-parity.test.ts`) which need no database at all. This is why the acceptance assertions live in `auth.checks.ts` with `node:assert` instead of inside the vitest file: same proofs, two runners, no drift.
 
 `tests/integration/rls.test.ts` (vitest) and `scripts/verify-integration.ts` (plain node) run **the same assertions** from `tests/integration/rls.checks.ts`, written with `node:assert` so they are framework-independent and cannot drift.
+
+## Two engines, one set of assertions
+
+PGlite is Postgres **18.3**. Production targets Postgres **16**. Testing on a newer major than you ship is a gap, and tenancy isolation is precisely where it could bite: role handling, `FORCE ROW LEVEL SECURITY` semantics and policy evaluation are server behaviour, not application behaviour.
+
+So `scripts/verify-postgres.ts` runs the *identical* `rlsChecks` and `authChecks` arrays through `postgres.js` against a real server. `Harness` is engine-agnostic for exactly this reason — the assertions must not know which engine they are on, or they stop being evidence about production.
+
+```bash
+DATABASE_URL=postgres://coldpath_migrator@localhost:5432/coldpath npm run verify:postgres
+```
+
+This is not belt-and-braces. It immediately found a defect PGlite could not see: a JS `Date` interpolated into a raw ``sql`...` `` template binds without the column's type mapping, which PGlite tolerates and `postgres.js` rejects with `ERR_INVALID_ARG_TYPE`. Offboarding a user — expiring their role and PII grants — therefore failed on any real server while passing the whole suite. Use `gt()` and the other typed operators; keep raw templates for server-side expressions like `now()`.
 
 ---
 

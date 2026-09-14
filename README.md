@@ -29,7 +29,7 @@ Verified at this commit:
 typecheck   clean (strict, noUncheckedIndexedAccess)
 lint        clean (incl. layer-boundary rules)
 tests       110 passing
-integration 41/41 checks against a real Postgres engine
+integration 41/41 checks, run on PGlite AND on real Postgres 16
 ```
 
 Reproduce with `cd app && npm ci && npm run verify && npm test`.
