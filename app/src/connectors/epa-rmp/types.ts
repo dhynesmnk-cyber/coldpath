@@ -74,7 +74,14 @@ export interface AccountRecord {
 }
 
 export interface ReviewRecord {
-  kind: 'numeric_outlier' | 'unresolved_name';
+  /**
+   * numeric_outlier   a reported value failed the plausibility gate
+   * unresolved_name   no usable company name after normalisation
+   * below_threshold   resolved, but under the pilot floor and worth a look
+   * merge_rescue      a pattern guard stopped this being absorbed into another
+   *                   account — the reviewer confirms they are separate
+   */
+  kind: 'numeric_outlier' | 'unresolved_name' | 'below_threshold' | 'merge_rescue';
   rmpId: string;
   name: string;
   city: string;

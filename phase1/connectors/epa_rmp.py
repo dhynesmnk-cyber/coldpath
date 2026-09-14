@@ -134,10 +134,21 @@ RTO_BY_STATE = {
 # parity test diffs this implementation against the TypeScript port.
 
 # Canonical tokens that are complete words and must not absorb a suffix.
+# Short tokens that genuinely absorb a following word and land in the wrong
+# bucket: aldi/Aldine, tyson/Tysons Corner, jbs/WJBS, nestle/Nestlerode.
+#
+# Deliberately NOT here:
+#   schwan  — "SCHWANS COMPANY" is a legitimate continuation, and the guard only
+#             looked safe because match_key() normalises both sides to `schwans`
+#             anyway. A guard whose safety depends on a downstream accident is
+#             worse than no guard: it moves the name onto the fallback path for
+#             no benefit.
+#   lineage, tippmann, pictsweet, stouffer, safeway, albertsons, sysco, kroger,
+#   cargill — long or already start-anchored; the leading guard is sufficient
+#             and no observed name continues them.
 _WORD_FINAL = {
-    "costco", "tyson", "jbs", "hormel", "aldi", "saputo", "publix", "schwan",
-    "nestl[e\u00e9]", "lineage", "tippmann", "pictsweet", "stouffer", "safeway",
-    "albertsons", "sysco", "kroger", "cargill",
+    "costco", "tyson", "jbs", "hormel", "aldi", "saputo", "publix",
+    "nestl[e\u00e9]",
 }
 
 
@@ -197,6 +208,24 @@ CANONICAL_PARENT_SOURCES = [
 # Anchoring is a property of the structure, not something each row remembers.
 CANONICAL_PARENTS = [(_guard(src), canonical) for src, canonical in CANONICAL_PARENT_SOURCES]
 
+# Patterns as they were BEFORE guarding. Used only by merge_rescue(); never for
+# resolution.
+_UNGUARDED = [(re.compile(src), canonical) for src, canonical in CANONICAL_PARENT_SOURCES]
+
+# Pilot filter: single-site operators below this charge are not auto-admitted.
+# Was 250,000, which admitted exactly THREE single-site companies out of 357 —
+# in practice "multi-site only" rather than a floor, and it concealed genuine
+# prospects whose single in-scope filing understates the business (Smithfield
+# Fresh Meats, Charoen Pokphand Foods, Mitsubishi all sit at 80,000-110,000 lb).
+SINGLE_SITE_AMMONIA_FLOOR = 100_000
+
+# Below the pilot floor but above this, a company is QUEUED rather than dropped.
+# 354 companies used to disappear silently, which made "nothing is silently
+# dropped" untrue for the largest category of refusal in the system. This floor
+# yields a queue a person can actually read; the EPA reporting threshold is
+# 10,000 lb, so lower floors flood it (25,000 would queue 120).
+SUBTHRESHOLD_QUEUE_FLOOR = 50_000
+
 # Existing Ndustrial customers. Populated from CRM in production, never hardcoded.
 KNOWN_CUSTOMERS = {
     "Americold Realty Trust",
@@ -204,8 +233,15 @@ KNOWN_CUSTOMERS = {
     "United States Cold Storage",
 }
 
+# `incorporated` is spelled out as well as `inc`. Without it "Perdue Farms
+# Incorporated" keys as `perdue farms incorporated` while "Perdue Farms, Inc."
+# keys as `perdue farms` — one company, two accounts. The 250,000 lb pilot floor
+# hid that split (both sit near 60,000 lb); lowering the floor exposes it.
+#
+# Order matters: `incorporated` must precede `inc` in the alternation, or the
+# engine matches `inc` first and leaves "orporated" behind.
 LEGAL_SUFFIXES = re.compile(
-    r"\b(inc|llc|ltd|lp|llp|corp|corporation|company|co|plc|gmbh|sa|nv|bv|the|and)\b",
+    r"\b(incorporated|inc|llc|ltd|lp|llp|corp|corporation|company|co|plc|gmbh|sa|nv|bv|the|and)\b",
     re.IGNORECASE,
 )
 
@@ -260,6 +296,38 @@ def canonicalise(name: str | None) -> tuple[str, str, str] | None:
     if not shown:
         return None
     return key, shown, "fallback"
+
+
+def merge_rescue(name: str | None) -> tuple[str, bool] | None:
+    """Did a pattern guard stop this name being absorbed into another account?
+
+    Returns (would_be_account, would_be_is_customer) or None.
+
+    This is the detector for the Sodus class. `us cold storage` is a substring of
+    "Sod-us cold storage", so before the guards Sodus Cold Storage Co. was filed
+    under United States Cold Storage — an existing CUSTOMER — and suppressed from
+    outbound with no error and no queue entry. The guard prevents that now, but
+    prevention is silent: nothing records that a near-miss occurred.
+
+    COMPARES BUCKET KEYS, NOT CANONICAL NAMES, and that is the whole subtlety.
+    On names, "SCHWANS COMPANY" looks rescued — the guard moves it from the rule
+    path to the fallback path — but match_key() normalises both to `schwans`, so
+    it lands in the same bucket and nothing was rescued. Comparing names reports
+    two hits on the current pull; comparing keys reports the one real one.
+
+    Mirrors mergeRescue() in app/src/lib/resolve/canonical.ts.
+    """
+    if not isinstance(name, str):
+        return None
+    low = name.lower()
+    hit = next(((pattern, canonical) for pattern, canonical in _UNGUARDED if pattern.search(low)), None)
+    if hit is None:
+        return None
+    _, would_be = hit
+    resolved = canonicalise(name)
+    if resolved is not None and resolved[0] == match_key(would_be):
+        return None  # same bucket: no rescue
+    return would_be, would_be in KNOWN_CUSTOMERS
 
 
 # ---------------------------------------------------------------------------
@@ -371,6 +439,12 @@ def aggregate(facilities: list[dict]) -> tuple[list[dict], list[dict], list[dict
         key, shown, by = resolved
         bucket = buckets[key]
         bucket["aliases"].add(reported)
+        # One row per bucket, not per site: the reviewer is confirming that two
+        # COMPANIES are distinct, which is a fact about the bucket.
+        if not bucket.get("rescue"):
+            rescued = merge_rescue(reported)
+            if rescued is not None:
+                bucket["rescue"] = (rescued[0], rescued[1], reported)
         if by == "rule":
             bucket["name"] = shown          # a canonical rule outranks a fallback name
         elif not bucket.get("name"):
@@ -395,6 +469,7 @@ def aggregate(facilities: list[dict]) -> tuple[list[dict], list[dict], list[dict
     validate_numerics(all_sites)
 
     accounts = []
+    below_threshold = []
     for b in buckets.values():
         name = b["name"]
         sites = b["sites"]
@@ -402,7 +477,11 @@ def aggregate(facilities: list[dict]) -> tuple[list[dict], list[dict], list[dict
         # Pilot filter: multi-site operators, or single sites with a large
         # enough ammonia charge to justify an enterprise motion.
         largest = max((s["ammonia_lb"] for s in scored_sites), default=0)
-        if len(scored_sites) < 2 and largest < 250_000:
+        if len(scored_sites) < 2 and largest < SINGLE_SITE_AMMONIA_FLOOR:
+            # Dropped — but no longer silently. Anything with a charge worth a
+            # look goes to the queue instead of vanishing (gate G9).
+            if largest >= SUBTHRESHOLD_QUEUE_FLOOR:
+                below_threshold.append(b)
             continue
         states = collections.Counter(s["state"] for s in sites)
         rtos = collections.Counter(RTO_BY_STATE.get(s["state"], "Other") for s in sites)
@@ -443,7 +522,50 @@ def aggregate(facilities: list[dict]) -> tuple[list[dict], list[dict], list[dict
         for b in buckets.values() for s in b["sites"]
         if not s.get("validated", True) and id(s) not in surviving
     ]
-    review_queue = flagged + [{**r, "kind": "unresolved_name"} for r in unresolved_records]
+    def _largest(b: dict) -> dict | None:
+        """The biggest site in a bucket stands for it in a queue row."""
+        return max(b["sites"], key=lambda s: s["ammonia_lb"], default=None)
+
+    # Resolved, under the pilot floor, but carrying enough ammonia to be worth a
+    # person's attention. Previously these just disappeared.
+    sub_threshold = []
+    for b in below_threshold:
+        s_ = _largest(b)
+        if s_ is None:
+            continue
+        sub_threshold.append({
+            **s_, "kind": "below_threshold", "reported_name": b["name"], "account": b["name"],
+            "reason": f"single site at {s_['ammonia_lb']} lb, below the "
+                      f"{SINGLE_SITE_AMMONIA_FLOOR} lb pilot floor",
+            "validation_note": "",
+            "action": "confirm whether this is a prospect; approving admits it as a "
+                      "sub-threshold account",
+        })
+
+    # A guard stopped this bucket merging into another account. Emitted whether
+    # or not the bucket became an account: "it nearly became an existing
+    # customer" is a fact a person should confirm either way.
+    rescues = []
+    for b in buckets.values():
+        if not b.get("rescue"):
+            continue
+        would_be, is_customer, reported_name = b["rescue"]
+        s_ = _largest(b)
+        if s_ is None:
+            continue
+        rescues.append({
+            **s_, "kind": "merge_rescue", "reported_name": reported_name, "account": b["name"],
+            "reason": (f"would have merged into {would_be}, an existing CUSTOMER, and been "
+                       f"suppressed from outbound") if is_customer
+                      else f"would have merged into {would_be}",
+            "validation_note": "",
+            "action": f"confirm {b['name']} is a separate company from {would_be}",
+        })
+
+    review_queue = (flagged
+                    + [{**r, "kind": "unresolved_name"} for r in unresolved_records]
+                    + sub_threshold
+                    + rescues)
     return accounts, sites, review_queue, unresolved_records
 
 

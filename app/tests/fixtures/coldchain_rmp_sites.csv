@@ -653,6 +653,8 @@ Kraft Heinz,Massillon,OH,31141,130000,3,0,0,7,100000111997,,040.779647,-081.5395
 Quality Chef Foods Division of Kraft Heinz Company,Cedar Rapids,IA,31141,32000,3,1,0,6,100000166517,,41.932053,-091.636131,True,,Kraft Heinz
 Fresh Mark Salem,Salem,OH,311612,123665,3,0,0,14,100000121236,www.freshmark.com,40.883611,-080.846944,True,,Fresh Mark
 Fresh Mark Cold Storage,Massillon,OH,49312,27000,3,0,0,6,100000179503,,40.783583,-081.495944,True,,Fresh Mark
+Perdue Foods,Gainesville,GA,311615,59000,3,3,0,6,100000126026,,34.268036,-83.817658,True,,Perdue Farms
+"Perdue Farms Incorporated, Washington Facility",Washington,IN,31161,63208,3,1,0,6,100000058411,www.perdue.com,38.655278,-087.204167,True,,Perdue Farms
 Hilmar Cheese Company Dalhart,Dalhart,TX,49312,21932,3,1,1,5,100000199723,www.hilmarcheese.com,36.086133,-102.503200,True,,Hilmar Cheese
 Hilmar Cheese Company,Hilmar,CA,311513,65000,3,0,0,21,100000127515,,37.421613,-120.850431,True,,Hilmar Cheese
 Reddy Ice-Harrisonburg (402),Harrisonburg,VA,312113,70000,3,0,0,7,100000146335,www.reddyice.com,38.399931,-078.895944,True,,Reddy Ice
@@ -753,3 +755,7 @@ Wawona Frozen Foods - Ranch,Clovis,CA,49312,11168,3,0,0,4,100000211736,www.wawon
 Wawona Frozen Foods - Main Plant,Clovis,CA,31141,11000,3,0,0,8,100000197253,www.wawona.com,36.844132,-119.714383,True,,Wawona Frozen Foods
 Molson Coors USA LLC -- Golden Brewery,Golden,CO,31212,410000,3,5,0,54,100000139735,molsoncoors.com,39.756667,-105.219167,True,,Molson Coors Beverage USA
 "Tropicana Manufacturing Company, Inc.",Bradenton,FL,311411,400000,3,3,0,34,100000073001,www.paipartners.com,27.488056,-082.554722,True,,PAI Partners
+Harkins Street Holdings LLC,Salinas,CA,49312,165000,3,1,0,9,100000166438,,36.655220,-121.631895,True,,Harkins Street Holdings
+"Dole Packaged Foods, LLC.",Atwater,CA,31141,117100,3,7,0,19,100000141786,,37.362400,-120.630500,True,,DPF Holdings
+Super Store Industries Turlock Dairy Division,Turlock,CA,31151,110000,3,0,0,10,100000043552,,37.485042,-120.876856,True,,Super Store Industries
+Bellisio Foods Incorporated (Formerly Luigino's),Jackson,OH,31141,110000,3,0,0,29,100000028347,bellisiofoods.com,39.054167,-082.631111,True,,Charoen Pokphand Foods
