@@ -28,8 +28,8 @@ Verified at this commit:
 ```
 typecheck   clean (strict, noUncheckedIndexedAccess)
 lint        clean (incl. layer-boundary rules)
-tests       105 passing
-integration 40/40 checks against a real Postgres engine
+tests       110 passing
+integration 41/41 checks against a real Postgres engine
 ```
 
 Reproduce with `cd app && npm ci && npm run verify && npm test`.

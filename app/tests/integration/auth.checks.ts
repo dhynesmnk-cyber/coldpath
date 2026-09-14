@@ -13,7 +13,7 @@ import { AuthError } from '../../src/lib/auth/types.js';
 import { canAccessPii, canUseForOutbound } from '../../src/lib/auth/permissions.js';
 import { serialise } from '../../src/lib/auth/tiers.js';
 import { resolveSession, revokeSession, rotateRefresh, sessionCookies } from '../../src/lib/auth/session.js';
-import { auditPiiRead } from '../../src/services/audit.js';
+import { audit, auditPiiRead, readAudit } from '../../src/services/audit.js';
 import { createCapture, type CaptureInput } from '../../src/services/capture.js';
 import {
   deriveInitials, hasActivePiiGrant, mapGroupsToRoles, offboardUser,
@@ -490,6 +490,48 @@ export const authChecks: Check[] = [
         tx.select({ c: sql<number>`count(*)::int` }).from(auditLog)
           .where(and(eq(auditLog.action, 'pii.read'), eq(auditLog.resourceId, piiAuditPersonId))));
       assert.equal(left?.c, 2);
+    },
+  },
+  {
+    group: 'acceptance #8 — audit records T3 reads, is append-only',
+    name: 'readAudit applies its userId and action filters',
+    async run(h) {
+      // These two filters were declared and never applied, so narrowing the
+      // trail to one user or one action silently returned the WHOLE trail. An
+      // audit answer that looks authoritative and is wrong is worse than an
+      // error, because nothing prompts the reviewer to check.
+      const mkt = await signIn(h.db, { tenantId: TENANT_A, profile: MADELINE(), groupRoleMap: GROUP_MAP });
+      const other = randomUUID();
+      await withTenant(h.db, tenantCtx(TENANT_A), async (tx) => {
+        await audit(tx, {
+          tenantId: TENANT_A, userId: mkt.user.id, action: 'account.suppress',
+          resourceType: 'account', resourceId: other, outcome: 'allow',
+        });
+      });
+
+      const all = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        readAudit(tx, { tenantId: TENANT_A, limit: 500 }));
+      assert.ok(all.length > 1, 'fixture should hold more than one entry');
+
+      const byAction = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        readAudit(tx, { tenantId: TENANT_A, limit: 500, action: 'account.suppress' }));
+      assert.ok(byAction.length > 0, 'action filter returned nothing');
+      assert.ok(byAction.length < all.length, 'action filter was ignored');
+      for (const r of byAction) assert.equal(r.action, 'account.suppress');
+
+      const byUser = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        readAudit(tx, { tenantId: TENANT_A, limit: 500, userId: mkt.user.id }));
+      assert.ok(byUser.length > 0, 'user filter returned nothing');
+      for (const r of byUser) assert.equal(r.userId, mkt.user.id);
+
+      // Both together must AND, not OR.
+      const both = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        readAudit(tx, { tenantId: TENANT_A, limit: 500, userId: mkt.user.id, action: 'account.suppress' }));
+      for (const r of both) {
+        assert.equal(r.userId, mkt.user.id);
+        assert.equal(r.action, 'account.suppress');
+      }
+      assert.ok(both.length <= byUser.length && both.length <= byAction.length);
     },
   },
   {

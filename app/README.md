@@ -4,7 +4,7 @@ Production codebase. See `../PRODUCT-PLAN.md` for architecture and milestones; t
 
 **Status: M1 core complete.** Foundations, schema, tenancy and RLS (M0), plus the identity layer: OIDC client, session management, RBAC middleware, identity lifecycle and the AUTH-SPEC §12 acceptance suite. What M1 still needs from Ndustrial: an IdP choice and OIDC client registration (§13 of AUTH-SPEC), then live sign-on against it.
 
-Verification at this commit: typecheck clean, lint clean, 65 vitest tests (unit + a 16-test OIDC protocol suite against a local mock IdP + 21 connector-parity), and 40/40 plain-node integration checks (19 RLS + 21 acceptance).
+Verification at this commit: typecheck clean, lint clean, 69 vitest tests (unit + a 20-test OIDC protocol suite against a local mock IdP + 21 connector-parity), and 41/41 plain-node integration checks (19 RLS + 22 acceptance).
 
 ---
 
