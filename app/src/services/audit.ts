@@ -1,6 +1,7 @@
 import { and, eq, sql, type SQL } from 'drizzle-orm';
 import type { Db, Tx } from '../db/client.js';
 import { auditLog } from '../db/schema/index.js';
+import { log } from '../lib/log.js';
 
 /**
  * Append-only audit writer — AUTH-SPEC.md §5.
@@ -52,8 +53,13 @@ export async function audit(db: Db | Tx, entry: AuditEntry): Promise<boolean> {
     });
     return true;
   } catch (e) {
-    // Structured log rather than a swallowed exception.
-    console.error('audit write failed', { action: entry.action, error: String(e) });
+    // Structured, and deliberately loud. An audit trail that silently stops
+    // recording is worse than one that errors: the absence of entries reads as
+    // "nothing happened". This is the signal that the trail is incomplete.
+    log.error(
+      { action: entry.action, outcome: entry.outcome, tenantId: entry.tenantId, err: String(e) },
+      'audit write failed',
+    );
     return false;
   }
 }
