@@ -42,84 +42,85 @@ rank,icp_score,account,is_customer,sites,unvalidated_sites,ammonia_lb,max_site_a
 41,37,McCain Foods,False,3,0,156200,90000,3,"ID,WA,WI",NW,4,2,31141,Frozen fruit & vegetable manufacturing,"McCain Foods, Ltd."
 42,46,Target,False,3,0,122760,52000,3,"FL,IA,MD",PJM,1,1,49312,Refrigerated warehousing & storage,Target Corporation
 43,39,Meijer Distribution,False,3,0,109000,54000,3,"MI,OH,WI",MISO,0,0,49312,Refrigerated warehousing & storage,"Meijer Distribution, Inc."
-44,43,Ben E Keith,False,3,0,92775,35000,2,"OK,TX",ERCOT,1,1,49312,Refrigerated warehousing & storage,Ben E Keith Company | Ben E. Keith Co. | Ben E. Keith Company
-45,34,Sunview Cold Storage,False,3,0,88341,51050,1,CA,CAISO,0,0,49312,Refrigerated warehousing & storage,Sunview Cold Storage
-46,42,American Foods Group,False,3,0,88000,39000,3,"MN,SD,WI",MISO,4,3,311611,Other,"American Foods Group | American Foods Group LLC | American Foods Group, LLC"
-47,34,BJs Wholesale Club,False,3,0,82050,31450,3,"CT,FL,MD",SERC,0,0,49312,Refrigerated warehousing & storage,"BJ's Wholesale Club, Inc."
-48,32,Enstructure,False,3,0,80000,50000,2,"AL,FL",SERC,0,0,49312,Refrigerated warehousing & storage,"Enstructure LLC | Enstructure, LLC"
-49,33,Chelan Fruit Cooperative,False,3,0,75042,28000,1,WA,NW,1,1,49312,Refrigerated warehousing & storage,Chelan Fruit Cooperative
-50,34,WinCo Foods,False,3,0,74500,32500,3,"CA,ID,OR",NW,0,0,49312,Refrigerated warehousing & storage,WinCo Foods LLC
-51,32,SFC Global Supply Chain,False,3,0,71000,40000,3,"GA,PA,TX",SERC,2,1,31141,Frozen fruit & vegetable manufacturing,"SFC Global Supply Chain | SFC Global Supply Chain, Inc."
-52,38,UNFI,False,3,0,69000,30000,3,"IL,IN,WI",MISO,0,0,49312,Refrigerated warehousing & storage,UNFI
-53,29,California Dairies,False,3,0,66900,39000,1,CA,CAISO,0,0,31151,Dairy product manufacturing,"California Dairies | California Dairies Inc. | California Dairies, Inc"
-54,37,McLane,False,3,0,66626,37776,3,"FL,IL,TX",PJM,0,0,42241,Other,"McLane Company | McLane Company, Inc."
-55,35,Shamrock Foods,False,3,0,64690,36190,2,"AZ,NM",WECC,4,1,49312,Refrigerated warehousing & storage,Shamrock Foods Company
-56,37,Sun Pacific,False,3,0,62050,25150,1,CA,CAISO,1,1,49312,Refrigerated warehousing & storage,Sun Pacific | Sun Pacific Corp.
-57,31,Upstate Niagara Cooperative,False,3,0,50685,18000,1,NY,NYISO,2,1,31151,Dairy product manufacturing,"Upstate Niagara Cooperative, Inc."
-58,27,Fieldale Farms,False,3,0,50150,19800,1,GA,SERC,2,1,311615,Other,Fieldale Farms Corporation
-59,37,ADUSA Distribution,False,3,0,46803,19923,3,"NY,SC,VA",NYISO,0,0,49312,Refrigerated warehousing & storage,ADUSA Distribution LLC
-60,32,Stemilt Growers,False,3,0,43467,18000,1,WA,NW,1,1,49312,Refrigerated warehousing & storage,"Stemilt Growers LLC | Stemilt Growers, LLC"
-61,36,T Marzetti,False,3,0,40609,16609,3,"AL,IA,KY",SERC,1,1,49312,Refrigerated warehousing & storage,T. Marzetti Company
-62,28,Pictsweet Farms,False,2,0,195000,180000,2,"TN,TX",TVA,0,0,42241,Other,The Pictsweet Company
-63,34,Magic Valley Fresh Frozen,False,2,0,195000,180000,1,TX,ERCOT,0,0,31141,Frozen fruit & vegetable manufacturing,"Magic Valley Fresh Frozen, Inc."
-64,37,JR Simplot,False,2,0,168000,88000,2,"ND,OR",MISO,2,2,31141,Frozen fruit & vegetable manufacturing,J.R. Simplot Company | The J.R. Simplot Company
-65,38,Kraft Heinz,False,2,0,162000,130000,2,"IA,OH",PJM,1,1,31141,Frozen fruit & vegetable manufacturing,Kraft Heinz | Kraft Heinz Company
-66,33,Fresh Mark,False,2,0,150665,123665,1,OH,PJM,0,0,311612,Other,"Fresh Mark, Inc."
-67,32,Perdue Farms,False,2,0,122208,63208,2,"GA,IN",SERC,4,2,311615,Other,Perdue Farms | Perdue Farms Incorporated
-68,41,Hilmar Cheese,False,2,0,86932,65000,2,"CA,TX",ERCOT,1,1,49312,Refrigerated warehousing & storage,Hilmar Cheese Company
-69,33,Reddy Ice,False,2,0,83600,70000,2,"NV,VA",PJM,0,0,312113,Other,Reddy Ice LLC
-70,28,Flint River Services,False,2,0,77000,42000,1,GA,SERC,0,0,49312,Refrigerated warehousing & storage,Flint River Services LLC
-71,32,Tanimura & Antle Fresh Foods,False,2,0,75500,45000,1,CA,CAISO,0,0,49312,Refrigerated warehousing & storage,"Tanimura & Antle Fresh Foods, Inc."
-72,25,Boars Head Provisions,False,2,0,75000,38000,2,"AR,MI",SPP,0,0,311991,Other,"Boars Head Provisions Co., Inc. | Boars Head Provisions Company, Inc."
-73,28,BCS Operations,False,2,0,75000,50000,1,WA,NW,0,0,49312,Refrigerated warehousing & storage,BCS Operations LLC
-74,25,Cedar Grove Warehouse,False,2,0,67000,55000,2,"ID,WI",NW,0,0,311411,Other,"Cedar Grove Warehouse Inc. | Cedar Grove Warehouse, Inc."
-75,30,Lamb Weston Holdings,False,2,0,66300,50000,2,"ID,OR",NW,0,0,49312,Refrigerated warehousing & storage,Lamb Weston Holdings Inc.
-76,36,Bozzutos,False,2,0,62600,40000,1,CT,ISO-NE,0,0,49312,Refrigerated warehousing & storage,"Bozzuto's Inc. | Bozzuto's, Inc."
-77,39,National Beef Packing,False,2,0,62000,31000,2,"GA,PA",PJM,4,2,311611,Other,"National Beef Packing Company, LLC"
-78,31,Peterson Farms,False,2,0,58521,46000,1,MI,MISO,0,0,49312,Refrigerated warehousing & storage,"Peterson Farms, Inc."
-79,22,True Leaf Farms,False,2,0,56900,39900,1,AZ,WECC,0,0,42248,Other,"True Leaf Farms, LLC"
-80,31,Michigan Natural Storage,False,2,0,53000,40000,1,MI,MISO,0,0,49312,Refrigerated warehousing & storage,Michigan Natural Storage | Michigan Natural Storage Company
-81,35,Danone North America,False,2,0,52600,35000,2,"OH,VA",PJM,3,1,31151,Dairy product manufacturing,Danone North America
-82,29,Oregon Potato,False,2,0,52500,40000,2,"ID,OR",NW,0,0,49312,Refrigerated warehousing & storage,Oregon Potato Company | Oregon Potato Company LLC
-83,36,Boar's Head,False,2,0,52000,33000,1,VA,PJM,2,2,311991,Other,"Boar's Head Provisions Co., Inc."
-84,40,Food Lion,False,2,0,51000,34000,2,"NC,PA",PJM,1,1,49312,Refrigerated warehousing & storage,"Food Lion, LLC"
-85,29,MarJac Poultry,False,2,0,50500,30000,2,"GA,MS",SERC,0,0,49312,Refrigerated warehousing & storage,"Mar-Jac Poultry, Inc | Mar-Jac Poultry, LLC."
-86,34,Seneca Foods,False,2,0,48300,30000,1,MN,MISO,1,1,49312,Refrigerated warehousing & storage,Seneca Foods Corporation
-87,31,Merchandise Warehouse,False,2,0,47400,29000,1,IN,MISO,0,0,49312,Refrigerated warehousing & storage,"Merchandise Warehouse Co. Inc | Merchandise Warehouse Co., Inc."
-88,24,Wayne Sanderson Farms,False,2,0,46291,26291,2,"AL,GA",SERC,0,0,11239,Other,Wayne Sanderson Farms
-89,27,Ajinomoto Foods North America,False,2,0,44500,29500,2,"MO,MS",SERC,1,1,31161,Animal slaughtering & processing,"Ajinomoto Foods North America, Inc."
-90,38,United Supermarkets,False,2,0,44304,22304,1,TX,ERCOT,2,1,49312,Refrigerated warehousing & storage,United Supermarkets
-91,37,DHL Supply Chain,False,2,0,44000,29000,2,"IL,OH",PJM,0,0,49312,Refrigerated warehousing & storage,DHL Supply Chain
-92,27,Cheney Brothers,False,2,0,44000,25000,1,FL,SERC,0,0,49312,Refrigerated warehousing & storage,Cheney Brothers Inc.
-93,26,Sonstegard Foods,False,2,0,44000,26000,1,IA,MISO,0,0,11231,Other,"Sonstegard Foods, Inc."
-94,40,Vertical Cold Storage,False,2,0,43028,26000,2,"NC,TX",ERCOT,1,1,49312,Refrigerated warehousing & storage,"Vertical Cold Storage LLC | Vertical Cold Storage, LLC"
-95,29,NorAm Cold Storage,False,2,0,42000,29000,2,"IA,NE",SPP,0,0,49312,Refrigerated warehousing & storage,Nor-Am Cold Storage
-96,34,Joseph Cold Storage 1,False,2,0,41450,21000,1,CA,CAISO,1,1,49312,Refrigerated warehousing & storage,Joseph Cold Storage #1
-97,34,Central Storage & Warehouse,False,2,0,41000,21000,1,WI,MISO,1,1,49312,Refrigerated warehousing & storage,"Central Storage & Warehouse , LLC | Central Storage & Warehouse LLC"
-98,31,Eckert Cold Storage,False,2,0,39600,27600,1,CA,CAISO,0,0,49312,Refrigerated warehousing & storage,Eckert Cold Storage
-99,37,Delhaize America,False,2,0,38913,27000,2,"ME,NC",ISO-NE,0,0,49312,Refrigerated warehousing & storage,Delhaize America Inc. | Delhaize America LLc
-100,27,Forum Clackamas Campus,False,2,0,37000,20000,1,OR,NW,0,0,49312,Refrigerated warehousing & storage,Forum Clackamas Campus
-101,35,Weis Markets,False,2,0,36178,24000,1,PA,PJM,0,0,49312,Refrigerated warehousing & storage,Weis Markets
-102,34,NUNES COOLING,False,2,0,35000,20000,1,CA,CAISO,1,1,49312,Refrigerated warehousing & storage,NUNES COOLING INC. | Nunes Cooling Inc.
-103,31,Golub,False,2,0,34803,19001,1,NY,NYISO,0,0,49312,Refrigerated warehousing & storage,Golub Corporation
-104,31,Tops Markets,False,2,0,31800,20000,1,NY,NYISO,0,0,49312,Refrigerated warehousing & storage,"Tops Markets, LLC"
-105,26,Overhill Farms,False,2,0,30500,20000,1,CA,CAISO,0,0,31199,All other food manufacturing,"Overhill Farms | Overhill Farms, Inc."
-106,33,Knouse Foods Cooperative,False,2,0,30000,18000,1,PA,PJM,1,1,31199,All other food manufacturing,"Knouse Foods Cooperative, Inc"
-107,27,Columbia Fruit Packers,False,2,0,29000,17000,1,WA,NW,0,0,49312,Refrigerated warehousing & storage,"Columbia Fruit Packers, Inc"
-108,27,FPL FOOD,False,2,0,29000,15000,1,GA,SERC,0,0,49312,Refrigerated warehousing & storage,"FPL FOOD, LLC"
-109,22,Tip Top Poultry,False,2,0,28000,16000,1,GA,SERC,0,0,31161,Animal slaughtering & processing,"Tip Top Poultry, Inc"
-110,22,WayneSanderson Farms,False,2,0,28000,16000,1,AL,SERC,0,0,11239,Other,Wayne-Sanderson Farms
-111,37,Van Drunen Farms,False,2,0,27500,14000,2,"IL,IN",PJM,0,0,49312,Refrigerated warehousing & storage,Van Drunen Farms
-112,27,Fresh Express,False,2,0,27312,16000,2,"GA,TX",SERC,1,1,311991,Other,Fresh Express | Fresh Express Inc.
-113,34,HyVee,False,2,0,27000,14000,1,IA,MISO,2,1,49312,Refrigerated warehousing & storage,"Hy-Vee Inc. | Hy-Vee, Inc."
-114,36,Dandy Cooling,False,2,0,26000,14000,2,"AZ,CA",CAISO,1,1,49312,Refrigerated warehousing & storage,"Dandy Cooling Company, LLC"
-115,31,Wegmans Food Markets,False,2,0,25210,15010,1,NY,NYISO,0,0,49312,Refrigerated warehousing & storage,"Wegmans Food Markets, Inc | Wegmans Food Markets, Inc."
-116,30,Underwood Fruit & Warehouse,False,2,0,24118,13983,1,WA,NW,1,1,49312,Refrigerated warehousing & storage,Underwood Fruit & Warehouse Co | Underwood Fruit & Warehouse Company
-117,32,KOCH MEAT,False,2,0,23797,16300,2,"IL,TN",TVA,1,1,49312,Refrigerated warehousing & storage,KOCH MEAT COMPANY | Koch Meat Company
-118,31,Wawona Frozen Foods,False,2,0,22168,11168,1,CA,CAISO,0,0,49312,Refrigerated warehousing & storage,Wawona Frozen Foods
-119,32,Molson Coors Beverage USA,False,1,0,410000,410000,1,CO,WECC,5,1,31212,Other,Molson Coors Beverage Company USA LLC
-120,32,PAI Partners,False,1,0,400000,400000,1,FL,SERC,3,1,311411,Other,PAI Partners
-121,35,Harkins Street Holdings,False,1,0,165000,165000,1,CA,CAISO,1,1,49312,Refrigerated warehousing & storage,Harkins Street Holdings LLC
-122,29,DPF Holdings,False,1,0,117100,117100,1,CA,CAISO,7,1,31141,Frozen fruit & vegetable manufacturing,"DPF Holdings, Inc."
-123,26,Super Store Industries,False,1,0,110000,110000,1,CA,CAISO,0,0,31151,Dairy product manufacturing,Super Store Industries
-124,30,Charoen Pokphand Foods,False,1,0,110000,110000,1,OH,PJM,0,0,31141,Frozen fruit & vegetable manufacturing,Charoen Pokphand Foods
+44,29,Suzannas Kitchen,False,3,0,103125,70000,1,GA,SERC,1,1,31141,Frozen fruit & vegetable manufacturing,"Suzanna's Kitchen II | Suzanna's Kitchen III | Suzanna's Kitchen, Inc."
+45,43,Ben E Keith,False,3,0,92775,35000,2,"OK,TX",ERCOT,1,1,49312,Refrigerated warehousing & storage,Ben E Keith Company | Ben E. Keith Co. | Ben E. Keith Company
+46,34,Sunview Cold Storage,False,3,0,88341,51050,1,CA,CAISO,0,0,49312,Refrigerated warehousing & storage,Sunview Cold Storage
+47,42,American Foods Group,False,3,0,88000,39000,3,"MN,SD,WI",MISO,4,3,311611,Other,"American Foods Group | American Foods Group LLC | American Foods Group, LLC"
+48,34,BJs Wholesale Club,False,3,0,82050,31450,3,"CT,FL,MD",SERC,0,0,49312,Refrigerated warehousing & storage,"BJ's Wholesale Club, Inc."
+49,32,Enstructure,False,3,0,80000,50000,2,"AL,FL",SERC,0,0,49312,Refrigerated warehousing & storage,"Enstructure LLC | Enstructure, LLC"
+50,33,Chelan Fruit Cooperative,False,3,0,75042,28000,1,WA,NW,1,1,49312,Refrigerated warehousing & storage,Chelan Fruit Cooperative
+51,34,WinCo Foods,False,3,0,74500,32500,3,"CA,ID,OR",NW,0,0,49312,Refrigerated warehousing & storage,WinCo Foods LLC
+52,32,SFC Global Supply Chain,False,3,0,71000,40000,3,"GA,PA,TX",SERC,2,1,31141,Frozen fruit & vegetable manufacturing,"SFC Global Supply Chain | SFC Global Supply Chain, Inc."
+53,38,UNFI,False,3,0,69000,30000,3,"IL,IN,WI",MISO,0,0,49312,Refrigerated warehousing & storage,UNFI
+54,29,California Dairies,False,3,0,66900,39000,1,CA,CAISO,0,0,31151,Dairy product manufacturing,"California Dairies | California Dairies Inc. | California Dairies, Inc"
+55,37,McLane,False,3,0,66626,37776,3,"FL,IL,TX",PJM,0,0,42241,Other,"McLane Company | McLane Company, Inc."
+56,35,Shamrock Foods,False,3,0,64690,36190,2,"AZ,NM",WECC,4,1,49312,Refrigerated warehousing & storage,Shamrock Foods Company
+57,37,Sun Pacific,False,3,0,62050,25150,1,CA,CAISO,1,1,49312,Refrigerated warehousing & storage,Sun Pacific | Sun Pacific Corp.
+58,31,Upstate Niagara Cooperative,False,3,0,50685,18000,1,NY,NYISO,2,1,31151,Dairy product manufacturing,"Upstate Niagara Cooperative, Inc."
+59,27,Fieldale Farms,False,3,0,50150,19800,1,GA,SERC,2,1,311615,Other,Fieldale Farms Corporation
+60,37,ADUSA Distribution,False,3,0,46803,19923,3,"NY,SC,VA",NYISO,0,0,49312,Refrigerated warehousing & storage,ADUSA Distribution LLC
+61,32,Stemilt Growers,False,3,0,43467,18000,1,WA,NW,1,1,49312,Refrigerated warehousing & storage,"Stemilt Growers LLC | Stemilt Growers, LLC"
+62,36,T Marzetti,False,3,0,40609,16609,3,"AL,IA,KY",SERC,1,1,49312,Refrigerated warehousing & storage,T. Marzetti Company
+63,28,Pictsweet Farms,False,2,0,195000,180000,2,"TN,TX",TVA,0,0,42241,Other,The Pictsweet Company
+64,34,Magic Valley Fresh Frozen,False,2,0,195000,180000,1,TX,ERCOT,0,0,31141,Frozen fruit & vegetable manufacturing,"Magic Valley Fresh Frozen, Inc."
+65,37,JR Simplot,False,2,0,168000,88000,2,"ND,OR",MISO,2,2,31141,Frozen fruit & vegetable manufacturing,J.R. Simplot Company | The J.R. Simplot Company
+66,38,Kraft Heinz,False,2,0,162000,130000,2,"IA,OH",PJM,1,1,31141,Frozen fruit & vegetable manufacturing,Kraft Heinz | Kraft Heinz Company
+67,33,Fresh Mark,False,2,0,150665,123665,1,OH,PJM,0,0,311612,Other,"Fresh Mark, Inc."
+68,32,Perdue Farms,False,2,0,122208,63208,2,"GA,IN",SERC,4,2,311615,Other,Perdue Farms | Perdue Farms Incorporated
+69,41,Hilmar Cheese,False,2,0,86932,65000,2,"CA,TX",ERCOT,1,1,49312,Refrigerated warehousing & storage,Hilmar Cheese Company
+70,33,Reddy Ice,False,2,0,83600,70000,2,"NV,VA",PJM,0,0,312113,Other,Reddy Ice LLC
+71,28,Flint River Services,False,2,0,77000,42000,1,GA,SERC,0,0,49312,Refrigerated warehousing & storage,Flint River Services LLC
+72,32,Tanimura & Antle Fresh Foods,False,2,0,75500,45000,1,CA,CAISO,0,0,49312,Refrigerated warehousing & storage,"Tanimura & Antle Fresh Foods, Inc."
+73,25,Boars Head Provisions,False,2,0,75000,38000,2,"AR,MI",SPP,0,0,311991,Other,"Boars Head Provisions Co., Inc. | Boars Head Provisions Company, Inc."
+74,28,BCS Operations,False,2,0,75000,50000,1,WA,NW,0,0,49312,Refrigerated warehousing & storage,BCS Operations LLC
+75,25,Cedar Grove Warehouse,False,2,0,67000,55000,2,"ID,WI",NW,0,0,311411,Other,"Cedar Grove Warehouse Inc. | Cedar Grove Warehouse, Inc."
+76,30,Lamb Weston Holdings,False,2,0,66300,50000,2,"ID,OR",NW,0,0,49312,Refrigerated warehousing & storage,Lamb Weston Holdings Inc.
+77,36,Bozzutos,False,2,0,62600,40000,1,CT,ISO-NE,0,0,49312,Refrigerated warehousing & storage,"Bozzuto's Inc. | Bozzuto's, Inc."
+78,39,National Beef Packing,False,2,0,62000,31000,2,"GA,PA",PJM,4,2,311611,Other,"National Beef Packing Company, LLC"
+79,31,Peterson Farms,False,2,0,58521,46000,1,MI,MISO,0,0,49312,Refrigerated warehousing & storage,"Peterson Farms, Inc."
+80,22,True Leaf Farms,False,2,0,56900,39900,1,AZ,WECC,0,0,42248,Other,"True Leaf Farms, LLC"
+81,31,Michigan Natural Storage,False,2,0,53000,40000,1,MI,MISO,0,0,49312,Refrigerated warehousing & storage,Michigan Natural Storage | Michigan Natural Storage Company
+82,35,Danone North America,False,2,0,52600,35000,2,"OH,VA",PJM,3,1,31151,Dairy product manufacturing,Danone North America
+83,29,Oregon Potato,False,2,0,52500,40000,2,"ID,OR",NW,0,0,49312,Refrigerated warehousing & storage,Oregon Potato Company | Oregon Potato Company LLC
+84,36,Boar's Head,False,2,0,52000,33000,1,VA,PJM,2,2,311991,Other,"Boar's Head Provisions Co., Inc."
+85,40,Food Lion,False,2,0,51000,34000,2,"NC,PA",PJM,1,1,49312,Refrigerated warehousing & storage,"Food Lion, LLC"
+86,29,MarJac Poultry,False,2,0,50500,30000,2,"GA,MS",SERC,0,0,49312,Refrigerated warehousing & storage,"Mar-Jac Poultry, Inc | Mar-Jac Poultry, LLC."
+87,34,Seneca Foods,False,2,0,48300,30000,1,MN,MISO,1,1,49312,Refrigerated warehousing & storage,Seneca Foods Corporation
+88,31,Merchandise Warehouse,False,2,0,47400,29000,1,IN,MISO,0,0,49312,Refrigerated warehousing & storage,"Merchandise Warehouse Co. Inc | Merchandise Warehouse Co., Inc."
+89,24,Wayne Sanderson Farms,False,2,0,46291,26291,2,"AL,GA",SERC,0,0,11239,Other,Wayne Sanderson Farms
+90,27,Ajinomoto Foods North America,False,2,0,44500,29500,2,"MO,MS",SERC,1,1,31161,Animal slaughtering & processing,"Ajinomoto Foods North America, Inc."
+91,38,United Supermarkets,False,2,0,44304,22304,1,TX,ERCOT,2,1,49312,Refrigerated warehousing & storage,United Supermarkets
+92,37,DHL Supply Chain,False,2,0,44000,29000,2,"IL,OH",PJM,0,0,49312,Refrigerated warehousing & storage,DHL Supply Chain
+93,27,Cheney Brothers,False,2,0,44000,25000,1,FL,SERC,0,0,49312,Refrigerated warehousing & storage,Cheney Brothers Inc.
+94,26,Sonstegard Foods,False,2,0,44000,26000,1,IA,MISO,0,0,11231,Other,"Sonstegard Foods, Inc."
+95,40,Vertical Cold Storage,False,2,0,43028,26000,2,"NC,TX",ERCOT,1,1,49312,Refrigerated warehousing & storage,"Vertical Cold Storage LLC | Vertical Cold Storage, LLC"
+96,29,NorAm Cold Storage,False,2,0,42000,29000,2,"IA,NE",SPP,0,0,49312,Refrigerated warehousing & storage,Nor-Am Cold Storage
+97,34,Joseph Cold Storage 1,False,2,0,41450,21000,1,CA,CAISO,1,1,49312,Refrigerated warehousing & storage,Joseph Cold Storage #1
+98,34,Central Storage & Warehouse,False,2,0,41000,21000,1,WI,MISO,1,1,49312,Refrigerated warehousing & storage,"Central Storage & Warehouse , LLC | Central Storage & Warehouse LLC"
+99,31,Eckert Cold Storage,False,2,0,39600,27600,1,CA,CAISO,0,0,49312,Refrigerated warehousing & storage,Eckert Cold Storage
+100,37,Delhaize America,False,2,0,38913,27000,2,"ME,NC",ISO-NE,0,0,49312,Refrigerated warehousing & storage,Delhaize America Inc. | Delhaize America LLc
+101,27,Forum Clackamas Campus,False,2,0,37000,20000,1,OR,NW,0,0,49312,Refrigerated warehousing & storage,Forum Clackamas Campus
+102,35,Weis Markets,False,2,0,36178,24000,1,PA,PJM,0,0,49312,Refrigerated warehousing & storage,Weis Markets
+103,34,NUNES COOLING,False,2,0,35000,20000,1,CA,CAISO,1,1,49312,Refrigerated warehousing & storage,NUNES COOLING INC. | Nunes Cooling Inc.
+104,31,Golub,False,2,0,34803,19001,1,NY,NYISO,0,0,49312,Refrigerated warehousing & storage,Golub Corporation
+105,31,Tops Markets,False,2,0,31800,20000,1,NY,NYISO,0,0,49312,Refrigerated warehousing & storage,"Tops Markets, LLC"
+106,26,Overhill Farms,False,2,0,30500,20000,1,CA,CAISO,0,0,31199,All other food manufacturing,"Overhill Farms | Overhill Farms, Inc."
+107,33,Knouse Foods Cooperative,False,2,0,30000,18000,1,PA,PJM,1,1,31199,All other food manufacturing,"Knouse Foods Cooperative, Inc"
+108,27,Columbia Fruit Packers,False,2,0,29000,17000,1,WA,NW,0,0,49312,Refrigerated warehousing & storage,"Columbia Fruit Packers, Inc"
+109,27,FPL FOOD,False,2,0,29000,15000,1,GA,SERC,0,0,49312,Refrigerated warehousing & storage,"FPL FOOD, LLC"
+110,22,Tip Top Poultry,False,2,0,28000,16000,1,GA,SERC,0,0,31161,Animal slaughtering & processing,"Tip Top Poultry, Inc"
+111,22,WayneSanderson Farms,False,2,0,28000,16000,1,AL,SERC,0,0,11239,Other,Wayne-Sanderson Farms
+112,37,Van Drunen Farms,False,2,0,27500,14000,2,"IL,IN",PJM,0,0,49312,Refrigerated warehousing & storage,Van Drunen Farms
+113,27,Fresh Express,False,2,0,27312,16000,2,"GA,TX",SERC,1,1,311991,Other,Fresh Express | Fresh Express Inc.
+114,34,HyVee,False,2,0,27000,14000,1,IA,MISO,2,1,49312,Refrigerated warehousing & storage,"Hy-Vee Inc. | Hy-Vee, Inc."
+115,36,Dandy Cooling,False,2,0,26000,14000,2,"AZ,CA",CAISO,1,1,49312,Refrigerated warehousing & storage,"Dandy Cooling Company, LLC"
+116,31,Wegmans Food Markets,False,2,0,25210,15010,1,NY,NYISO,0,0,49312,Refrigerated warehousing & storage,"Wegmans Food Markets, Inc | Wegmans Food Markets, Inc."
+117,30,Underwood Fruit & Warehouse,False,2,0,24118,13983,1,WA,NW,1,1,49312,Refrigerated warehousing & storage,Underwood Fruit & Warehouse Co | Underwood Fruit & Warehouse Company
+118,32,KOCH MEAT,False,2,0,23797,16300,2,"IL,TN",TVA,1,1,49312,Refrigerated warehousing & storage,KOCH MEAT COMPANY | Koch Meat Company
+119,31,Wawona Frozen Foods,False,2,0,22168,11168,1,CA,CAISO,0,0,49312,Refrigerated warehousing & storage,Wawona Frozen Foods
+120,32,Molson Coors Beverage USA,False,1,0,410000,410000,1,CO,WECC,5,1,31212,Other,Molson Coors Beverage Company USA LLC
+121,32,PAI Partners,False,1,0,400000,400000,1,FL,SERC,3,1,311411,Other,PAI Partners
+122,35,Harkins Street Holdings,False,1,0,165000,165000,1,CA,CAISO,1,1,49312,Refrigerated warehousing & storage,Harkins Street Holdings LLC
+123,29,DPF Holdings,False,1,0,117100,117100,1,CA,CAISO,7,1,31141,Frozen fruit & vegetable manufacturing,"DPF Holdings, Inc."
+124,26,Super Store Industries,False,1,0,110000,110000,1,CA,CAISO,0,0,31151,Dairy product manufacturing,Super Store Industries
+125,30,Charoen Pokphand Foods,False,1,0,110000,110000,1,OH,PJM,0,0,31141,Frozen fruit & vegetable manufacturing,Charoen Pokphand Foods

@@ -85,3 +85,30 @@ export function stripSiteQualifier(name: string | null | undefined): string | nu
   const stripped = name.replace(/\s*\([^)]*\)\s*$/, '').trim();
   return stripped.length > 0 ? stripped : name.trim();
 }
+
+/**
+ * The company name behind a trailing site number, or null if there isn't one.
+ *
+ * "Suzanna's Kitchen II" and "Suzanna's Kitchen III" are the same company as
+ * "Suzanna's Kitchen, Inc." at different plants, and left alone they key
+ * separately into three accounts.
+ *
+ * The rule is deliberately narrow, because the dataset punishes a loose one:
+ *
+ *   - The numeral must be a SEPARATE token. Without that, "UNFI" parses as
+ *     "UNF" + Roman numeral I — reducing United Natural Foods to a stem that
+ *     matches nothing.
+ *   - Roman numerals must be at least two characters, for the same reason.
+ *   - A trailing state code must not parse as a numeral, which is why
+ *     "Cedar Grove Warehousing-Cedar Grove, WI" is left alone.
+ *   - Glued codes are not site numbers: "ADUSA Distribution LLC DC5" keeps its
+ *     DC5, because that identifies the distribution centre, not a repetition.
+ *
+ * Extracting a stem is NOT the same as using it — see consolidateSiteNumbers.
+ */
+export function siteNumberStem(name: string | null | undefined): string | null {
+  if (typeof name !== 'string') return null;
+  const match = /^(.+?)\s+[#\-]?\s*(?:[IVX]{2,4}|\d{1,3})$/.exec(name.trim());
+  const stem = match?.[1]?.trim();
+  return stem !== undefined && stem.length > 0 ? stem : null;
+}

@@ -4,7 +4,7 @@ Production codebase. See `../PRODUCT-PLAN.md` for architecture and milestones; t
 
 **Status: M1 core complete.** Foundations, schema, tenancy and RLS (M0), plus the identity layer: OIDC client, session management, RBAC middleware, identity lifecycle and the AUTH-SPEC §12 acceptance suite. What M1 still needs from Ndustrial: an IdP choice and OIDC client registration (§13 of AUTH-SPEC), then live sign-on against it.
 
-Verification at this commit: typecheck clean, lint clean, 124 vitest tests, and 43/43 plain-node integration checks (19 RLS + 24 acceptance) — run twice, against PGlite **and** against a real Postgres 16 server. The Python reference is verified to reproduce the committed CSVs byte-for-byte (see "Parity is two legs" below).
+Verification at this commit: typecheck clean, lint clean, 128 vitest tests, and 43/43 plain-node integration checks (19 RLS + 24 acceptance) — run twice, against PGlite **and** against a real Postgres 16 server. The Python reference is verified to reproduce the committed CSVs byte-for-byte (see "Parity is two legs" below).
 
 ---
 

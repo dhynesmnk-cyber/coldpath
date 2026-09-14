@@ -288,7 +288,7 @@ Sequenced by dependency, not by calendar. Each milestone ends with something dem
 | Prototype artefact | Becomes |
 |---|---|
 | 424 KB single-file UI, 14 screens | React components under `src/app/`, same design tokens as CSS custom properties |
-| `REG` (124 accounts, 264 aliases) | Seed migration + the `account`/`account_alias` tables |
+| `REG` (125 accounts, 267 aliases) | Seed migration + the `account`/`account_alias` tables |
 | `RMP` stats blob | Deleted — computed from real tables |
 | `ACCOUNTS`, `DELIV`, `ROI` baked data | Test fixtures and the M9 acceptance corpus |
 | `connectors/epa_rmp.py` | Ported to TypeScript, same three-pass resolution and validation gate, same output |

@@ -1,5 +1,5 @@
-import { canonicaliseParent, KNOWN_CUSTOMERS, mergeRescue, type MergeRescue } from '../../lib/resolve/canonical.js';
-import { looksLikePerson, stripSiteQualifier } from '../../lib/resolve/person.js';
+import { canonicaliseParent, KNOWN_CUSTOMERS, matchKey, mergeRescue, type MergeRescue } from '../../lib/resolve/canonical.js';
+import { looksLikePerson, siteNumberStem, stripSiteQualifier } from '../../lib/resolve/person.js';
 import { validateNumericField } from '../../lib/validation/outliers.js';
 import { modeByInsertion, pyRound, pySorted } from '../../lib/resolve/pycompat.js';
 import { AMMONIA_IDS, NAICS_IN_SCOPE, RTO_BY_STATE, SINGLE_SITE_AMMONIA_FLOOR, SUBTHRESHOLD_QUEUE_FLOOR } from './constants.js';
@@ -148,6 +148,29 @@ export function aggregate(facilities: readonly RmpFacility[]): AggregateResult {
       lat: f.facilityLat ?? null, lon: f.facilityLong ?? null,
       validated: true, validationNote: '',
     });
+  }
+
+  // A trailing site number is only removed when the same company ALREADY EXISTS
+  // without it. That condition is the whole safety of this pass: "Suzanna's
+  // Kitchen II" merges because "Suzanna's Kitchen, Inc." is right there, while
+  // "Joseph Cold Storage #1" and "ADUSA Distribution LLC DC5" are left alone
+  // because nothing says the number is a repetition rather than part of the
+  // name. Guessing without a sibling is how genuinely distinct companies get
+  // merged, which is the more expensive mistake.
+  //
+  // Runs after bucketing because it needs to know every key that exists.
+  for (const [key, bucket] of [...buckets]) {
+    const stem = siteNumberStem(bucket.name);
+    if (stem === null) continue;
+    const stemKey = matchKey(stem);
+    if (stemKey === key) continue;
+    const target = buckets.get(stemKey);
+    if (target === undefined) continue;     // no sibling: do not guess
+
+    target.sites.push(...bucket.sites);
+    for (const alias of bucket.aliases) target.aliases.add(alias);
+    if (bucket.rescue !== null && target.rescue === null) target.rescue = bucket.rescue;
+    buckets.delete(key);
   }
 
   // Numeric validation runs across EVERY bucketed site before aggregation, so a

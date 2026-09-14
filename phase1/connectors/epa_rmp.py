@@ -375,6 +375,39 @@ def strip_site_qualifier(name: str | None) -> str | None:
     return stripped if stripped else name.strip()
 
 
+_SITE_NUMBER = re.compile(r"^(.+?)\s+[#\-]?\s*(?:[IVX]{2,4}|\d{1,3})$")
+
+
+def site_number_stem(name: str | None) -> str | None:
+    """The company name behind a trailing site number, or None if there isn't one.
+
+    "Suzanna's Kitchen II" and "Suzanna's Kitchen III" are the same company as
+    "Suzanna's Kitchen, Inc." at different plants, and left alone they key
+    separately into three accounts.
+
+    The rule is deliberately narrow, because the dataset punishes a loose one:
+
+      - The numeral must be a SEPARATE token. Without that, "UNFI" parses as
+        "UNF" + Roman numeral I, reducing United Natural Foods to a stem that
+        matches nothing.
+      - Roman numerals must be at least two characters, for the same reason.
+      - A trailing state code must not parse as a numeral, which is why
+        "Cedar Grove Warehousing-Cedar Grove, WI" is left alone.
+      - Glued codes are not site numbers: "ADUSA Distribution LLC DC5" keeps its
+        DC5, which identifies the distribution centre, not a repetition.
+
+    Extracting a stem is NOT the same as using it — see the consolidation pass
+    in aggregate(). Mirrors siteNumberStem() in app/src/lib/resolve/person.ts.
+    """
+    if not isinstance(name, str):
+        return None
+    m = _SITE_NUMBER.match(name.strip())
+    if not m:
+        return None
+    stem = m.group(1).strip()
+    return stem or None
+
+
 def merge_rescue(name: str | None) -> tuple[str, bool] | None:
     """Did a pattern guard stop this name being absorbed into another account?
 
@@ -567,6 +600,30 @@ def aggregate(facilities: list[dict]) -> tuple[list[dict], list[dict], list[dict
             "lat": f.get("facilityLat"),
             "lon": f.get("facilityLong"),
         })
+
+    # A trailing site number is only removed when the same company ALREADY
+    # EXISTS without it. That condition is the whole safety of this pass:
+    # "Suzanna's Kitchen II" merges because "Suzanna's Kitchen, Inc." is right
+    # there, while "Joseph Cold Storage #1" and "ADUSA Distribution LLC DC5" are
+    # left alone because nothing says the number is a repetition rather than
+    # part of the name. Guessing without a sibling is how genuinely distinct
+    # companies get merged, which is the more expensive mistake.
+    #
+    # Runs after bucketing because it needs to know every key that exists.
+    for key in list(buckets):
+        bucket = buckets[key]
+        stem = site_number_stem(bucket["name"])
+        if stem is None:
+            continue
+        stem_key = match_key(stem)
+        if stem_key == key or stem_key not in buckets:
+            continue  # no sibling: do not guess
+        target = buckets[stem_key]
+        target["sites"].extend(bucket["sites"])
+        target["aliases"].update(bucket["aliases"])
+        if bucket.get("rescue") and not target.get("rescue"):
+            target["rescue"] = bucket["rescue"]
+        del buckets[key]
 
     all_sites = [s for b in buckets.values() for s in b["sites"]]
     validate_numerics(all_sites)
