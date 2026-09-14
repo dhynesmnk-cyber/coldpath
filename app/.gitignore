@@ -1,0 +1,44 @@
+# ---------------------------------------------------------------------------
+# Secrets. Never commit these, never commit a file that contains them.
+# Git history is permanent: deleting a committed secret does not un-leak it.
+# If one is committed by accident, treat it as compromised and rotate it.
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# Build output
+dist/
+.next/
+out/
+build/
+*.tsbuildinfo
+
+# Dependencies
+node_modules/
+
+# Test and coverage artefacts
+coverage/
+.nyc_output/
+*.lcov
+
+# Local database files (PGlite data directories)
+.pgdata/
+*.pglite/
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp

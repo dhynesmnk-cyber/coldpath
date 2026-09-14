@@ -1,0 +1,41 @@
+# Local and single-host deployment. The same image runs unmodified on AWS, Azure,
+# GCP or a managed platform — Postgres is the only stateful dependency.
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      # Two roles, deliberately. The migrator owns the tables; the application
+      # role does not and must not, or Row-Level Security is silently bypassed.
+      POSTGRES_DB: ${POSTGRES_DB:-coldpath}
+      POSTGRES_USER: ${POSTGRES_MIGRATOR_USER:-coldpath_migrator}
+      POSTGRES_PASSWORD: ${POSTGRES_MIGRATOR_PASSWORD:?POSTGRES_MIGRATOR_PASSWORD is required}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_MIGRATOR_USER:-coldpath_migrator} -d ${POSTGRES_DB:-coldpath}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
+      COLDPATH_MIGRATIONS_DIR: /app/dist/src/db/migrations
+      LLM_PROVIDER: ${LLM_PROVIDER:-anthropic}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OIDC_ISSUER: ${OIDC_ISSUER:-}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET:-}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+
+volumes:
+  pgdata:

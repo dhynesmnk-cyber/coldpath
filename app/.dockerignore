@@ -1,0 +1,10 @@
+node_modules
+dist
+.next
+coverage
+*.log
+.env
+.env.*
+!.env.example
+.git
+tests/fixtures/rmp-facilities.json
