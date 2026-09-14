@@ -4,7 +4,7 @@ Production codebase. See `../PRODUCT-PLAN.md` for architecture and milestones; t
 
 **Status: M1 core complete.** Foundations, schema, tenancy and RLS (M0), plus the identity layer: OIDC client, session management, RBAC middleware, identity lifecycle and the AUTH-SPEC §12 acceptance suite. What M1 still needs from Ndustrial: an IdP choice and OIDC client registration (§13 of AUTH-SPEC), then live sign-on against it.
 
-Verification at this commit: typecheck clean, lint clean, 110 vitest tests, and 41/41 plain-node integration checks (19 RLS + 22 acceptance) — run twice, against PGlite **and** against a real Postgres 16 server.
+Verification at this commit: typecheck clean, lint clean, 112 vitest tests, and 43/43 plain-node integration checks (19 RLS + 24 acceptance) — run twice, against PGlite **and** against a real Postgres 16 server.
 
 ---
 
@@ -128,6 +128,15 @@ python3 ../phase1/connectors/regen_reference.py
 That runs the Python reference against the **committed fixture**, not the live EPA API, so the only delta in the output is your logic delta. Running `epa_rmp.py` directly re-pulls from EPA and mixes upstream drift into the same diff — do that only when a fresh pull is what you actually want.
 
 Note what the parity test does and does not prove. It pins the TypeScript port to the committed CSVs; it does not re-run the Python. So the Python can drift from its own committed output without the test noticing — which had already happened once, and is why the regeneration path above exists and is verified to reproduce the reference byte-for-byte.
+
+## Session retention needs a scheduler
+
+`pruneExpiredSessions()` exists and is tested, but nothing calls it yet — there
+is no scheduler until M2. Rotation only ever inserts (the consumed row is kept
+as the replay tripwire), so the `session` table grows until something sweeps it.
+Wire it to a daily job when the runtime lands; until then a pilot-scale
+deployment is fine, and the table is indexed so growth costs storage rather than
+request latency.
 
 ## What is deliberately not here yet
 

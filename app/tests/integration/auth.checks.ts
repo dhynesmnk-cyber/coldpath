@@ -7,6 +7,7 @@ import { tenantCtx, withTenant } from '../../src/db/client.js';
 import { account, appUser, auditLog, capture, piiGrant, roleGrant, session } from '../../src/db/schema/index.js';
 import { CSRF_COOKIE, CSRF_HEADER, randomOpaqueToken, SESSION_COOKIE } from '../../src/lib/auth/cookies.js';
 import { authorizeRequest, type InboundRequest } from '../../src/lib/auth/middleware.js';
+import { pruneExpiredSessions, REFRESH_TTL_SECONDS } from '../../src/lib/auth/session.js';
 import { ROLES } from '../../src/lib/auth/types.js';
 import type { IdpProfile, Principal, Role } from '../../src/lib/auth/types.js';
 import { AuthError } from '../../src/lib/auth/types.js';
@@ -693,6 +694,85 @@ export const authChecks: Check[] = [
     },
   },
 
+  {
+    group: 'session internals under RLS',
+    name: 'pruning removes only sessions past the refresh window',
+    async run(h) {
+      // Rotation only ever INSERTS — the consumed row is kept as the replay
+      // tripwire — so without a sweep this table grows without bound. The sweep
+      // must not touch anything still inside the refresh window.
+      const live = await signIn(h.db, {
+        tenantId: TENANT_A,
+        profile: REP('prune-live'),
+        groupRoleMap: GROUP_MAP,
+      });
+
+      const before = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        tx.select({ id: session.id }).from(session));
+
+      // A sweep at "now" must delete nothing: every row was just issued.
+      const noop = await withTenant(h.db, tenantCtx(TENANT_A), (tx) => pruneExpiredSessions(tx));
+      assert.equal(noop, 0, 'pruning removed a session inside the refresh window');
+
+      const stillThere = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        tx.select({ id: session.id }).from(session));
+      assert.equal(stillThere.length, before.length);
+
+      // The live session must still authenticate after a sweep.
+      const resolved = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        resolveSession(tx, live.session.sessionToken));
+      assert.ok(resolved !== null, 'a swept-but-live session stopped resolving');
+
+      // Now sweep with a clock far enough forward that the whole refresh window
+      // has elapsed. Everything issued so far becomes inert and is collected.
+      const future = new Date(Date.now() + (REFRESH_TTL_SECONDS + 3600) * 1000);
+      const removed = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        pruneExpiredSessions(tx, future));
+      assert.ok(removed > 0, 'pruning collected nothing past the refresh window');
+
+      const after = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        tx.select({ id: session.id }).from(session));
+      assert.equal(after.length, 0, 'inert rows survived the sweep');
+
+      // A token whose row was collected must not resolve — pruning revokes in
+      // effect, it does not resurrect.
+      const gone = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        resolveSession(tx, live.session.sessionToken));
+      assert.equal(gone, null, 'a pruned session still authenticated');
+    },
+  },
+  {
+    group: 'session internals under RLS',
+    name: 'indexed lookup still detects refresh replay and burns the family',
+    async run(h) {
+      // resolveSession and rotateRefresh moved from a full table scan to an
+      // indexed lookup. The tripwire depends on a CONSUMED row remaining
+      // findable by its retained hash, so the lookup change could have silently
+      // turned 'reused' into 'unknown' and stopped revoking the family.
+      const first = await signIn(h.db, {
+        tenantId: TENANT_A,
+        profile: REP('replay-after-index'),
+        groupRoleMap: GROUP_MAP,
+      });
+
+      const rotated = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        rotateRefresh(tx, first.session.refreshToken));
+      assert.ok(rotated.ok, 'first rotation must succeed'); // also narrows for tsc
+
+      // Replaying the consumed token must still report 'reused', not 'unknown'.
+      const replay = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        rotateRefresh(tx, first.session.refreshToken));
+      assert.deepEqual(replay, { ok: false, reason: 'reused' });
+
+      // And the successor issued by the legitimate rotation is dead too.
+      assert.equal(
+        await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+          resolveSession(tx, rotated.issued.sessionToken)),
+        null,
+        'family was not revoked on replay',
+      );
+    },
+  },
   {
     group: 'session internals under RLS',
     name: 'resolveSession refuses unknown, expired and role-less tokens',
