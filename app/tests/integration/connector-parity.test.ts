@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { aggregate, maxAmmoniaLb } from '@/connectors/epa-rmp/aggregate.js';
 import { canonicalName, KNOWN_CUSTOMERS, mergeRescue } from '@/lib/resolve/canonical.js';
+import { looksLikePerson, stripSiteQualifier } from '@/lib/resolve/person.js';
 import { parseCsvObjects } from '@/lib/csv.js';
 import type { RmpFacility } from '@/connectors/epa-rmp/types.js';
 
@@ -75,11 +76,12 @@ describe('fixture integrity', () => {
     expect(fixture.meta.pulled).toBe('2026-09-13');
   });
   it('has a committed Python reference to compare against', () => {
-    // 117 -> 122: the pilot floor dropped 250,000 -> 100,000, admitting four
-    // single-site companies (Harkins Street Holdings, DPF Holdings, Super Store
-    // Industries, Charoen Pokphand Foods); and Perdue Farms stopped being two
-    // accounts, which gave it two sites and so cleared the filter on count.
-    expect(expected.length).toBe(122);
+    // 122 -> 124: the operator field no longer outranks the facility name when
+    // it holds an individual, which recovers the real companies behind three
+    // person-named accounts (Penske Logistics among them); and stripping
+    // trailing site qualifiers un-split Magic Valley Fresh Frozen, Cheney
+    // Brothers and Eckert Cold Storage.
+    expect(expected.length).toBe(124);
   });
 });
 
@@ -172,6 +174,55 @@ describe('REGRESSION: the VersaCold defect', () => {
   it('exactly three accounts are flagged as customers', () => {
     const customers = actual.accounts.filter((a) => a.isCustomer).map((a) => a.account).sort();
     expect(customers).toEqual(['Americold Realty Trust', 'Lineage, Inc.', 'United States Cold Storage']);
+  });
+});
+
+describe('REGRESSION: a person is not a company', () => {
+  /**
+   * The EPA operator field often holds whoever signed the filing. Because
+   * pick() preferred it over facilityName, people's names became account names
+   * — and the real companies behind them were lost. Penske Logistics is named
+   * in INGESTION-GATES.md §9 #13 and was absent from the registry entirely.
+   */
+  it('recovers the company hiding behind a person-named operator', () => {
+    const names = actual.accounts.map((a) => a.account);
+    expect(names.some((n) => /penske/i.test(n)), 'Penske Logistics should be an account').toBe(true);
+  });
+
+  it('keeps individuals out of the registry', () => {
+    const names = actual.accounts.map((a) => a.account);
+    for (const person of ['Bradley Howard', 'Byron C Russell', 'George Calhoon']) {
+      expect(names, `${person} is an individual, not a company`).not.toContain(person);
+    }
+  });
+
+  it('records every substitution so a misjudgement can be overturned', () => {
+    const subs = actual.reviewQueue.filter((q) => q.kind === 'operator_is_person');
+    expect(subs.length).toBeGreaterThan(0);
+    for (const q of subs) {
+      // The operator's name is retained deliberately: without it a reviewer
+      // cannot check whether the call was right.
+      expect(q.reportedName, 'the queue row must name the operator').not.toBe('');
+      expect(q.account, 'the row must name the company we substituted').not.toBe('');
+      expect(q.reason).toMatch(/looks like an individual/);
+    }
+  });
+
+  it('does not mistake companies that merely read like names', () => {
+    for (const company of ['KOCH MEAT', 'SpartanNash Omaha', 'Gordon Food Service', 'Aldi Incorporated']) {
+      expect(looksLikePerson(company), `${company} is a company`).toBe(false);
+    }
+    for (const person of ['Chad Paige', 'Byron C. Russell', 'George Calhoon']) {
+      expect(looksLikePerson(person), `${person} is an individual`).toBe(true);
+    }
+  });
+
+  it('does not let a site qualifier split one company in two', () => {
+    const names = actual.accounts.map((a) => a.account);
+    // "Magic Valley Fresh Frozen, Inc. (Military)" and "(Trophy)" are one company.
+    expect(names.filter((n) => /magic valley/i.test(n)).length).toBe(1);
+    expect(stripSiteQualifier('Magic Valley Fresh Frozen, Inc. (Military)'))
+      .toBe('Magic Valley Fresh Frozen, Inc.');
   });
 });
 

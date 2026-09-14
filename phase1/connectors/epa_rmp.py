@@ -298,6 +298,83 @@ def canonicalise(name: str | None) -> tuple[str, str, str] | None:
     return key, shown, "fallback"
 
 
+# Telling a person's name from a company's — EPA RMP operator fields.
+#
+# pick() chose parentCompanyName, then operatorName, then facilityName. For 263
+# active facilities there is no parent company, so the OPERATOR wins — and the
+# EPA operator field frequently holds the individual who signed the filing:
+#
+#     operatorName          facilityName (the actual company)
+#     Christopher Hawk  ->  Penske Logistics, LLC
+#     George Calhoon    ->  Magic Valley Fresh Frozen, Inc.
+#     Gary Crowder      ->  Smith Frozen Foods, INC
+#
+# Two harms: named private individuals entered a prospect registry (gate G2),
+# and real companies were LOST — Penske Logistics is named in §9 #13 and was
+# absent purely because a person's name outranked it.
+#
+# NOT fixed by reordering pick() globally. Measured: preferring facilityName
+# everywhere gains 4 accounts and loses 21 (California Dairies, National Beef
+# Packing, Seneca Foods, Boar's Head…), whose facility names are site labels.
+# The operator field is usually right; it is wrong in a detectable way.
+#
+# Mirrors app/src/lib/resolve/person.ts.
+_BUSINESS_WORD = re.compile(
+    r"\b(incorporated|inc|llc|ltd|lp|llp|corp|corporation|co|company|group|holdings?|farms?"
+    r"|foods?|storage|logistics|cold|warehouse|packing|meats?|dairy|dairies|market|markets"
+    r"|produce|fresh|frozen|services?|supply|industries|packers|cooperative|coop|distribution"
+    r"|transport|brands?|kitchen|provisions|cheese|beef|pork|poultry|seafood|grocer\w*|wholesale"
+    r"|terminal|plant|division|center|centre|intl|international|usa|america\w*|bakers?|chef|pure)\b",
+    re.IGNORECASE,
+)
+
+# `Firstname Lastname` or `Firstname M. Lastname`, title-cased, nothing else.
+# Strict on purpose: title case and two-or-three tokens keep "KOCH MEAT" and
+# "SpartanNash Omaha" out, and the middle-initial branch catches "Byron C. Russell".
+_PERSON_NAME = re.compile(r"^[A-Z][a-z]+(?: [A-Z]\.?)? [A-Z][a-z]+$")
+
+_SITE_QUALIFIER = re.compile(r"\s*\([^)]*\)\s*$")
+
+
+def looks_like_person(name: str | None) -> bool:
+    """Does this reported name look like an individual rather than an organisation?
+
+    Pattern only — deliberately no dictionary of given names. A list would be
+    more precise (it would spare "Home Chef", "Universal Pure" and "Valley
+    Bakers", the three real companies this pattern misjudges) but it is a shared
+    word list both implementations would have to keep identical forever. Instead
+    every firing is recorded in the review queue, so a misjudgement is visible
+    and a person can overturn it. Failing visibly beats failing precisely.
+    """
+    if not isinstance(name, str):
+        return False
+    trimmed = name.strip()
+    if not trimmed or _BUSINESS_WORD.search(trimmed):
+        return False
+    return bool(_PERSON_NAME.match(trimmed))
+
+
+def strip_site_qualifier(name: str | None) -> str | None:
+    """Strip a trailing site qualifier from a facility name.
+
+    Facility names identify a SITE: "Magic Valley Fresh Frozen, Inc. (Military)"
+    and "… (Trophy)" are one company at two plants, and left alone they key
+    separately and split the company in two. This matters because the fix above
+    makes facilityName load-bearing for 47 facilities, so without it fixing the
+    person-name bug would INTRODUCE a split. It also un-splits Cheney Brothers
+    and Eckert Cold Storage, already broken this way.
+
+    Only a TRAILING parenthetical is removed. Trailing numerals and Roman
+    numerals ("Suzanna's Kitchen II", "Joseph Cold Storage 1") split the same way
+    and are NOT handled — that is a broader normalisation question, and guessing
+    would merge companies that are genuinely distinct.
+    """
+    if not isinstance(name, str):
+        return None
+    stripped = _SITE_QUALIFIER.sub("", name).strip()
+    return stripped if stripped else name.strip()
+
+
 def merge_rescue(name: str | None) -> tuple[str, bool] | None:
     """Did a pattern guard stop this name being absorbed into another account?
 
@@ -420,12 +497,22 @@ def aggregate(facilities: list[dict]) -> tuple[list[dict], list[dict], list[dict
     """
     buckets: dict[str, dict] = collections.defaultdict(lambda: {"sites": [], "aliases": set(), "name": ""})
     unresolved_records: list[dict] = []
+    operator_persons: list[dict] = []
 
     for f in facilities:
         if f.get("isDeregistered"):
             continue  # closed / deregistered plants are not prospects
-        reported = next((v for v in (f.get("parentCompanyName"), f.get("operatorName"),
-                                     f.get("facilityName")) if isinstance(v, str) and v.strip()), None)
+        # Facility names identify a site, so a trailing qualifier is stripped
+        # before the name can stand for a company. See strip_site_qualifier.
+        facility_name = strip_site_qualifier(f.get("facilityName"))
+        parent = f.get("parentCompanyName")
+        has_parent = isinstance(parent, str) and bool(parent.strip())
+        # The EPA operator field often holds the person who signed the filing.
+        # When it does, it must not outrank the company in facilityName.
+        operator_is_person = (not has_parent) and looks_like_person(f.get("operatorName"))
+        order = ((parent, facility_name, f.get("operatorName")) if operator_is_person
+                 else (parent, f.get("operatorName"), facility_name))
+        reported = next((v for v in order if isinstance(v, str) and v.strip()), None)
         resolved = canonicalise(reported)
         if resolved is None:
             unresolved_records.append({
@@ -439,6 +526,22 @@ def aggregate(facilities: list[dict]) -> tuple[list[dict], list[dict], list[dict
         key, shown, by = resolved
         bucket = buckets[key]
         bucket["aliases"].add(reported)
+
+        # Every substitution is recorded so a misjudgement is visible and
+        # overturnable. The operator's name is retained in the row deliberately:
+        # without it a reviewer cannot check whether the call was right.
+        if operator_is_person:
+            operator_persons.append({
+                "kind": "operator_is_person",
+                "rmp_id": f.get("facilityId"), "name": f.get("facilityName"),
+                "city": f.get("city"), "state": f.get("state"),
+                "naics": f.get("naicsCode"), "ammonia_lb": max_ammonia_lb(f),
+                "reported_name": f.get("operatorName"), "account": shown,
+                "reason": f'operator field "{f.get("operatorName")}" looks like an '
+                          f"individual, not a company",
+                "validation_note": "",
+                "action": f"confirm {shown} is the operating company, or supply the correct one",
+            })
         # One row per bucket, not per site: the reviewer is confirming that two
         # COMPANIES are distinct, which is a fact about the bucket.
         if not bucket.get("rescue"):
@@ -565,7 +668,8 @@ def aggregate(facilities: list[dict]) -> tuple[list[dict], list[dict], list[dict
     review_queue = (flagged
                     + [{**r, "kind": "unresolved_name"} for r in unresolved_records]
                     + sub_threshold
-                    + rescues)
+                    + rescues
+                    + operator_persons)
     return accounts, sites, review_queue, unresolved_records
 
 

@@ -39,7 +39,7 @@ These nine run in order on everything, regardless of source. Source-specific gat
 
 Entity resolution is the highest-risk gate in the system and the only one with a measured, documented failure mode. In the live EPA RMP pull:
 
-- **55 of 122 accounts (45%)** were filed under more than one legal name — 259 names collapsing to 122 accounts
+- **55 of 124 accounts (44%)** were filed under more than one legal name — 264 names collapsing to 124 accounts
 - **Americold** appears as `Americold Logistics, LLC` (88 sites), `Americold` (8), `Americold Realty` (5), `Americold Realty Trust` (3)
 - A naive exact-match customer blocklist **fails on the largest entities**, because `"Americold Logistics, LLC" != "Americold"`
 
@@ -299,8 +299,9 @@ Nothing is discarded. Every gate that refuses, defers or conflicts writes here, 
 | **PII quarantined** | G2, L12, S4 | Should be near zero | Review and release or delete |
 | **Below threshold** | G9, pilot filter | 27 on the RMP pull | Confirm whether it is a prospect; approving admits it |
 | **Merge rescues** | G4 pattern guards | Near zero, high-stakes | Confirm the two companies really are separate |
+| **Operator is a person** | G2, G4 | 47 on the RMP pull | Confirm the substituted company, or supply the right one |
 
-In the live RMP run this machinery was already exercised end-to-end: **31 records** landed in review (1 numeric outlier, 2 unresolved names, 27 below threshold, 1 merge rescue), including the 89,000,000 lb marine-terminal filing that would otherwise have ranked #15 of the prospect list.
+In the live RMP run this machinery was already exercised end-to-end: **77 records** landed in review (1 numeric outlier, 2 unresolved names, 26 below threshold, 1 merge rescue, 47 operator-is-a-person), including the 89,000,000 lb marine-terminal filing that would otherwise have ranked #15 of the prospect list.
 
 ### 6.1 Below threshold — the largest category of silent refusal
 
@@ -315,6 +316,27 @@ Two changes, because one number could not do both jobs:
 Lower floors do not help. The EPA reporting threshold is 10,000 lb, so the dropped set is dense at the bottom: a 25,000 lb floor queues 120 records and a queue that size goes unread, which is silent dropping wearing a hat.
 
 **On approval**, a queued company becomes an ordinary account — ICP-scored, outbound-eligible like any other — carrying a flag that records it entered below the pilot floor. The flag is what later answers whether the queue is finding real business or just noise. *(The approval step itself needs the M2 review UI; the connector emits the queue rows and the rule is specified and tested now.)*
+
+### 6.3 Operator is a person — a name is not a company
+
+The EPA operator field frequently holds the individual who signed the filing rather than a company. Because the name-picking order preferred it over the facility name, **people's names became account names**, and the companies behind them were lost:
+
+| operator field | the company actually operating the site |
+|---|---|
+| Christopher Hawk | **Penske Logistics, LLC** |
+| George Calhoon | Magic Valley Fresh Frozen, Inc. |
+| Gary Crowder | Smith Frozen Foods, INC |
+| Bradley Howard | Suzanna's Kitchen, Inc. |
+
+Two harms, and the second is the larger one. Named private individuals entered a prospect registry, which G2 exists to prevent. And real prospects were **missing**: Penske Logistics is named in §9 #13 of this document and was absent from the registry entirely, because a person's name outranked it.
+
+The fix is not to prefer facility names generally. Measured on this pull, doing so gains 4 accounts and loses 21 — California Dairies, National Beef Packing, Seneca Foods, Boar's Head and others, whose facility names are site labels rather than companies. The operator field is usually right; it is wrong in a specific, detectable way.
+
+**Detection is pattern-based and deliberately has no dictionary of given names.** A name list would be more precise — it would spare the three real companies this pattern misjudges — but it is a shared word list both implementations would have to keep identical forever. Instead *every* substitution is recorded in the queue, **including the operator's name**, so a reviewer can check the judgement and overturn it. Failing visibly beats failing precisely.
+
+Retaining that name is a deliberate trade against G2's usual instinct to quarantine. It is the one place in the system where an individual's name is stored, it exists so the call can be audited, and it will need a tier assignment when the review queue reaches the database at M2.
+
+A related split is fixed alongside: facility names identify a *site*, so `Magic Valley Fresh Frozen, Inc. (Military)` and `… (Trophy)` are one company at two plants. Trailing parentheticals are stripped before a facility name may stand for a company. Trailing numerals and Roman numerals (`Suzanna's Kitchen II`) split the same way and are **not** handled — guessing there would merge companies that are genuinely distinct.
 
 ### 6.2 Merge rescues — recording a near-miss, not just preventing it
 
@@ -386,6 +408,8 @@ The build does not ship until all of these pass. Each corresponds to a real, mea
 12c. **A company dropped by the pilot filter is queued, not discarded**, when its charge is above the review floor — and approving it admits it as an account flagged sub-threshold. *(Gate G9; §6.1.)*
 12d. **A guarded near-miss is recorded.** Where a pattern guard stops a name merging into another account, the record appears in the queue naming that account and whether it is a customer. `Sodus Cold Storage Co.` must appear there naming `United States Cold Storage`. Detection compares bucket keys, so `SCHWANS COMPANY` — which normalises to the same key either way — must **not** appear. *(Blocking; §6.2.)*
 12e. **One company does not become two on a spelled-out legal suffix.** `Perdue Farms Incorporated` and `Perdue Farms, Inc.` resolve to a single account.
+12f. **A person's name never becomes an account.** Where the operator field holds an individual, the company is taken from the facility name instead, and the substitution is recorded in the queue naming both. `Penske Logistics` must be present in the registry; `George Calhoon`, `Bradley Howard` and `Byron C Russell` must not. *(Blocking; §6.3.)*
+12g. **A site qualifier does not split a company.** `Magic Valley Fresh Frozen, Inc. (Military)` and `… (Trophy)` resolve to one account.
 13. **Distinct companies sharing only a generic or weak token do not merge.** `United Global Foods` / `United Natural Foods Inc.`, `Penske Logistics` / `VersaCold Logistics`, and `Vertical Cold Storage` / `Sodus Cold Storage` must each resolve independently or route to the human queue.
 14. **An unanchored duration is never filed as a clean tenure.** A LinkedIn "About" blurb reading *"18 years across ammonia systems"* must not be extracted as role tenure; only a duration anchored to the current role's date range may be marked clean. Everything else is marked `inferred` and shown for confirmation.
 15. **A SalesIntel spec missing `verification_date` blocks S2** with the reason stated, and the request text names the field explicitly.
