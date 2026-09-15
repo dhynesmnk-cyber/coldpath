@@ -1,0 +1,1 @@
+CREATE INDEX "ix_session_refresh" ON "session" USING btree ("refresh_hash");

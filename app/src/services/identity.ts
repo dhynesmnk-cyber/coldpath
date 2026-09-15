@@ -1,7 +1,7 @@
 import { and, eq, inArray, isNull, ne, or, sql } from 'drizzle-orm';
 import { tenantCtx, withTenant, type Db, type Tx } from '../db/client.js';
 import { account, appUser, piiGrant, roleGrant, type AppUser } from '../db/schema/index.js';
-import { createSession, revokeAllSessions, type IssuedSession } from '../lib/auth/session.js';
+import { activeRoles, createSession, revokeAllSessions, type IssuedSession } from '../lib/auth/session.js';
 import { AuthError, type IdpProfile, type Role } from '../lib/auth/types.js';
 import { audit } from './audit.js';
 
@@ -74,15 +74,25 @@ export async function provisionUser(
     .where(and(eq(appUser.tenantId, p.tenantId), eq(appUser.idpSubject, p.profile.subject)));
 
   if (existing === undefined) {
+    // Upsert, not a bare insert. SELECT-then-INSERT races itself: two requests
+    // for the same brand-new subject both find nothing and both insert, and the
+    // second hits uq_app_user_idp and throws — turning a user's first sign-in
+    // into a 500 whenever their client opens two tabs at once. onConflictDoUpdate
+    // makes the constraint do the arbitration it exists for.
     const [created] = await db.insert(appUser).values({
       tenantId: p.tenantId,
       idpSubject: p.profile.subject,
       email: p.profile.email,
       displayName,
       initials,
+    }).onConflictDoUpdate({
+      target: [appUser.tenantId, appUser.idpSubject],
+      set: { email: p.profile.email, displayName, initials, lastSeenAt: new Date() },
     }).returning();
-    if (!created) throw new Error('app_user insert returned no row');
-    return { user: created, created: true };
+    if (!created) throw new Error('app_user upsert returned no row');
+    // `created` is only true when we won the insert. A row that already carried a
+    // createdAt older than this call was provisioned by whoever won the race.
+    return { user: created, created: created.lastSeenAt === null };
   }
 
   const [updated] = await db.update(appUser).set({
@@ -250,15 +260,6 @@ export async function signIn(
 
     return { user: outcome.user, roles: outcome.roles, session, created: outcome.created };
   });
-}
-
-/** Roles currently in force for a user (unexpired grants only). */
-async function activeRoles(db: Db | Tx, tenantId: string, userId: string): Promise<Role[]> {
-  const grants = await db.select({ role: roleGrant.role, expiresAt: roleGrant.expiresAt })
-    .from(roleGrant)
-    .where(and(eq(roleGrant.userId, userId), eq(roleGrant.tenantId, tenantId)));
-  const now = new Date();
-  return grants.filter((g) => g.expiresAt === null || g.expiresAt > now).map((g) => g.role);
 }
 
 export interface OffboardResult {

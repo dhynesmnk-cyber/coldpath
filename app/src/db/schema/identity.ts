@@ -64,6 +64,9 @@ export const session = pgTable('session', {
   index('ix_session_user').on(t.userId),
   index('ix_session_tenant').on(t.tenantId),
   index('ix_session_family').on(t.familyId),
+  // token_hash is already unique (and therefore indexed); refresh_hash is looked
+  // up on every rotation and was not. Both lookups used to scan the whole table.
+  index('ix_session_refresh').on(t.refreshHash),
 ]);
 
 export const auditAction = pgEnum('audit_action', [

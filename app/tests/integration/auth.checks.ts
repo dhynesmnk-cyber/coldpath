@@ -12,7 +12,7 @@ import type { IdpProfile, Principal, Role } from '../../src/lib/auth/types.js';
 import { AuthError } from '../../src/lib/auth/types.js';
 import { canAccessPii, canUseForOutbound } from '../../src/lib/auth/permissions.js';
 import { serialise, visibleFields } from '../../src/lib/auth/tiers.js';
-import { resolveSession, revokeSession, rotateRefresh, sessionCookies } from '../../src/lib/auth/session.js';
+import { createSession, pruneExpiredSessions, resolveSession, revokeSession, rotateRefresh, sessionCookies } from '../../src/lib/auth/session.js';
 import { auditPiiRead } from '../../src/services/audit.js';
 import { createCapture, type CaptureInput } from '../../src/services/capture.js';
 import {
@@ -426,6 +426,58 @@ export const authChecks: Check[] = [
         tx.select().from(session).where(eq(session.id, original.sessionId)));
       assert.notEqual(srows[0]?.revokedAt, null);
       assert.match(srows[0]?.revokeReason ?? '', /reuse/i);
+    },
+  },
+
+  {
+    group: 'acceptance #6 — refresh reuse revokes the family',
+    name: 'concurrent replays of one token cannot both mint a session',
+    async run(h) {
+      const user = await signIn(h.db, { tenantId: TENANT_A, profile: REP('entra-6002'), groupRoleMap: GROUP_MAP });
+
+      // Fire the SAME refresh token twice with no ordering between them. The
+      // previous implementation read the row, checked refresh_rotated_at, then
+      // updated: under READ COMMITTED both callers saw NULL, both passed the
+      // reuse check and both rotated. The tripwire never fired in exactly the
+      // case it exists for. Consuming via a conditional UPDATE means the row
+      // itself arbitrates and precisely one caller can win.
+      const [a, b] = await Promise.all([
+        withTenant(h.db, tenantCtx(TENANT_A), (tx) => rotateRefresh(tx, user.session.refreshToken)),
+        withTenant(h.db, tenantCtx(TENANT_A), (tx) => rotateRefresh(tx, user.session.refreshToken)),
+      ]);
+
+      const winners = [a, b].filter((r) => r.ok);
+      assert.equal(winners.length, 1, 'exactly one concurrent rotation may succeed');
+
+      const loser = [a, b].find((r) => !r.ok);
+      assert.ok(loser !== undefined && !loser.ok);
+      // The loser must be refused. 'reused' means it raced and lost after the
+      // winner committed; 'revoked' means it lost before. Either is a refusal —
+      // what must never happen is a second `ok`.
+      assert.ok(['reused', 'revoked'].includes(loser.reason), `unexpected reason ${loser.reason}`);
+    },
+  },
+
+  {
+    group: 'session hygiene',
+    name: 'pruneExpiredSessions removes only sessions already past expiry',
+    async run(h) {
+      const user = await signIn(h.db, { tenantId: TENANT_A, profile: REP('entra-6003'), groupRoleMap: GROUP_MAP });
+      const live = user.session.sessionToken;
+
+      await withTenant(h.db, tenantCtx(TENANT_A), async (tx) => {
+        // One row expired an hour ago, alongside the live session above.
+        const stale = await createSession(tx, { userId: user.user.id, tenantId: TENANT_A });
+        await tx.update(session)
+          .set({ expiresAt: new Date(Date.now() - 3_600_000) })
+          .where(eq(session.id, stale.sessionId));
+
+        const removed = await pruneExpiredSessions(tx, new Date());
+        assert.ok(removed >= 1, 'the expired row must be pruned');
+
+        // The live session is untouched and still resolves.
+        assert.notEqual(await resolveSession(tx, live), null, 'pruning must not touch live sessions');
+      });
     },
   },
 
