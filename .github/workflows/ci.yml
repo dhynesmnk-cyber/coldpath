@@ -46,6 +46,13 @@ jobs:
           # `defaults.run.working-directory` does not apply to `uses` steps.
           cache-dependency-path: app/package-lock.json
 
+      # The reference connector is Python. Pinned rather than relying on
+      # whatever the runner image ships, so the drift gate below cannot start
+      # passing or failing because GitHub changed the default interpreter.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - run: npm ci --no-audit --no-fund
 
       - name: Typecheck (strict, noUncheckedIndexedAccess)
@@ -56,6 +63,22 @@ jobs:
 
       - name: Unit tests
         run: npx vitest run tests/unit
+
+      # LEG 2 OF PARITY, and the reason it exists.
+      #
+      # The parity test below asserts TypeScript(fixture) == committed CSV. It
+      # never executes the Python, so the Python could drift from its own
+      # committed output and nothing would fail. That already happened once:
+      # max_ammonia_lb() read only the live API's chemical shape and not the
+      # frozen pull's, so every facility in the fixture reported 0 lb and two
+      # accounts silently vanished from the reference.
+      #
+      # This asserts committed CSV == Python(fixture). Together with the parity
+      # test that gives TypeScript == Python, which is what parity claims.
+      # Ordered FIRST so a stale reference is reported before the port is blamed
+      # for disagreeing with it.
+      - name: Reference CSVs reproduce from the Python connector
+        run: python3 ../phase1/connectors/regen_reference.py --check
 
       - name: Connector parity vs the Python reference
         run: npx vitest run tests/integration/connector-parity.test.ts

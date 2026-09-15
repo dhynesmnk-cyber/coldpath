@@ -28,7 +28,7 @@ Verified at this commit:
 ```
 typecheck   clean (strict, noUncheckedIndexedAccess)
 lint        clean (incl. layer-boundary rules)
-tests       112 passing
+tests       113 passing
 integration 43/43 checks, run on PGlite AND on real Postgres 16
 ```
 
