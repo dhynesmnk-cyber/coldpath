@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { aggregate, maxAmmoniaLb } from '@/connectors/epa-rmp/aggregate.js';
-import { canonicalName, KNOWN_CUSTOMERS } from '@/lib/resolve/canonical.js';
+import { canonicalName, KNOWN_CUSTOMERS, mergeRescue } from '@/lib/resolve/canonical.js';
 import { parseCsvObjects } from '@/lib/csv.js';
 import type { RmpFacility } from '@/connectors/epa-rmp/types.js';
 
@@ -75,7 +75,11 @@ describe('fixture integrity', () => {
     expect(fixture.meta.pulled).toBe('2026-09-13');
   });
   it('has a committed Python reference to compare against', () => {
-    expect(expected.length).toBe(117);
+    // 117 -> 122: the pilot floor dropped 250,000 -> 100,000, admitting four
+    // single-site companies (Harkins Street Holdings, DPF Holdings, Super Store
+    // Industries, Charoen Pokphand Foods); and Perdue Farms stopped being two
+    // accounts, which gave it two sites and so cleared the filter on count.
+    expect(expected.length).toBe(122);
   });
 });
 
@@ -171,6 +175,73 @@ describe('REGRESSION: the VersaCold defect', () => {
   });
 });
 
+describe('the pilot floor and the sub-threshold queue', () => {
+  const queue = actual.reviewQueue;
+
+  /**
+   * 354 of 472 resolved companies used to be dropped by the pilot filter with
+   * no record at all, which made INGESTION-GATES.md's "nothing is silently
+   * dropped" untrue for the largest category of refusal in the system.
+   */
+  it('queues resolved companies dropped by the pilot floor', () => {
+    const below = queue.filter((q) => q.kind === 'below_threshold');
+    expect(below.length).toBeGreaterThan(0);
+    for (const q of below) {
+      expect(q.ammoniaLb, `${q.account} is under the queue floor`).toBeGreaterThanOrEqual(50_000);
+      expect(q.ammoniaLb, `${q.account} should have been admitted, not queued`).toBeLessThan(100_000);
+      expect(q.action).toMatch(/sub-threshold account/);
+    }
+  });
+
+  it('admits the single-site companies the old floor was hiding', () => {
+    const names = actual.accounts.map((a) => a.account);
+    for (const n of ['Harkins Street Holdings', 'DPF Holdings', 'Super Store Industries', 'Charoen Pokphand Foods']) {
+      expect(names, `${n} should now be an account`).toContain(n);
+    }
+  });
+
+  it('nothing sits in both the registry and the below-threshold queue', () => {
+    const accountNames = new Set(actual.accounts.map((a) => a.account));
+    const below = queue.filter((q) => q.kind === 'below_threshold').map((q) => q.account);
+    expect(below.filter((n) => accountNames.has(n))).toEqual([]);
+  });
+});
+
+describe('REGRESSION: a guarded near-miss is recorded, not just prevented', () => {
+  /**
+   * The guards stop Sodus Cold Storage being absorbed into the United States
+   * Cold Storage CUSTOMER account — but prevention is silent. Without a queue
+   * entry the only evidence is a prospect list one company longer, which is
+   * exactly as unreadable as the bug was.
+   */
+  it('queues Sodus as a merge rescue naming the customer it escaped', () => {
+    const rescues = actual.reviewQueue.filter((q) => q.kind === 'merge_rescue');
+    expect(rescues.length).toBe(1);
+    const [sodus] = rescues;
+    expect(sodus?.account).toMatch(/sodus/i);
+    expect(sodus?.reason).toMatch(/United States Cold Storage/);
+    expect(sodus?.reason).toMatch(/CUSTOMER/);
+    expect(sodus?.action).toMatch(/separate company/);
+  });
+
+  it('does not report a rescue when the bucket key is unchanged', () => {
+    // "SCHWANS COMPANY" moves between resolution paths but matchKey normalises
+    // both sides to `schwans`, so nothing was rescued. Comparing canonical
+    // NAMES reports this as a hit; comparing bucket KEYS does not.
+    expect(mergeRescue('SCHWANS COMPANY')).toBeNull();
+    expect(mergeRescue('Sodus Cold Storage Co., Inc.')).not.toBeNull();
+  });
+});
+
+describe('REGRESSION: Perdue Farms is one company', () => {
+  it('does not split on the spelled-out legal suffix', () => {
+    const perdue = actual.accounts.filter((a) => /perdue/i.test(a.account));
+    expect(perdue.length).toBe(1);
+    expect(perdue[0]?.aliases).toContain('Perdue Farms Incorporated');
+    expect(perdue[0]?.sites).toBe(2);
+  });
+});
+
 describe('REGRESSION: entity resolution does not over-merge', () => {
   it('distinct companies sharing generic or weak tokens stay separate', () => {
     const names = actual.accounts.map((a) => a.account);
@@ -210,8 +281,10 @@ describe('REGRESSION: entity resolution does not over-merge', () => {
 
   it('multi-alias accounts really were merged', () => {
     const multi = actual.accounts.filter((a) => a.aliases.length > 1);
-    // The live pull produced 51 such accounts; the port must reproduce that.
-    expect(multi.length).toBe(54);
+    // 54 -> 55: adding `incorporated` to the legal-suffix list merged
+    // "Perdue Farms Incorporated" into "Perdue Farms", giving that account a
+    // second alias.
+    expect(multi.length).toBe(55);
   });
   it('Americold absorbs all four of its reported names', () => {
     const a = byName.get('Americold Realty Trust');

@@ -39,7 +39,7 @@ These nine run in order on everything, regardless of source. Source-specific gat
 
 Entity resolution is the highest-risk gate in the system and the only one with a measured, documented failure mode. In the live EPA RMP pull:
 
-- **54 of 117 accounts (46%)** were filed under more than one legal name — 254 names collapsing to 117 accounts
+- **55 of 122 accounts (45%)** were filed under more than one legal name — 259 names collapsing to 122 accounts
 - **Americold** appears as `Americold Logistics, LLC` (88 sites), `Americold` (8), `Americold Realty` (5), `Americold Realty Trust` (3)
 - A naive exact-match customer blocklist **fails on the largest entities**, because `"Americold Logistics, LLC" != "Americold"`
 
@@ -297,8 +297,32 @@ Nothing is discarded. Every gate that refuses, defers or conflicts writes here, 
 | **Unassigned accounts** | C6 | Low | Allocate an owner |
 | **Outbound blocked** | L8, S5 | Per-contact | Resolve the contact, or accept the block |
 | **PII quarantined** | G2, L12, S4 | Should be near zero | Review and release or delete |
+| **Below threshold** | G9, pilot filter | 27 on the RMP pull | Confirm whether it is a prospect; approving admits it |
+| **Merge rescues** | G4 pattern guards | Near zero, high-stakes | Confirm the two companies really are separate |
 
-In the live RMP run this machinery was already exercised end-to-end: **5 records** landed in review (1 numeric outlier, 2 unresolved names), including the 89,000,000 lb marine-terminal filing that would otherwise have ranked #15 of 114 prospects.
+In the live RMP run this machinery was already exercised end-to-end: **31 records** landed in review (1 numeric outlier, 2 unresolved names, 27 below threshold, 1 merge rescue), including the 89,000,000 lb marine-terminal filing that would otherwise have ranked #15 of the prospect list.
+
+### 6.1 Below threshold — the largest category of silent refusal
+
+The pilot filter admits multi-site operators, or single sites above an ammonia floor. Everything else was **dropped with no record**: 354 of 472 resolved companies on the current pull. That is not a rounding error at the edge of the dataset, it is the biggest refusal the system performs, and it performed it silently — which made "nothing is discarded" untrue.
+
+Two changes, because one number could not do both jobs:
+
+- **The pilot floor came down to 100,000 lb** (from 250,000). At 250,000 the filter admitted exactly *three* single-site companies out of 357 — in practice "multi-site only" rather than a floor — while excluding genuine prospects whose single in-scope RMP filing understates the business. Smithfield Fresh Meats (88,000 lb), Charoen Pokphand Foods (110,000 lb) and Mitsubishi (82,000 lb) are not small companies.
+
+- **The 50,000–100,000 lb band is queued, not admitted.** Below 100,000 the data quality falls off sharply, and it falls off in ways a person spots instantly and a rule does not: operator names that are actually individuals, facility codes filed as company names, and a duplicate Perdue. Admitting that band unreviewed would have put **named private individuals into a prospect registry** — a G2 concern, not untidiness.
+
+Lower floors do not help. The EPA reporting threshold is 10,000 lb, so the dropped set is dense at the bottom: a 25,000 lb floor queues 120 records and a queue that size goes unread, which is silent dropping wearing a hat.
+
+**On approval**, a queued company becomes an ordinary account — ICP-scored, outbound-eligible like any other — carrying a flag that records it entered below the pilot floor. The flag is what later answers whether the queue is finding real business or just noise. *(The approval step itself needs the M2 review UI; the connector emits the queue rows and the rule is specified and tested now.)*
+
+### 6.2 Merge rescues — recording a near-miss, not just preventing it
+
+Gate G4's pattern guards stop a name being absorbed into the wrong canonical account. `us cold storage` is a substring of "Sod-us cold storage", so before the guards **Sodus Cold Storage Co. was filed under United States Cold Storage — an existing customer — and suppressed from outbound**, with no error and no queue entry.
+
+The guard prevents that now. But prevention is *silent*: the only evidence is a prospect list one company longer, which is exactly as unreadable as the original bug. So when a guard fires, the record goes to the queue naming the account it escaped and whether that account is a customer.
+
+The detector compares **bucket keys, not canonical names**, and the distinction is load-bearing. "SCHWANS COMPANY" looks rescued on names — the guard moves it from the rule path to the fallback path — but normalisation maps both to the same key, so it lands in the same bucket and nothing was rescued. Comparing names reports two hits on the current pull; comparing keys reports the one that is real.
 
 ---
 
@@ -359,6 +383,9 @@ The build does not ship until all of these pass. Each corresponds to a real, mea
 11. **Bulk paste into the LinkedIn capture box is refused** with an explanation referencing the manual-capture rule.
 12. **Nothing writes to the CRM.** Verified by absence of credentials, not by configuration.
 12b. **Attribution cannot be forged.** No request parameter, header or body field can set `captured_by` to anyone other than the session user (`AUTH-SPEC.md` §12, item 3).
+12c. **A company dropped by the pilot filter is queued, not discarded**, when its charge is above the review floor — and approving it admits it as an account flagged sub-threshold. *(Gate G9; §6.1.)*
+12d. **A guarded near-miss is recorded.** Where a pattern guard stops a name merging into another account, the record appears in the queue naming that account and whether it is a customer. `Sodus Cold Storage Co.` must appear there naming `United States Cold Storage`. Detection compares bucket keys, so `SCHWANS COMPANY` — which normalises to the same key either way — must **not** appear. *(Blocking; §6.2.)*
+12e. **One company does not become two on a spelled-out legal suffix.** `Perdue Farms Incorporated` and `Perdue Farms, Inc.` resolve to a single account.
 13. **Distinct companies sharing only a generic or weak token do not merge.** `United Global Foods` / `United Natural Foods Inc.`, `Penske Logistics` / `VersaCold Logistics`, and `Vertical Cold Storage` / `Sodus Cold Storage` must each resolve independently or route to the human queue.
 14. **An unanchored duration is never filed as a clean tenure.** A LinkedIn "About" blurb reading *"18 years across ammonia systems"* must not be extracted as role tenure; only a duration anchored to the current role's date range may be marked clean. Everything else is marked `inferred` and shown for confirmation.
 15. **A SalesIntel spec missing `verification_date` blocks S2** with the reason stated, and the request text names the field explicitly.

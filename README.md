@@ -2,7 +2,7 @@
 
 **Account intelligence engine for the cold chain.**
 
-COLDPATH turns public regulatory data into a researched, gated, attributable prospect list. Any US facility holding more than 10,000 lb of anhydrous ammonia must file a Risk Management Plan with the EPA, and those filings are public — which makes the registry a near-complete map of the cold-chain market. The current pull resolves **1,382 facilities into 117 accounts across 754 sites in 43 states**.
+COLDPATH turns public regulatory data into a researched, gated, attributable prospect list. Any US facility holding more than 10,000 lb of anhydrous ammonia must file a Risk Management Plan with the EPA, and those filings are public — which makes the registry a near-complete map of the cold-chain market. The current pull resolves **1,382 facilities into 122 accounts across 760 sites in 43 states**.
 
 The hard part is not fetching the data. It is deciding what may be trusted, what must be reviewed by a person, and what must never reach outbound — and proving those decisions in code rather than describing them in a document.
 
@@ -28,7 +28,7 @@ Verified at this commit:
 ```
 typecheck   clean (strict, noUncheckedIndexedAccess)
 lint        clean (incl. layer-boundary rules)
-tests       113 passing
+tests       119 passing
 integration 43/43 checks, run on PGlite AND on real Postgres 16
 ```
 

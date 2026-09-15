@@ -46,9 +46,18 @@ import { JUNK, normName } from './normalise.js';
  * `tyson` must not match "Tysons Corner"; `nestle` must not match "Nestlerode".
  */
 const WORD_FINAL: ReadonlySet<string> = new Set([
-  'costco', 'tyson', 'jbs', 'hormel', 'aldi', 'saputo', 'publix', 'schwan',
-  'nestl[eé]', 'lineage', 'tippmann', 'pictsweet', 'stouffer', 'safeway',
-  'albertsons', 'sysco', 'kroger', 'cargill',
+  // Short tokens that genuinely absorb a following word and land in the wrong
+  // bucket: aldi/Aldine, tyson/Tysons Corner, jbs/WJBS, nestle/Nestlerode.
+  'costco', 'tyson', 'jbs', 'hormel', 'aldi', 'saputo', 'publix', 'nestl[eé]',
+  // Deliberately NOT here:
+  //   schwan   — "SCHWANS COMPANY" is a legitimate continuation, and the guard
+  //              only looked safe because matchKey() normalises both sides to
+  //              `schwans` anyway. A guard whose safety depends on a downstream
+  //              accident is worse than no guard: it moves the name onto the
+  //              fallback path for no benefit.
+  //   lineage, tippmann, pictsweet, stouffer, safeway, albertsons, sysco,
+  //   kroger, cargill — long or already start-anchored; the leading guard
+  //              alone is sufficient and no observed name continues them.
 ]);
 
 /**
@@ -124,7 +133,16 @@ export const KNOWN_CUSTOMERS: ReadonlySet<string> = new Set([
   'United States Cold Storage',
 ]);
 
-const LEGAL_SUFFIXES_CI = /\b(inc|llc|ltd|lp|llp|corp|corporation|company|co|plc|gmbh|sa|nv|bv|the|and)\b/gi;
+/**
+ * `incorporated` is spelled out here as well as `inc`. Without it, "Perdue Farms
+ * Incorporated" keys as `perdue farms incorporated` while "Perdue Farms, Inc."
+ * keys as `perdue farms` — one company, two accounts. The 250,000 lb pilot floor
+ * hid that split (both sit near 60,000 lb); lowering the floor exposes it.
+ *
+ * Order matters: `incorporated` must precede `inc` in the alternation or the
+ * regex engine matches `inc` first and leaves "orporated" behind.
+ */
+const LEGAL_SUFFIXES_CI = /\b(incorporated|inc|llc|ltd|lp|llp|corp|corporation|company|co|plc|gmbh|sa|nv|bv|the|and)\b/gi;
 
 /**
  * Bucketing key: aggressively normalised, case-folded, punctuation removed.
@@ -191,3 +209,45 @@ export function canonicalName(name: string | null | undefined): string | null {
 }
 
 export { normName };
+
+/**
+ * Patterns as they were BEFORE guarding — used only to detect rescues below.
+ * Built once; never used for resolution.
+ */
+const UNGUARDED_PATTERNS: readonly (readonly [RegExp, string])[] =
+  CANONICAL_PARENT_SOURCES.map(([source, canonical]) => [new RegExp(source), canonical] as const);
+
+export interface MergeRescue {
+  /** The account this name would have been absorbed into without the guard. */
+  readonly wouldBe: string;
+  /** Whether that account is an existing customer — the damaging case. */
+  readonly wouldBeCustomer: boolean;
+}
+
+/**
+ * Did a pattern guard stop this name being absorbed into another account?
+ *
+ * This is the detector for the Sodus class. `us cold storage` is a substring of
+ * "Sod-us cold storage", so before the guards Sodus Cold Storage Co. was filed
+ * under United States Cold Storage — an existing CUSTOMER — and suppressed from
+ * outbound with no error and no queue entry. The guard now prevents that, but
+ * prevention is silent: nothing records that a near-miss occurred.
+ *
+ * COMPARES BUCKET KEYS, NOT CANONICAL NAMES, and that is the whole subtlety.
+ * On names, "SCHWANS COMPANY" looks rescued — the guard moves it from the rule
+ * path to the fallback path — but matchKey() normalises both to `schwans`, so it
+ * lands in the same bucket and nothing was actually rescued. Comparing names
+ * reports two hits on the current pull; comparing keys reports the one real one.
+ */
+export function mergeRescue(name: string | null | undefined): MergeRescue | null {
+  if (typeof name !== 'string') return null;
+  const low = name.toLowerCase();
+  const hit = UNGUARDED_PATTERNS.find(([pattern]) => pattern.test(low));
+  if (hit === undefined) return null;
+
+  const [, wouldBe] = hit;
+  const resolved = canonicaliseParent(name);
+  if (resolved !== null && resolved.key === matchKey(wouldBe)) return null; // same bucket: no rescue
+
+  return { wouldBe, wouldBeCustomer: KNOWN_CUSTOMERS.has(wouldBe) };
+}
