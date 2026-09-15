@@ -7,7 +7,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import postgres from 'postgres';
-import { allSecuritySql } from '../src/db/rls.js';
+import { allSecuritySql, tenantScopedTables } from '../src/db/rls.js';
 import { migrationsDir } from '../src/db/migrate.js';
 
 const configured = process.env.DATABASE_URL;
@@ -45,8 +45,39 @@ async function main(): Promise<void> {
   }
   log(`coldpath_app verified: superuser=${String(r.rolsuper)} bypassrls=${String(r.rolbypassrls)}`);
 
-  const pol = await sql`SELECT count(*)::int AS c FROM pg_policies WHERE policyname = 'tenant_isolation'`;
-  log(`tenant_isolation policies: ${String(pol[0]?.c ?? 0)}`);
+  // Count the policies AND assert the count. This used to log the number and
+  // exit 0 regardless — so a migration that installed zero tenant_isolation
+  // policies deployed green, and the one script whose entire purpose is refusing
+  // to ship broken isolation would have shipped it, printing "policies: 0" into
+  // a log nobody reads until the incident.
+  const expected = tenantScopedTables();
+  const pol = await sql<{ tablename: string }[]>`
+    SELECT tablename FROM pg_policies WHERE policyname = 'tenant_isolation'`;
+  const covered = new Set(pol.map((r) => r.tablename));
+  const missing = expected.filter((t) => !covered.has(t));
+  if (missing.length > 0) {
+    throw new Error(
+      `tenant_isolation missing on ${missing.length} of ${expected.length} tenant-scoped ` +
+      `table(s): ${missing.join(', ')} — refusing to complete, tenancy isolation is not in force`,
+    );
+  }
+  log(`tenant_isolation verified on all ${expected.length} tenant-scoped tables`);
+
+  // ENABLE alone is not enough: without FORCE, the table OWNER bypasses the
+  // policy. Migrations run as the owner, so this is the exact role that must not
+  // be able to read across tenants if it is ever reused for the application.
+  const unforced = await sql<{ relname: string }[]>`
+    SELECT c.relname FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
+     WHERE n.nspname = 'public' AND c.relkind = 'r'
+       AND c.relname = ANY(${expected})
+       AND (c.relrowsecurity IS NOT TRUE OR c.relforcerowsecurity IS NOT TRUE)`;
+  if (unforced.length > 0) {
+    throw new Error(
+      `RLS not ENABLEd+FORCEd on: ${unforced.map((r) => r.relname).join(', ')}`,
+    );
+  }
+  log('row-level security enabled and forced on every tenant-scoped table');
+
   await sql.end();
   log('done');
 }
