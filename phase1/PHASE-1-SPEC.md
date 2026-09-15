@@ -3,7 +3,7 @@
 **Client:** Ndustrial · **Vertical:** Cold storage & logistics
 **Duration:** 2 weeks (10 working days) · **Solo engineer, full-time**
 **Client-side contribution:** ~6 hours of marketer time for template critique and review-gate testing
-**Document status:** Ready to build · **Companion artefacts:** `../index.html` (working prototype), `data/` (real seed dataset), `connectors/epa_rmp.py` (working, tested connector)
+**Document status:** Ready to build · **Companion artefacts:** `../archive/index.html` (working prototype), `data/` (real seed dataset), `connectors/epa_rmp.py` (working, tested connector)
 
 ---
 
@@ -403,7 +403,7 @@ Three levels, applied per fact, enforced at generation.
 
 ## 9. Deliverable templates (3 types)
 
-Each template below is the exact section structure to build. The prototype (`../index.html`) contains fully-written reference examples for Kroger, Tyson and NewCold across all nine types — those are the quality bar. Three are built in Phase 1; the other six are specified and demonstrated but deferred.
+Each template below is the exact section structure to build. The prototype (`../archive/index.html`) contains fully-written reference examples for Kroger, Tyson and NewCold across all nine types — those are the quality bar. Three are built in Phase 1; the other six are specified and demonstrated but deferred.
 
 **Why these three.** The Account Brief is the artefact a rep actually reads before working an account. The Executive One-Pager is what makes a time-critical approach possible. The Site Portfolio Analysis is the one no competitor can produce, because it is built on the RMP registry. Together they test every part of the hypothesis.
 
@@ -489,7 +489,7 @@ Fixed scope. Each day has a **done-when** condition — if a day slips, scope co
 | Day | Build | Done when |
 |---|---|---|
 | **1** | Stand up the app from the prototype codebase (Next.js + TypeScript). Postgres schema per §5, migrations. Deploy to Vercel + managed Postgres. **OIDC integration against Ndustrial's IdP; `app_user`, `role_grant`, `session` tables (`AUTH-SPEC.md` §4–5).** Import the customer list and account ownership from the Ndustrial CSV. Seed the RMP dataset from `data/coldchain_rmp_seed.json`. | The screens render against a live database with real seeded data behind a real sign-in. Customer suppression is active. |
-| **2** | Port `connectors/epa_rmp.py` behind the connector interface with nightly scheduling. Wire entity resolution and the numeric validation gate to the database. Build the human review queue UI. | A fresh connector run reproduces 117 accounts / 755 sites / 3 review-queue records. All 3 customers suppressed under every alias. |
+| **2** | Port `connectors/epa_rmp.py` behind the connector interface with nightly scheduling. Wire entity resolution and the numeric validation gate to the database. Build the human review queue UI. | A fresh connector run reproduces 117 accounts / 754 sites / 3 review-queue records. All 3 customers suppressed under every alias. |
 | **3** | SEC EDGAR connector — 10-K, 10-Q, 8-K, DEF 14A (officers). Company website connector — leadership, sustainability, facility pages. Provenance capture on every record, licence metadata non-nullable. | All 10 pilot accounts have ≥8 sources with retrievable raw payloads and complete provenance. |
 | **4** | News search connector. Signal detection with classification and impact scoring. Commercial translation (`why_it_matters`) generation. | Every pilot account has dated, classified signals, each with a commercial translation and a source reference. |
 | **5** | Pain mapping to the four pillars with evidence-based severity. Weak-fit detection. Confidence scoring on every fact. | Pains severity-scored with cited evidence; ≥2 of the 10 accounts correctly show a weak-fit pillar; every fact carries a source and a confidence level. |
@@ -587,7 +587,7 @@ Phase 1 is complete when all of the following are measured and met. The correctn
 - [ ] Outbound sequences are **blocked**, with a recorded reason, for every account whose primary contact is a gap
 - [ ] All 10 pilot accounts have ≥8 ingested sources with complete, non-null provenance including licence metadata
 - [ ] Every account record shows its open gaps; zero gaps are silently omitted
-- [ ] A fresh connector run reproduces the reference dataset: 117 accounts, 755 sites, 3 review-queue records
+- [ ] A fresh connector run reproduces the reference dataset: 117 accounts, 754 sites, 3 review-queue records
 
 ### Quality — human, measured during the two-week measurement window
 - [ ] 10 account briefs published through the review gate
@@ -623,4 +623,4 @@ The pilot is designed so that Phase 2 can be scoped from measurement rather than
 
 ---
 
-*Companion artefacts: `../index.html` (working prototype — three fully researched live accounts, 18 generated deliverables, five working ingestion paths) · `INGESTION-GATES.md` (49 gate rules) · `AUTH-SPEC.md` (authentication, roles, data tiers, attribution integrity) · `what-is-this/` (first-run explainers) · `data/coldchain_rmp_accounts.csv` (114 real scored accounts) · `data/coldchain_rmp_sites.csv` (755 real facilities) · `data/coldchain_rmp_review_queue.csv` (5 records needing human judgement) · `connectors/epa_rmp.py` (built and tested connector)*
+*Companion artefacts: `../archive/index.html` (working prototype — three fully researched live accounts, 18 generated deliverables, five working ingestion paths) · `INGESTION-GATES.md` (49 gate rules) · `AUTH-SPEC.md` (authentication, roles, data tiers, attribution integrity) · `what-is-this/` (first-run explainers) · `data/coldchain_rmp_accounts.csv` (117 real scored accounts) · `data/coldchain_rmp_sites.csv` (754 real facilities) · `data/coldchain_rmp_review_queue.csv` (3 records needing human judgement) · `connectors/epa_rmp.py` (built and tested connector)*

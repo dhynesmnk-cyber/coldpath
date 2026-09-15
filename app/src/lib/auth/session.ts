@@ -1,5 +1,5 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
-import { and, eq, isNull, sql } from 'drizzle-orm';
+import { and, eq, isNull, lt, sql } from 'drizzle-orm';
 import type { Db, Tx } from '../../db/client.js';
 import { appUser, roleGrant, session } from '../../db/schema/index.js';
 import { clearCookie, CSRF_COOKIE, generateToken, randomOpaqueToken, REFRESH_COOKIE, serializeCookie, SESSION_COOKIE } from './cookies.js';
@@ -106,11 +106,17 @@ export interface ResolvedSession {
 export async function resolveSession(db: Db | Tx, token: string | undefined): Promise<ResolvedSession | null> {
   if (token === undefined || token.length === 0) return null;
   const hash = hashToken(token);
-  const rows = await db.select().from(session);
-  // Constant-time comparison against every candidate rather than a WHERE on the
-  // hash, so timing does not leak how many sessions exist. At pilot scale this is
-  // cheap; add an indexed lookup if the table grows.
-  const row = rows.find((r) => eqHash(r.tokenHash, hash));
+  // Indexed lookup on token_hash (UNIQUE, so already indexed). This previously
+  // read EVERY session row and scanned them in Node on every authenticated
+  // request — O(rows) per request, against a table that only ever grows.
+  //
+  // The scan was there to stop timing revealing how many sessions exist. It
+  // does not buy that: the token is 32 random bytes and we match on its SHA-256,
+  // so there is no guessable input to time against, and a full table read leaks
+  // duration proportional to table size anyway. The constant-time compare is
+  // kept on the single fetched row, which preserves the original intent at O(1).
+  const [candidate] = await db.select().from(session).where(eq(session.tokenHash, hash)).limit(1);
+  const row = candidate !== undefined && eqHash(candidate.tokenHash, hash) ? candidate : undefined;
   if (row === undefined) return null;
   if (row.revokedAt !== null) return null;
   if (row.expiresAt <= new Date()) return null;
@@ -152,8 +158,11 @@ export async function rotateRefresh(
 ): Promise<{ ok: true; issued: IssuedSession } | { ok: false; reason: 'unknown' | 'reused' | 'revoked' | 'expired' }> {
   if (refreshToken === undefined || refreshToken.length === 0) return { ok: false, reason: 'unknown' };
   const hash = hashToken(refreshToken);
-  const rows = await db.select().from(session);
-  const row = rows.find((r) => r.refreshHash !== null && eqHash(r.refreshHash, hash));
+  // Indexed on refresh_hash — see resolveSession for why this is not a full scan.
+  const [candidate] = await db.select().from(session).where(eq(session.refreshHash, hash)).limit(1);
+  const row = candidate?.refreshHash !== null && candidate !== undefined && eqHash(candidate.refreshHash, hash)
+    ? candidate
+    : undefined;
   if (row === undefined) return { ok: false, reason: 'unknown' };
 
   // REUSE DETECTION: this token was already exchanged once. Someone is
@@ -218,4 +227,30 @@ export async function activeSessionCount(db: Db | Tx, userId: string): Promise<n
     .from(session)
     .where(and(eq(session.userId, userId), isNull(session.revokedAt), sql`${session.expiresAt} > now()`));
   return row?.c ?? 0;
+}
+
+/**
+ * Retention sweep — without this the session table grows without bound.
+ *
+ * Rotation never updates a refresh hash in place; it INSERTS a successor and
+ * keeps the consumed row as the replay tripwire (see rotateRefresh). Nothing
+ * ever deleted those rows, so a single user refreshing every 8 hours left ~90
+ * dead rows per 30 days, permanently.
+ *
+ * `issuedAt` is the family's FIRST issuance and is copied to every successor,
+ * so it is the correct clock: once a row is older than the refresh TTL, its
+ * token cannot be exchanged regardless of the tripwire, and the row is inert.
+ * Deleting it costs one distinction — a replay of a >30-day-old token reports
+ * `unknown` rather than `reused`, and so does not burn the family. That token
+ * was already expired and unusable, so nothing is granted either way.
+ *
+ * Live sessions are never touched: a row is only eligible once the whole
+ * refresh window has elapsed.
+ */
+export async function pruneExpiredSessions(db: Db | Tx, now = new Date()): Promise<number> {
+  const cutoff = new Date(now.getTime() - REFRESH_TTL_SECONDS * 1000);
+  const deleted = await db.delete(session)
+    .where(lt(session.issuedAt, cutoff))
+    .returning({ id: session.id });
+  return deleted.length;
 }

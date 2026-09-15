@@ -16,8 +16,9 @@ defaults:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    # Integration tests each load a WASM Postgres (~300 MB) and the suite also
-    # runs against a real Postgres service. 2 GB is the floor; do not lower it.
+    # Integration tests each load a WASM Postgres (~300 MB), and the suite also
+    # runs against the real Postgres 16 service below. 2 GB is the floor; do
+    # not lower it.
     timeout-minutes: 20
 
     services:
@@ -71,8 +72,52 @@ jobs:
       # PGlite-backed suite: RLS/tenancy AND the AUTH-SPEC §12 acceptance
       # tests. Runs the same assertions as the vitest wrappers but serially in
       # one process, which is what a 2 GB runner can hold.
-      - name: RLS + tenancy + auth acceptance (real Postgres engine)
+      - name: RLS + tenancy + auth acceptance (PGlite, Postgres 18.3)
         run: node dist/scripts/verify-integration.js
+
+      # The production migration entrypoint, against the real server. Nothing
+      # else exercises this path: it uses postgres.js rather than PGlite, and it
+      # is what actually runs in the container. It asserts coldpath_app is a
+      # non-superuser without BYPASSRLS before reporting success.
+      - name: Production migration entrypoint (real Postgres 16)
+        run: node dist/scripts/migrate-prod.js
+
+      # The SAME assertions as the PGlite step above, on the engine we deploy.
+      # PGlite is Postgres 18.3; production is 16. Tenancy isolation is engine
+      # behaviour — role handling, FORCE semantics, policy evaluation — so
+      # proving it only on the newer major proves the wrong thing. This step
+      # caught a real defect the PGlite suite could not see: a JS Date bound
+      # into a raw sql template, which PGlite tolerates and postgres.js rejects,
+      # breaking offboarding on any real server.
+      - name: RLS + tenancy + auth acceptance (real Postgres 16)
+        run: node dist/scripts/verify-postgres.js
 
       - name: Confirm the container builds
         run: docker build -t coldpath:ci .
+
+      # The runtime image must not ship the build toolchain or the test
+      # database. Asserted rather than assumed: the previous Dockerfile copied
+      # node_modules from the build stage and shipped all eight devDependencies.
+      - name: Runtime image carries no dev tooling
+        run: |
+          probe() { docker run --rm --entrypoint sh coldpath:ci -c "test -e /app/node_modules/$1"; }
+
+          # POSITIVE CONTROL FIRST. Every assertion below reads "docker run
+          # exited non-zero", which is also what happens if the image name is
+          # wrong or the image has no shell — the absence check would then pass
+          # while proving nothing. Confirm the probe can find something before
+          # trusting it to report things missing.
+          if ! probe drizzle-orm; then
+            echo "::error::probe is broken — drizzle-orm is a production dependency and must be present"
+            exit 1
+          fi
+
+          for pkg in vitest eslint typescript tsx drizzle-kit @electric-sql/pglite; do
+            if probe "$pkg"; then
+              echo "::error::$pkg is present in the runtime image"; exit 1
+            fi
+          done
+          echo "runtime image is free of dev tooling (probe verified against drizzle-orm)"
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high

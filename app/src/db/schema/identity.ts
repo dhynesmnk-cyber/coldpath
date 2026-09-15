@@ -64,6 +64,13 @@ export const session = pgTable('session', {
   index('ix_session_user').on(t.userId),
   index('ix_session_tenant').on(t.tenantId),
   index('ix_session_family').on(t.familyId),
+  // Session lookup happens on EVERY authenticated request. token_hash is
+  // already unique (and so indexed); refresh_hash was not, and both lookups
+  // used to read the whole table and scan it in Node.
+  index('ix_session_refresh_hash').on(t.refreshHash),
+  // Supports pruning: rotation only ever inserts, so without a retention sweep
+  // this table grows without bound.
+  index('ix_session_issued_at').on(t.issuedAt),
 ]);
 
 export const auditAction = pgEnum('audit_action', [

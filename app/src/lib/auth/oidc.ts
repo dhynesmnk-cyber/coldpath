@@ -154,9 +154,9 @@ export class OidcIdentityProvider implements IdentityProvider {
     let email = claim(claims, 'email') ?? claim(claims, 'preferred_username');
     let name = claim(claims, 'name') ?? claim(claims, 'given_name');
 
-    // Some providers return only an access token with no claims in the ID Token;
-    // the UserInfo endpoint is then the authoritative source. We call it only
-    // when we actually need to.
+    // Some providers put almost nothing in the ID Token, so UserInfo is how the
+    // profile gets filled in. It is called only when something is actually
+    // missing, and it can only ADD — see the merge below.
     if (!email || !name) {
       try {
         const ui = (await client.fetchUserInfo(config, tokens.access_token, subject)) as Record<
@@ -165,7 +165,22 @@ export class OidcIdentityProvider implements IdentityProvider {
         >;
         email ??= claim(ui, 'email') ?? claim(ui, 'preferred_username');
         name ??= claim(ui, 'name');
-        Object.assign(claims, ui);
+        // ID TOKEN WINS. A plain UserInfo response is JSON over TLS — it is not
+        // signed, and we deliberately validate the ID Token against the IdP's
+        // JWKS rather than trusting the channel (enableNonRepudiationChecks
+        // above). Merging the other way round threw that away: `Object.assign(
+        // claims, ui)` let an unsigned response OVERWRITE signature-verified
+        // claims, including the group claim that decides every role in the
+        // system. UserInfo may only FILL GAPS, never override.
+        //
+        // The group claim is excluded from the merge entirely. It is the one
+        // claim that grants authority, so it comes from the signed token or it
+        // does not come at all — a user with no groups gets zero roles and is
+        // refused, which is the correct failure direction.
+        for (const [key, value] of Object.entries(ui)) {
+          if (key === this.#groupClaim) continue;
+          if (!(key in claims)) claims[key] = value;
+        }
       } catch (err) {
         // UserInfo failing is not fatal if the ID Token already had what we need.
         this.log('userinfo fetch failed', err instanceof Error ? err.message : err);

@@ -37,6 +37,12 @@ export interface MockIdpControls {
   rawIdToken: string | null;
   /** /authorize returns error=access_denied instead of a code. */
   failAuthorize: boolean;
+  /**
+   * Merged into the /userinfo response, overriding its defaults. Lets a test
+   * make UserInfo DISAGREE with the signed ID Token — which is the whole point
+   * of the trust-boundary test, since UserInfo is not signed.
+   */
+  userinfoOverride: Record<string, unknown> | null;
 }
 
 export interface MockIdp {
@@ -119,6 +125,7 @@ export async function startMockIdp(opts: StartMockIdpOptions = {}): Promise<Mock
     signingKey: privateKey,
     rawIdToken: null,
     failAuthorize: false,
+    userinfoOverride: null,
   };
 
   const redirectUri = opts.redirectUri ?? 'http://127.0.0.1:9999/api/auth/callback';
@@ -263,6 +270,7 @@ export async function startMockIdp(opts: StartMockIdpOptions = {}): Promise<Mock
           email_verified: true,
           name: controls.user.name,
           groups: controls.user.groups,
+          ...(controls.userinfoOverride ?? {}),
         }); return;
       }
 

@@ -1,39 +1,15 @@
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join, resolve } from 'node:path';
+import { readFileSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
 import type { PGlite } from '@electric-sql/pglite';
 import { drizzle, type PgliteDatabase } from 'drizzle-orm/pglite';
 import * as schema from './schema/index.js';
 import { allSecuritySql, tenantScopedTables } from './rls.js';
 
-/**
- * Locate the migrations directory.
- *
- * .sql files are not emitted by tsc, so the compiled layout (dist/src/db/) does
- * not contain them. Walk up from this module looking for a migrations folder
- * beside a src/db directory, which resolves identically from source and from
- * dist. Override with COLDPATH_MIGRATIONS_DIR when deploying.
- */
-export function migrationsDir(): string {
-  const override = process.env.COLDPATH_MIGRATIONS_DIR;
-  if (override) {
-    if (!existsSync(override)) throw new Error(`COLDPATH_MIGRATIONS_DIR does not exist: ${override}`);
-    return override;
-  }
-  let dir = dirname(fileURLToPath(import.meta.url));
-  for (let i = 0; i < 8; i += 1) {
-    const candidate = join(dir, 'src', 'db', 'migrations');
-    if (existsSync(candidate)) return candidate;
-    const local = join(dir, 'migrations');
-    if (existsSync(local) && readdirSync(local).some((f) => f.endsWith('.sql'))) return local;
-    const parent = dirname(dir);
-    if (parent === dir) break;
-    dir = parent;
-  }
-  throw new Error(`could not locate a migrations directory from ${dirname(fileURLToPath(import.meta.url))}`);
-}
-
-export const MIGRATIONS_DIR = resolve(migrationsDir());
+// migrationsDir() lives in migrations-dir.ts so that scripts/migrate-prod.ts
+// can locate migrations WITHOUT importing a database driver. Re-exported here
+// for the dev/test callers that already import it from this module.
+export { migrationsDir, MIGRATIONS_DIR } from './migrations-dir.js';
+import { MIGRATIONS_DIR } from './migrations-dir.js';
 
 export interface MigratedDb {
   db: PgliteDatabase<typeof schema>;

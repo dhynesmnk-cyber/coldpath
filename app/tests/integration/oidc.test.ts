@@ -63,6 +63,7 @@ afterEach(() => {
   idp.controls.signingKey = idp.key;
   idp.controls.rawIdToken = null;
   idp.controls.failAuthorize = false;
+  idp.controls.userinfoOverride = null;
 });
 
 describe('OIDC happy path', () => {
@@ -237,4 +238,65 @@ describe('acceptance #10 — bad tokens are denied with no fallback', () => {
       (c) => c instanceof WWWAuthenticateChallengeError,
     );
   }, 30_000);
+});
+
+/**
+ * THE UNSIGNED-USERINFO TRUST BOUNDARY.
+ *
+ * This client deliberately validates the ID Token against the IdP's JWKS
+ * (enableNonRepudiationChecks) rather than trusting TLS alone. A plain UserInfo
+ * response has no such guarantee — it is JSON over a channel.
+ *
+ * The profile builder used to do `Object.assign(claims, ui)`, so the unsigned
+ * response OVERWROTE signature-verified claims. That included the group claim,
+ * which is the sole input to role assignment: anything able to influence
+ * UserInfo could hand itself `admin`. UserInfo may fill gaps only.
+ */
+describe('UserInfo cannot override the signed ID Token', () => {
+  it('keeps ID Token groups when UserInfo claims different ones', async () => {
+    idp.controls.user = { ...DEFAULT_USER, groups: ['COLDPATH-Reps'] };
+    // Force the UserInfo call: with no name in the ID Token the client fetches.
+    idp.controls.claimMutator = (c) => { const { name: _drop, ...rest } = c; return rest; };
+    idp.controls.userinfoOverride = { groups: ['COLDPATH-Admins'], name: 'Madeline Belvin' };
+
+    const profile = await fullFlow(makeProvider());
+
+    expect(profile.groups).toEqual(['COLDPATH-Reps']);
+    expect(profile.groups).not.toContain('COLDPATH-Admins');
+  });
+
+  it('still fills a missing name from UserInfo — gaps may be filled', async () => {
+    idp.controls.user = { ...DEFAULT_USER, groups: ['COLDPATH-Reps'] };
+    idp.controls.claimMutator = (c) => { const { name: _drop, ...rest } = c; return rest; };
+    idp.controls.userinfoOverride = { name: 'Filled From UserInfo' };
+
+    const profile = await fullFlow(makeProvider());
+
+    expect(profile.name).toBe('Filled From UserInfo');
+  });
+
+  it('does not let UserInfo replace a claim the ID Token already carries', async () => {
+    idp.controls.user = { ...DEFAULT_USER, groups: ['COLDPATH-Reps'] };
+    // ID Token has no name (forces the fetch) but DOES carry a custom claim.
+    idp.controls.claimMutator = (c) => {
+      const { name: _drop, ...rest } = c;
+      return { ...rest, department: 'cold-chain' };
+    };
+    idp.controls.userinfoOverride = { department: 'executive', name: 'x' };
+
+    const profile = await fullFlow(makeProvider());
+
+    expect(profile.claims.department).toBe('cold-chain');
+  });
+
+  it('grants nothing when the ID Token carries no groups at all', async () => {
+    idp.controls.user = { ...DEFAULT_USER, groups: [] };
+    idp.controls.claimMutator = (c) => { const { name: _drop, ...rest } = c; return rest; };
+    idp.controls.userinfoOverride = { groups: ['COLDPATH-Admins'], name: 'n' };
+
+    const profile = await fullFlow(makeProvider());
+
+    // Zero groups -> zero roles -> refused at sign-in. Correct failure direction.
+    expect(profile.groups).toEqual([]);
+  });
 });

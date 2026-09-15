@@ -4,7 +4,7 @@ Production codebase. See `../PRODUCT-PLAN.md` for architecture and milestones; t
 
 **Status: M1 core complete.** Foundations, schema, tenancy and RLS (M0), plus the identity layer: OIDC client, session management, RBAC middleware, identity lifecycle and the AUTH-SPEC §12 acceptance suite. What M1 still needs from Ndustrial: an IdP choice and OIDC client registration (§13 of AUTH-SPEC), then live sign-on against it.
 
-Verification at this commit: typecheck clean, lint clean, 59 vitest tests (unit + a 16-test OIDC protocol suite against a local mock IdP + 19 connector-parity), and 40/40 plain-node integration checks (19 RLS + 21 acceptance).
+Verification at this commit: typecheck clean, lint clean, 112 vitest tests, and 43/43 plain-node integration checks (19 RLS + 24 acceptance) — run twice, against PGlite **and** against a real Postgres 16 server.
 
 ---
 
@@ -27,7 +27,8 @@ Requires Node 20.11+. No database server needed for local development — tests 
 | `npm test` | Full vitest suite |
 | `npm run test:lowmem` | Same suite, serialised in one process (for <2 GB machines) |
 | `npm run build` | Compile to `dist/` and copy `.sql` migrations |
-| `npm run verify:integration` | Build, then run the RLS + AUTH-SPEC §12 acceptance suite against real Postgres via PGlite |
+| `npm run verify:integration` | Build, then run the RLS + AUTH-SPEC §12 acceptance suite against PGlite |
+| `npm run verify:postgres` | The same suite against a REAL Postgres server (needs `DATABASE_URL`) |
 | `npm run db:generate` | Generate a migration from schema changes |
 
 ## Memory
@@ -39,6 +40,18 @@ On a constrained machine use `npm run test:lowmem`, which sets `COLDPATH_LOW_MEM
 Below roughly 1.5 GB even low-memory vitest gets OOM-killed on the DB-backed files (observed: exit 137 in a 1 GB cgroup — vitest's runtime plus a WASM Postgres does not fit). There, the sanctioned path is `npm run build && npm run verify:integration`: the plain-node verifier runs the identical RLS and acceptance assertions against one PGlite instance in ~5 seconds, plus the non-DB suites (`vitest run tests/unit tests/integration/oidc.test.ts tests/integration/connector-parity.test.ts`) which need no database at all. This is why the acceptance assertions live in `auth.checks.ts` with `node:assert` instead of inside the vitest file: same proofs, two runners, no drift.
 
 `tests/integration/rls.test.ts` (vitest) and `scripts/verify-integration.ts` (plain node) run **the same assertions** from `tests/integration/rls.checks.ts`, written with `node:assert` so they are framework-independent and cannot drift.
+
+## Two engines, one set of assertions
+
+PGlite is Postgres **18.3**. Production targets Postgres **16**. Testing on a newer major than you ship is a gap, and tenancy isolation is precisely where it could bite: role handling, `FORCE ROW LEVEL SECURITY` semantics and policy evaluation are server behaviour, not application behaviour.
+
+So `scripts/verify-postgres.ts` runs the *identical* `rlsChecks` and `authChecks` arrays through `postgres.js` against a real server. `Harness` is engine-agnostic for exactly this reason — the assertions must not know which engine they are on, or they stop being evidence about production.
+
+```bash
+DATABASE_URL=postgres://coldpath_migrator@localhost:5432/coldpath npm run verify:postgres
+```
+
+This is not belt-and-braces. It immediately found a defect PGlite could not see: a JS `Date` interpolated into a raw ``sql`...` `` template binds without the column's type mapping, which PGlite tolerates and `postgres.js` rejects with `ERR_INVALID_ARG_TYPE`. Offboarding a user — expiring their role and PII grants — therefore failed on any real server while passing the whole suite. Use `gt()` and the other typed operators; keep raw templates for server-side expressions like `now()`.
 
 ---
 
@@ -87,12 +100,12 @@ scripts/
   migrate-prod.ts        production migration entrypoint (privileged role)
   verify-integration.ts  runs the RLS assertions without a test framework
 tests/
-  unit/                  24 tests — resolution, matching, rounding, outlier gate
+  unit/                  28 tests — resolution, matching, rounding, outlier gate
   integration/
     harness.ts           builds a migrated two-tenant PGlite instance
     rls.checks.ts        19 runner-agnostic assertions incl. the negative control
     rls.test.ts          vitest wrapper
-    connector-parity.test.ts   19 tests diffing the TS port against the Python CSV
+    connector-parity.test.ts   21 tests diffing the TS port against the Python CSV
   fixtures/
     rmp-facilities.json          1,382 real facilities from the live EPA pull
     coldchain_rmp_accounts.csv   the Python reference output
@@ -104,7 +117,26 @@ tests/
 
 **Licence: CC BY-SA 4.0.** Source: U.S. EPA Risk Management Program, obtained under FOIA by the Data Liberation Project. Redistribution must remain CC BY-SA compatible, and EPA states the data is self-reported and "may contain errors or omissions" — which is precisely why the numeric validation gate exists.
 
-The reference CSVs are the output of `../coldpath/phase1/connectors/epa_rmp.py`. **If you change resolution logic, change both implementations and regenerate the reference.** The parity test exists so a divergence is caught immediately rather than discovered in production as a missing prospect or an emailed customer.
+The reference CSVs are the output of `../phase1/connectors/epa_rmp.py`. **If you change resolution logic, change both implementations and regenerate the reference.** The parity test exists so a divergence is caught immediately rather than discovered in production as a missing prospect or an emailed customer.
+
+Regenerate with:
+
+```bash
+python3 ../phase1/connectors/regen_reference.py
+```
+
+That runs the Python reference against the **committed fixture**, not the live EPA API, so the only delta in the output is your logic delta. Running `epa_rmp.py` directly re-pulls from EPA and mixes upstream drift into the same diff — do that only when a fresh pull is what you actually want.
+
+Note what the parity test does and does not prove. It pins the TypeScript port to the committed CSVs; it does not re-run the Python. So the Python can drift from its own committed output without the test noticing — which had already happened once, and is why the regeneration path above exists and is verified to reproduce the reference byte-for-byte.
+
+## Session retention needs a scheduler
+
+`pruneExpiredSessions()` exists and is tested, but nothing calls it yet — there
+is no scheduler until M2. Rotation only ever inserts (the consumed row is kept
+as the replay tripwire), so the `session` table grows until something sweeps it.
+Wire it to a daily job when the runtime lands; until then a pilot-scale
+deployment is fine, and the table is indexed so growth costs storage rather than
+request latency.
 
 ## What is deliberately not here yet
 

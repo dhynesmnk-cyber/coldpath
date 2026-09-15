@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canonicalName, displayName, KNOWN_CUSTOMERS, matchKey } from '@/lib/resolve/canonical.js';
+import { CANONICAL_PARENTS, CANONICAL_PARENT_SOURCES, canonicaliseParent, canonicalName, displayName, guardPattern, KNOWN_CUSTOMERS, matchKey } from '@/lib/resolve/canonical.js';
 import { distMatch, distinctive, isAcceptableMatch, scoreCandidate, strongTokens } from '@/lib/resolve/match.js';
 import { isJunkName, levenshtein, normName, tokenSim } from '@/lib/resolve/normalise.js';
 import { median, OUTLIER_FACTOR, percentile, validateNumericField } from '@/lib/validation/outliers.js';
@@ -99,6 +99,84 @@ describe('canonical parent resolution', () => {
     ];
     for (const [input, expected] of cases) {
       expect(canonicalName(input), `${input} -> ${expected}`).toBe(expected);
+    }
+  });
+
+  /**
+   * INGESTION-GATES.md §9 #1 — "customer suppression must not over-reach" (blocking).
+   *
+   * The canonical pass runs FIRST and returns on the first hit, so a substring
+   * match here is final: it never reaches the distinctive-token protection.
+   * `us cold storage` matched "Sod-us cold storage" and put Sodus Cold Storage
+   * Co. — an independent prospect — inside the United States Cold Storage
+   * CUSTOMER account, suppressing it from outbound with no queue entry.
+   *
+   * The table below is the measured family, not just the one instance.
+   */
+  it('never matches a canonical pattern mid-word', () => {
+    const mustNotMatchARule: [string, string][] = [
+      ['Sodus Cold Storage Co., Inc.', 'us cold storage'],
+      ['Seaonus Cold Storage', 'us cold storage'],
+      ['Rinaldi Fine Foods', 'aldi'],
+      ['Baldinger Bakery', 'aldi'],
+      ['Garibaldi Produce Co', 'aldi'],
+      ['Aldine Cold Storage', 'aldi'],
+      ['Nestlerode Farms', 'nestl'],
+      ['Tysons Corner Provisions', 'tyson'],
+      ['WJBS Holdings', 'jbs'],
+    ];
+    for (const [name, why] of mustNotMatchARule) {
+      const r = canonicaliseParent(name);
+      expect(r?.by, `${name} must not hit the '${why}' rule`).not.toBe('rule');
+      expect(KNOWN_CUSTOMERS.has(r?.name ?? ''), `${name} must not be suppressed`).toBe(false);
+    }
+  });
+
+  /**
+   * The guards are asymmetric on purpose: a blanket trailing guard would break
+   * these, which are CORRECT. "U.S. Foodservice" is the former name of US Foods;
+   * "Performance Foodservice" is Performance Food Group's operating brand.
+   */
+  it('still resolves legitimate matches that continue past the pattern', () => {
+    const cases: [string, string][] = [
+      ['U.S. Foodservice, Inc.', 'US Foods Holding Corp.'],
+      ['Performance Foodservice - Arizona', 'Performance Food Group'],
+      ['AmericoldLogistics Services', 'Americold Realty Trust'],
+      ['Nestle Purina', 'Nestlé USA'],
+      ['Cargill Meat Solutions', 'Cargill, Inc.'],
+    ];
+    for (const [input, expected] of cases) {
+      expect(canonicalName(input), `${input} -> ${expected}`).toBe(expected);
+    }
+  });
+
+  /**
+   * Structural, not case-by-case: asserts the property over the whole table so a
+   * NEW row cannot reintroduce the defect. Probes each pattern with a letter
+   * glued to the front of a name it is supposed to match.
+   */
+  it('no pattern in the table can match mid-word (meta-test)', () => {
+    for (const [source] of CANONICAL_PARENT_SOURCES) {
+      if (source.startsWith('^')) continue;          // already start-anchored
+      // Build a plain-text probe the UNGUARDED pattern would have matched: take
+      // the first alternative and drop the regex metacharacters.
+      const [first = ''] = source.split('|');
+      const literal = first
+        .replace('[e\u00e9]', 'e')     // character class -> one member
+        .replace(/\\.\?/g, '')        // optional escaped literal (\.?) -> drop it
+        .replace(/\./g, 'z')          // a bare '.' still needs SOME character
+        .replace(/[?\\]/g, '');       // leftover optional markers and escapes
+      if (literal.length === 0) continue;
+      const probe = `x${literal}`;
+      expect(new RegExp(source).test(probe), `probe '${probe}' is not a valid witness`).toBe(true);
+      expect(guardPattern(source).test(probe), `'${source}' still matches mid-word`).toBe(false);
+    }
+  });
+
+  it('every source in the table compiles to a guarded pattern', () => {
+    expect(CANONICAL_PARENTS.length).toBe(CANONICAL_PARENT_SOURCES.length);
+    for (const [pattern] of CANONICAL_PARENTS) {
+      expect(pattern.source).toMatch(/\(\?<!\[a-z0-9\]\)|\^/);
     }
   });
 
