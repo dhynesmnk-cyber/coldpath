@@ -8,7 +8,7 @@ import { AuthError, type Permission, type Principal, type RequestContext } from 
 /**
  * The request pipeline — AUTH-SPEC.md §3, §4.
  *
- *   authenticate → CSRF → route match → authorize → tenant context
+ *   authenticate → route match → CSRF → authorize → tenant context
  *
  * Framework-agnostic on purpose: it consumes a plain `InboundRequest` and
  * throws `AuthError` carrying an HTTP status. Whatever HTTP adapter ships in

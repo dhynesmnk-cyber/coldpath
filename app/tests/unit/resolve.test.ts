@@ -34,29 +34,62 @@ describe('matchKey vs displayName — the DFA split-bucket regression', () => {
   it('case and punctuation variants collapse to one key', () => {
     for (const pair of [
       ["BJ's Wholesale Club, Inc.", 'BJs Wholesale Club'],
-      ['Nor-Am Cold Storage', 'NorAm Cold Storage'],
+      ['Nor-Am Cold Storage', 'NorAm Cold Storage'],   // hyphen standing for nothing
       ['SYSCO Corporation', 'Sysco Corporation'],
       ['Americold Logistics, LLC', 'AMERICOLD LOGISTICS'],
     ] as const) {
       expect(matchKey(pair[0]), pair.join(' vs ')).toBe(matchKey(pair[1]));
     }
   });
-  it('DOCUMENTED LIMITATION: hyphenated vs spaced variants do NOT merge', () => {
-    // Punctuation is REMOVED, not replaced with a space, so "Wayne-Sanderson"
-    // becomes "waynesanderson" while "Wayne Sanderson" stays "wayne sanderson".
-    // Both refer to the same company and they land in different buckets.
-    //
-    // This is inherited from the Python reference and is deliberately preserved:
-    // a port that "improves" matching silently cannot be verified against its
-    // reference. Merging these is the job of the M3 human resolution queue, which
-    // is where a person confirms that two buckets are one company.
-    expect(matchKey('Wayne-Sanderson Farms')).not.toBe(matchKey('Wayne Sanderson Farms'));
-    expect(matchKey('Wayne-Sanderson Farms')).toBe('waynesanderson farms');
+  it('separator punctuation does not split one company into two accounts', () => {
+    // This assertion used to run the other way, as a "documented limitation"
+    // deferring the merge to the M3 human resolution queue. The deferral never
+    // happened: when a split company's halves each fall below the multi-site
+    // pilot filter, BOTH are dropped from the output and reach no queue at all.
+    // On the live pull that silently lost MDV/SpartanNash and Save-A-Lot.
+    for (const pair of [
+      ['Wayne-Sanderson Farms', 'Wayne Sanderson Farms'],
+      ['MDV/SpartanNash, LLC', 'MDV SpartanNash, LLC'],
+      ['Save-A-Lot', 'Save A Lot Inc.'],
+      ['Mar-Jac Poultry, Inc', 'Mar Jac Poultry'],
+    ] as const) {   // hyphen standing for a space
+      expect(matchKey(pair[0]), pair.join(' vs ')).toBe(matchKey(pair[1]));
+    }
+  });
+
+  it('spaced and unspaced initials produce one key', () => {
+    // "U.S." and "U. S." differ only in whether the periods carried a space.
+    expect(matchKey('U.S. Foods, Inc.')).toBe(matchKey('U. S. Foods, Inc.'));
+    expect(matchKey('H.E. Butt Grocery Company')).toBe(matchKey('H. E. Butt Grocery Company'));
+  });
+
+  it('apostrophes do not split a name', () => {
+    expect(matchKey("Boar's Head Provisions Co., Inc.")).toBe(matchKey('Boars Head Provisions'));
+    expect(matchKey("Bozzuto's, Inc.")).toBe(matchKey('Bozzutos'));
+  });
+
+  it('does not merge two genuinely different companies', () => {
+    // The guard on the rule above. Measured across all 609 distinct reported
+    // names in the live pull: five merge groups, every one a real same-company
+    // pair, and nothing else collapsed.
+    expect(matchKey('United Global Foods')).not.toBe(matchKey('United Natural Foods Inc.'));
+    expect(matchKey('VersaCold Logistics')).not.toBe(matchKey('Americold Logistics'));
+    expect(matchKey('Koch Foods')).not.toBe(matchKey('Dot Foods'));
   });
 
   it('display names stay properly capitalised', () => {
     expect(displayName('Western Precooling Systems, LLC')).toBe('Western Precooling Systems');
     expect(displayName("Bozzuto's Inc.")).toBe('Bozzutos');
+  });
+
+  it('display names separate welded tokens without stranding letters', () => {
+    // displayName cannot use matchKey's rule: a marketer reads this string, so it
+    // keeps spacing and must decide per mark. Separators (- /) become a space;
+    // joiners (. ') are removed, because spacing one strands a letter.
+    expect(displayName('Mar-Jac Poultry, Inc')).toBe('Mar Jac Poultry');
+    expect(displayName('MDV/SpartanNash, LLC')).toBe('MDV SpartanNash');
+    expect(displayName("Boar's Head Provisions Co., Inc.")).toBe('Boars Head Provisions');
+    expect(displayName('U.S. Foods, Inc.')).toBe('US Foods');
   });
 });
 

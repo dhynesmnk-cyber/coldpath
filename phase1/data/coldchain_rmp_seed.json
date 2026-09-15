@@ -1,15 +1,15 @@
 {
  "meta": {
-  "source": "U.S. EPA Risk Management Program via Data Liberation Project",
+  "source": "U.S. EPA Risk Management Program via Data Liberation Project (rmpmap.org)",
   "license": "CC BY-SA 4.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "license_url": null,
   "attribution": "U.S. EPA Risk Management Program via Data Liberation Project. CC BY-SA 4.0.",
   "disclaimer": "Data as reported by facilities to EPA; may contain errors or omissions",
-  "dataset_version": 3,
-  "data_export_date": "2026-02-05",
-  "data_through_date": "2025-12-30",
-  "connector": "epa_rmp.py/1.0",
-  "pulled_at": "2026-09-13T20:02:52Z",
+  "dataset_version": "snapshot",
+  "data_export_date": "2026-09-13",
+  "data_through_date": "2026-09-13",
+  "connector": "epa_rmp.py",
+  "pulled_at": "2026-09-13",
   "naics_in_scope": {
    "49312": "Refrigerated warehousing & storage",
    "31161": "Animal slaughtering & processing",
@@ -938,6 +938,38 @@
    }
   },
   {
+   "account": "H E Butt Grocery",
+   "is_customer": false,
+   "aliases": [
+    "H. E. Butt Grocery Company",
+    "H.E. Butt Grocery Company"
+   ],
+   "sites": 5,
+   "ammonia_lb": 93618,
+   "max_site_ammonia_lb": 36828,
+   "unvalidated_sites": 0,
+   "states": 1,
+   "state_list": "TX",
+   "primary_rto": "ERCOT",
+   "accidents": 1,
+   "sites_with_accidents": 1,
+   "primary_naics": "49312",
+   "vertical": "Refrigerated warehousing & storage",
+   "rmp_url": "https://rmpmap.org",
+   "rank": 26,
+   "icp": {
+    "score": 45,
+    "components": {
+     "scale": 10,
+     "refrig_intensity": 2,
+     "geographic_spread": 2,
+     "grid_exposure": 14,
+     "replacement_signal": 3,
+     "vertical_fit": 14
+    }
+   }
+  },
+  {
    "account": "Tippmann Group",
    "is_customer": false,
    "aliases": [
@@ -955,7 +987,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 26,
+   "rank": 27,
    "icp": {
     "score": 53,
     "components": {
@@ -989,7 +1021,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 27,
+   "rank": 28,
    "icp": {
     "score": 53,
     "components": {
@@ -1020,7 +1052,7 @@
    "primary_naics": "311511",
    "vertical": "Other",
    "rmp_url": "https://rmpmap.org",
-   "rank": 28,
+   "rank": 29,
    "icp": {
     "score": 41,
     "components": {
@@ -1051,7 +1083,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 29,
+   "rank": 30,
    "icp": {
     "score": 51,
     "components": {
@@ -1084,7 +1116,7 @@
    "primary_naics": "31161",
    "vertical": "Animal slaughtering & processing",
    "rmp_url": "https://rmpmap.org",
-   "rank": 30,
+   "rank": 31,
    "icp": {
     "score": 53,
     "components": {
@@ -1117,7 +1149,7 @@
    "primary_naics": "31141",
    "vertical": "Frozen fruit & vegetable manufacturing",
    "rmp_url": "https://rmpmap.org",
-   "rank": 31,
+   "rank": 32,
    "icp": {
     "score": 43,
     "components": {
@@ -1148,7 +1180,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 32,
+   "rank": 33,
    "icp": {
     "score": 39,
     "components": {
@@ -1179,7 +1211,7 @@
    "primary_naics": "311513",
    "vertical": "Other",
    "rmp_url": "https://rmpmap.org",
-   "rank": 33,
+   "rank": 34,
    "icp": {
     "score": 44,
     "components": {
@@ -1210,7 +1242,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 34,
+   "rank": 35,
    "icp": {
     "score": 43,
     "components": {
@@ -1224,33 +1256,34 @@
    }
   },
   {
-   "account": "H E Butt Grocery",
+   "account": "Wayne Sanderson Farms",
    "is_customer": false,
    "aliases": [
-    "H. E. Butt Grocery Company"
+    "Wayne Sanderson Farms",
+    "Wayne-Sanderson Farms"
    ],
    "sites": 4,
-   "ammonia_lb": 81828,
-   "max_site_ammonia_lb": 36828,
+   "ammonia_lb": 74291,
+   "max_site_ammonia_lb": 26291,
    "unvalidated_sites": 0,
-   "states": 1,
-   "state_list": "TX",
-   "primary_rto": "ERCOT",
-   "accidents": 1,
-   "sites_with_accidents": 1,
-   "primary_naics": "49312",
-   "vertical": "Refrigerated warehousing & storage",
+   "states": 2,
+   "state_list": "AL,GA",
+   "primary_rto": "SERC",
+   "accidents": 0,
+   "sites_with_accidents": 0,
+   "primary_naics": "11239",
+   "vertical": "Other",
    "rmp_url": "https://rmpmap.org",
-   "rank": 35,
+   "rank": 36,
    "icp": {
-    "score": 43,
+    "score": 29,
     "components": {
      "scale": 8,
      "refrig_intensity": 2,
-     "geographic_spread": 2,
-     "grid_exposure": 14,
-     "replacement_signal": 3,
-     "vertical_fit": 14
+     "geographic_spread": 4,
+     "grid_exposure": 6,
+     "replacement_signal": 0,
+     "vertical_fit": 9
     }
    }
   },
@@ -1273,7 +1306,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 36,
+   "rank": 37,
    "icp": {
     "score": 49,
     "components": {
@@ -1306,7 +1339,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 37,
+   "rank": 38,
    "icp": {
     "score": 46,
     "components": {
@@ -1337,7 +1370,7 @@
    "primary_naics": "31141",
    "vertical": "Frozen fruit & vegetable manufacturing",
    "rmp_url": "https://rmpmap.org",
-   "rank": 38,
+   "rank": 39,
    "icp": {
     "score": 37,
     "components": {
@@ -1368,7 +1401,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 39,
+   "rank": 40,
    "icp": {
     "score": 46,
     "components": {
@@ -1399,7 +1432,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 40,
+   "rank": 41,
    "icp": {
     "score": 39,
     "components": {
@@ -1432,7 +1465,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 41,
+   "rank": 42,
    "icp": {
     "score": 43,
     "components": {
@@ -1463,7 +1496,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 42,
+   "rank": 43,
    "icp": {
     "score": 34,
     "components": {
@@ -1496,7 +1529,7 @@
    "primary_naics": "311611",
    "vertical": "Other",
    "rmp_url": "https://rmpmap.org",
-   "rank": 43,
+   "rank": 44,
    "icp": {
     "score": 42,
     "components": {
@@ -1527,7 +1560,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 44,
+   "rank": 45,
    "icp": {
     "score": 34,
     "components": {
@@ -1559,7 +1592,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 45,
+   "rank": 46,
    "icp": {
     "score": 32,
     "components": {
@@ -1590,7 +1623,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 46,
+   "rank": 47,
    "icp": {
     "score": 33,
     "components": {
@@ -1621,7 +1654,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 47,
+   "rank": 48,
    "icp": {
     "score": 34,
     "components": {
@@ -1653,7 +1686,7 @@
    "primary_naics": "31141",
    "vertical": "Frozen fruit & vegetable manufacturing",
    "rmp_url": "https://rmpmap.org",
-   "rank": 48,
+   "rank": 49,
    "icp": {
     "score": 32,
     "components": {
@@ -1686,7 +1719,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 49,
+   "rank": 50,
    "icp": {
     "score": 41,
     "components": {
@@ -1717,7 +1750,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 50,
+   "rank": 51,
    "icp": {
     "score": 38,
     "components": {
@@ -1750,7 +1783,7 @@
    "primary_naics": "31151",
    "vertical": "Dairy product manufacturing",
    "rmp_url": "https://rmpmap.org",
-   "rank": 51,
+   "rank": 52,
    "icp": {
     "score": 29,
     "components": {
@@ -1782,7 +1815,7 @@
    "primary_naics": "42241",
    "vertical": "Other",
    "rmp_url": "https://rmpmap.org",
-   "rank": 52,
+   "rank": 53,
    "icp": {
     "score": 37,
     "components": {
@@ -1813,7 +1846,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 53,
+   "rank": 54,
    "icp": {
     "score": 35,
     "components": {
@@ -1845,7 +1878,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 54,
+   "rank": 55,
    "icp": {
     "score": 37,
     "components": {
@@ -1878,7 +1911,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 55,
+   "rank": 56,
    "icp": {
     "score": 41,
     "components": {
@@ -1909,7 +1942,7 @@
    "primary_naics": "31151",
    "vertical": "Dairy product manufacturing",
    "rmp_url": "https://rmpmap.org",
-   "rank": 56,
+   "rank": 57,
    "icp": {
     "score": 31,
     "components": {
@@ -1940,7 +1973,7 @@
    "primary_naics": "311615",
    "vertical": "Other",
    "rmp_url": "https://rmpmap.org",
-   "rank": 57,
+   "rank": 58,
    "icp": {
     "score": 27,
     "components": {
@@ -1971,7 +2004,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 58,
+   "rank": 59,
    "icp": {
     "score": 37,
     "components": {
@@ -2003,7 +2036,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 59,
+   "rank": 60,
    "icp": {
     "score": 32,
     "components": {
@@ -2034,7 +2067,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 60,
+   "rank": 61,
    "icp": {
     "score": 36,
     "components": {
@@ -2067,7 +2100,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 61,
+   "rank": 62,
    "icp": {
     "score": 39,
     "components": {
@@ -2098,7 +2131,7 @@
    "primary_naics": "42241",
    "vertical": "Other",
    "rmp_url": "https://rmpmap.org",
-   "rank": 62,
+   "rank": 63,
    "icp": {
     "score": 28,
     "components": {
@@ -2129,7 +2162,7 @@
    "primary_naics": "31141",
    "vertical": "Frozen fruit & vegetable manufacturing",
    "rmp_url": "https://rmpmap.org",
-   "rank": 63,
+   "rank": 64,
    "icp": {
     "score": 34,
     "components": {
@@ -2161,7 +2194,7 @@
    "primary_naics": "31141",
    "vertical": "Frozen fruit & vegetable manufacturing",
    "rmp_url": "https://rmpmap.org",
-   "rank": 64,
+   "rank": 65,
    "icp": {
     "score": 37,
     "components": {
@@ -2193,7 +2226,7 @@
    "primary_naics": "31141",
    "vertical": "Frozen fruit & vegetable manufacturing",
    "rmp_url": "https://rmpmap.org",
-   "rank": 65,
+   "rank": 66,
    "icp": {
     "score": 38,
     "components": {
@@ -2224,7 +2257,7 @@
    "primary_naics": "311612",
    "vertical": "Other",
    "rmp_url": "https://rmpmap.org",
-   "rank": 66,
+   "rank": 67,
    "icp": {
     "score": 33,
     "components": {
@@ -2255,7 +2288,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 67,
+   "rank": 68,
    "icp": {
     "score": 41,
     "components": {
@@ -2286,7 +2319,7 @@
    "primary_naics": "312113",
    "vertical": "Other",
    "rmp_url": "https://rmpmap.org",
-   "rank": 68,
+   "rank": 69,
    "icp": {
     "score": 33,
     "components": {
@@ -2317,7 +2350,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 69,
+   "rank": 70,
    "icp": {
     "score": 28,
     "components": {
@@ -2348,7 +2381,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 70,
+   "rank": 71,
    "icp": {
     "score": 32,
     "components": {
@@ -2380,7 +2413,7 @@
    "primary_naics": "311991",
    "vertical": "Other",
    "rmp_url": "https://rmpmap.org",
-   "rank": 71,
+   "rank": 72,
    "icp": {
     "score": 25,
     "components": {
@@ -2411,7 +2444,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 72,
+   "rank": 73,
    "icp": {
     "score": 28,
     "components": {
@@ -2443,7 +2476,7 @@
    "primary_naics": "311411",
    "vertical": "Other",
    "rmp_url": "https://rmpmap.org",
-   "rank": 73,
+   "rank": 74,
    "icp": {
     "score": 25,
     "components": {
@@ -2474,7 +2507,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 74,
+   "rank": 75,
    "icp": {
     "score": 30,
     "components": {
@@ -2506,7 +2539,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 75,
+   "rank": 76,
    "icp": {
     "score": 36,
     "components": {
@@ -2537,7 +2570,7 @@
    "primary_naics": "311611",
    "vertical": "Other",
    "rmp_url": "https://rmpmap.org",
-   "rank": 76,
+   "rank": 77,
    "icp": {
     "score": 39,
     "components": {
@@ -2568,7 +2601,7 @@
    "primary_naics": "42248",
    "vertical": "Other",
    "rmp_url": "https://rmpmap.org",
-   "rank": 77,
+   "rank": 78,
    "icp": {
     "score": 22,
     "components": {
@@ -2600,7 +2633,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 78,
+   "rank": 79,
    "icp": {
     "score": 31,
     "components": {
@@ -2631,7 +2664,7 @@
    "primary_naics": "31151",
    "vertical": "Dairy product manufacturing",
    "rmp_url": "https://rmpmap.org",
-   "rank": 79,
+   "rank": 80,
    "icp": {
     "score": 35,
     "components": {
@@ -2663,7 +2696,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 80,
+   "rank": 81,
    "icp": {
     "score": 29,
     "components": {
@@ -2694,7 +2727,7 @@
    "primary_naics": "311991",
    "vertical": "Other",
    "rmp_url": "https://rmpmap.org",
-   "rank": 81,
+   "rank": 82,
    "icp": {
     "score": 36,
     "components": {
@@ -2725,7 +2758,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 82,
+   "rank": 83,
    "icp": {
     "score": 40,
     "components": {
@@ -2739,7 +2772,7 @@
    }
   },
   {
-   "account": "MarJac Poultry",
+   "account": "Mar Jac Poultry",
    "is_customer": false,
    "aliases": [
     "Mar-Jac Poultry, Inc",
@@ -2757,7 +2790,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 83,
+   "rank": 84,
    "icp": {
     "score": 29,
     "components": {
@@ -2788,7 +2821,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 84,
+   "rank": 85,
    "icp": {
     "score": 34,
     "components": {
@@ -2820,7 +2853,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 85,
+   "rank": 86,
    "icp": {
     "score": 31,
     "components": {
@@ -2830,37 +2863,6 @@
      "grid_exposure": 10,
      "replacement_signal": 0,
      "vertical_fit": 14
-    }
-   }
-  },
-  {
-   "account": "Wayne Sanderson Farms",
-   "is_customer": false,
-   "aliases": [
-    "Wayne Sanderson Farms"
-   ],
-   "sites": 2,
-   "ammonia_lb": 46291,
-   "max_site_ammonia_lb": 26291,
-   "unvalidated_sites": 0,
-   "states": 2,
-   "state_list": "AL,GA",
-   "primary_rto": "SERC",
-   "accidents": 0,
-   "sites_with_accidents": 0,
-   "primary_naics": "11239",
-   "vertical": "Other",
-   "rmp_url": "https://rmpmap.org",
-   "rank": 86,
-   "icp": {
-    "score": 24,
-    "components": {
-     "scale": 4,
-     "refrig_intensity": 1,
-     "geographic_spread": 4,
-     "grid_exposure": 6,
-     "replacement_signal": 0,
-     "vertical_fit": 9
     }
    }
   },
@@ -3052,7 +3054,7 @@
    }
   },
   {
-   "account": "NorAm Cold Storage",
+   "account": "Nor Am Cold Storage",
    "is_customer": false,
    "aliases": [
     "Nor-Am Cold Storage"
@@ -3490,37 +3492,6 @@
    }
   },
   {
-   "account": "WayneSanderson Farms",
-   "is_customer": false,
-   "aliases": [
-    "Wayne-Sanderson Farms"
-   ],
-   "sites": 2,
-   "ammonia_lb": 28000,
-   "max_site_ammonia_lb": 16000,
-   "unvalidated_sites": 0,
-   "states": 1,
-   "state_list": "AL",
-   "primary_rto": "SERC",
-   "accidents": 0,
-   "sites_with_accidents": 0,
-   "primary_naics": "11239",
-   "vertical": "Other",
-   "rmp_url": "https://rmpmap.org",
-   "rank": 107,
-   "icp": {
-    "score": 22,
-    "components": {
-     "scale": 4,
-     "refrig_intensity": 1,
-     "geographic_spread": 2,
-     "grid_exposure": 6,
-     "replacement_signal": 0,
-     "vertical_fit": 9
-    }
-   }
-  },
-  {
    "account": "Van Drunen Farms",
    "is_customer": false,
    "aliases": [
@@ -3538,7 +3509,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 108,
+   "rank": 107,
    "icp": {
     "score": 37,
     "components": {
@@ -3570,7 +3541,7 @@
    "primary_naics": "311991",
    "vertical": "Other",
    "rmp_url": "https://rmpmap.org",
-   "rank": 109,
+   "rank": 108,
    "icp": {
     "score": 27,
     "components": {
@@ -3584,7 +3555,7 @@
    }
   },
   {
-   "account": "HyVee",
+   "account": "Hy Vee",
    "is_customer": false,
    "aliases": [
     "Hy-Vee Inc.",
@@ -3602,7 +3573,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 110,
+   "rank": 109,
    "icp": {
     "score": 34,
     "components": {
@@ -3633,7 +3604,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 111,
+   "rank": 110,
    "icp": {
     "score": 36,
     "components": {
@@ -3665,7 +3636,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 112,
+   "rank": 111,
    "icp": {
     "score": 31,
     "components": {
@@ -3697,7 +3668,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 113,
+   "rank": 112,
    "icp": {
     "score": 30,
     "components": {
@@ -3706,6 +3677,38 @@
      "geographic_spread": 2,
      "grid_exposure": 6,
      "replacement_signal": 3,
+     "vertical_fit": 14
+    }
+   }
+  },
+  {
+   "account": "MDV SpartanNash",
+   "is_customer": false,
+   "aliases": [
+    "MDV SpartanNash, LLC",
+    "MDV/SpartanNash, LLC"
+   ],
+   "sites": 2,
+   "ammonia_lb": 24000,
+   "max_site_ammonia_lb": 12000,
+   "unvalidated_sites": 0,
+   "states": 2,
+   "state_list": "GA,OK",
+   "primary_rto": "SPP",
+   "accidents": 2,
+   "sites_with_accidents": 2,
+   "primary_naics": "49312",
+   "vertical": "Refrigerated warehousing & storage",
+   "rmp_url": "https://rmpmap.org",
+   "rank": 113,
+   "icp": {
+    "score": 35,
+    "components": {
+     "scale": 4,
+     "refrig_intensity": 1,
+     "geographic_spread": 4,
+     "grid_exposure": 6,
+     "replacement_signal": 6,
      "vertical_fit": 14
     }
    }
@@ -3743,6 +3746,38 @@
    }
   },
   {
+   "account": "Save A Lot",
+   "is_customer": false,
+   "aliases": [
+    "Save A Lot Inc.",
+    "Save-A-Lot"
+   ],
+   "sites": 2,
+   "ammonia_lb": 22900,
+   "max_site_ammonia_lb": 13000,
+   "unvalidated_sites": 0,
+   "states": 2,
+   "state_list": "LA,MD",
+   "primary_rto": "MISO",
+   "accidents": 0,
+   "sites_with_accidents": 0,
+   "primary_naics": "42241",
+   "vertical": "Other",
+   "rmp_url": "https://rmpmap.org",
+   "rank": 115,
+   "icp": {
+    "score": 28,
+    "components": {
+     "scale": 4,
+     "refrig_intensity": 1,
+     "geographic_spread": 4,
+     "grid_exposure": 10,
+     "replacement_signal": 0,
+     "vertical_fit": 9
+    }
+   }
+  },
+  {
    "account": "Wawona Frozen Foods",
    "is_customer": false,
    "aliases": [
@@ -3760,7 +3795,7 @@
    "primary_naics": "49312",
    "vertical": "Refrigerated warehousing & storage",
    "rmp_url": "https://rmpmap.org",
-   "rank": 115,
+   "rank": 116,
    "icp": {
     "score": 31,
     "components": {
@@ -3791,7 +3826,7 @@
    "primary_naics": "31212",
    "vertical": "Other",
    "rmp_url": "https://rmpmap.org",
-   "rank": 116,
+   "rank": 117,
    "icp": {
     "score": 32,
     "components": {
@@ -3822,7 +3857,7 @@
    "primary_naics": "311411",
    "vertical": "Other",
    "rmp_url": "https://rmpmap.org",
-   "rank": 117,
+   "rank": 118,
    "icp": {
     "score": 32,
     "components": {
@@ -13270,6 +13305,96 @@
    "account": "Taylor Fresh Foods"
   },
   {
+   "name": "SARSC Combo Warehouse",
+   "city": "San Antonio",
+   "state": "TX",
+   "naics": "49312",
+   "ammonia_lb": 18000,
+   "program_level": 3,
+   "accidents": 0,
+   "recent_accidents": 0,
+   "submissions": 6,
+   "rmp_id": "100000124714",
+   "url": "",
+   "lat": "29.425000",
+   "lon": "-098.401336",
+   "validated": true,
+   "validation_note": "",
+   "account": "H E Butt Grocery"
+  },
+  {
+   "name": "SARSC Milk Plant",
+   "city": "San Antonio",
+   "state": "TX",
+   "naics": "311511",
+   "ammonia_lb": 36828,
+   "program_level": 3,
+   "accidents": 1,
+   "recent_accidents": 0,
+   "submissions": 7,
+   "rmp_id": "100000124956",
+   "url": "HEB.com",
+   "lat": "29.476111",
+   "lon": "-098.400000",
+   "validated": true,
+   "validation_note": "",
+   "account": "H E Butt Grocery"
+  },
+  {
+   "name": "HRSC Milk Plant",
+   "city": "Houston",
+   "state": "TX",
+   "naics": "311511",
+   "ammonia_lb": 18000,
+   "program_level": 3,
+   "accidents": 0,
+   "recent_accidents": 0,
+   "submissions": 6,
+   "rmp_id": "100000124965",
+   "url": "HEB.com",
+   "lat": "29.831944",
+   "lon": "-095.541111",
+   "validated": true,
+   "validation_note": "",
+   "account": "H E Butt Grocery"
+  },
+  {
+   "name": "HEB Kirby Distribution Center",
+   "city": "San Antonio",
+   "state": "TX",
+   "naics": "49312",
+   "ammonia_lb": 11790,
+   "program_level": 3,
+   "accidents": 0,
+   "recent_accidents": 0,
+   "submissions": 5,
+   "rmp_id": "100000170502",
+   "url": "HEB.com",
+   "lat": "29.476346",
+   "lon": "-098.376182",
+   "validated": true,
+   "validation_note": "",
+   "account": "H E Butt Grocery"
+  },
+  {
+   "name": "San Antonio Retail Support Center South",
+   "city": "San Antonio",
+   "state": "TX",
+   "naics": "49312",
+   "ammonia_lb": 9000,
+   "program_level": 3,
+   "accidents": 0,
+   "recent_accidents": 0,
+   "submissions": 6,
+   "rmp_id": "100000176926",
+   "url": "www.heb.com",
+   "lat": "29.473611",
+   "lon": "-098.400556",
+   "validated": true,
+   "validation_note": "",
+   "account": "H E Butt Grocery"
+  },
+  {
    "name": "Interstate Warehousing Denver",
    "city": "Denver",
    "state": "CO",
@@ -13954,76 +14079,76 @@
    "account": "Art Al Holding"
   },
   {
-   "name": "SARSC Combo Warehouse",
-   "city": "San Antonio",
-   "state": "TX",
-   "naics": "49312",
-   "ammonia_lb": 18000,
+   "name": "Wayne-Sanderson Farms - Pendergrass",
+   "city": "Pendergrass",
+   "state": "GA",
+   "naics": "11239",
+   "ammonia_lb": 20000,
    "program_level": 3,
    "accidents": 0,
    "recent_accidents": 0,
-   "submissions": 6,
-   "rmp_id": "100000124714",
-   "url": "",
-   "lat": "29.425000",
-   "lon": "-098.401336",
+   "submissions": 12,
+   "rmp_id": "100000062987",
+   "url": "www.waynesandersonfarms.com",
+   "lat": "34.17884",
+   "lon": "-083.672158",
    "validated": true,
    "validation_note": "",
-   "account": "H E Butt Grocery"
+   "account": "Wayne Sanderson Farms"
   },
   {
-   "name": "SARSC Milk Plant",
-   "city": "San Antonio",
-   "state": "TX",
-   "naics": "311511",
-   "ammonia_lb": 36828,
-   "program_level": 3,
-   "accidents": 1,
-   "recent_accidents": 0,
-   "submissions": 7,
-   "rmp_id": "100000124956",
-   "url": "HEB.com",
-   "lat": "29.476111",
-   "lon": "-098.400000",
-   "validated": true,
-   "validation_note": "",
-   "account": "H E Butt Grocery"
-  },
-  {
-   "name": "HRSC Milk Plant",
-   "city": "Houston",
-   "state": "TX",
-   "naics": "311511",
-   "ammonia_lb": 18000,
+   "name": "Wayne-Sanderson Farms - Decatur Fresh Processing",
+   "city": "Decatur",
+   "state": "AL",
+   "naics": "11239",
+   "ammonia_lb": 16000,
    "program_level": 3,
    "accidents": 0,
    "recent_accidents": 0,
-   "submissions": 6,
-   "rmp_id": "100000124965",
-   "url": "HEB.com",
-   "lat": "29.831944",
-   "lon": "-095.541111",
+   "submissions": 10,
+   "rmp_id": "100000063094",
+   "url": "www.waynesandersonfarms.com",
+   "lat": "34.607828",
+   "lon": "-087.042784",
    "validated": true,
    "validation_note": "",
-   "account": "H E Butt Grocery"
+   "account": "Wayne Sanderson Farms"
   },
   {
-   "name": "San Antonio Retail Support Center South",
-   "city": "San Antonio",
-   "state": "TX",
-   "naics": "49312",
-   "ammonia_lb": 9000,
+   "name": "Wayne-Sanderson Farms - Union Springs Fresh Plant",
+   "city": "Union Springs",
+   "state": "AL",
+   "naics": "311615",
+   "ammonia_lb": 26291,
    "program_level": 3,
    "accidents": 0,
    "recent_accidents": 0,
-   "submissions": 6,
-   "rmp_id": "100000176926",
-   "url": "www.heb.com",
-   "lat": "29.473611",
-   "lon": "-098.400556",
+   "submissions": 13,
+   "rmp_id": "100000065181",
+   "url": "www.waynesandersonfarms.com",
+   "lat": "32.136702",
+   "lon": "-85.723152",
    "validated": true,
    "validation_note": "",
-   "account": "H E Butt Grocery"
+   "account": "Wayne Sanderson Farms"
+  },
+  {
+   "name": "Wayne Sanderson Farms - Albertville",
+   "city": "Albertville",
+   "state": "AL",
+   "naics": "31161",
+   "ammonia_lb": 12000,
+   "program_level": 3,
+   "accidents": 0,
+   "recent_accidents": 0,
+   "submissions": 13,
+   "rmp_id": "100000065234",
+   "url": "waynesandersonfarms.com",
+   "lat": "34.262033",
+   "lon": "-086.204063",
+   "validated": true,
+   "validation_note": "",
+   "account": "Wayne Sanderson Farms"
   },
   {
    "name": "SpartanNash",
@@ -16219,7 +16344,7 @@
    "lon": "-083.828333",
    "validated": true,
    "validation_note": "",
-   "account": "MarJac Poultry"
+   "account": "Mar Jac Poultry"
   },
   {
    "name": "Mar-Jac Poultry MS, LLC",
@@ -16237,7 +16362,7 @@
    "lon": "-089.277997",
    "validated": true,
    "validation_note": "",
-   "account": "MarJac Poultry"
+   "account": "Mar Jac Poultry"
   },
   {
    "name": "Seneca Foods Corp.-Cold Storage, Rochester,MN",
@@ -16310,42 +16435,6 @@
    "validated": true,
    "validation_note": "",
    "account": "Merchandise Warehouse"
-  },
-  {
-   "name": "Wayne-Sanderson Farms - Pendergrass",
-   "city": "Pendergrass",
-   "state": "GA",
-   "naics": "11239",
-   "ammonia_lb": 20000,
-   "program_level": 3,
-   "accidents": 0,
-   "recent_accidents": 0,
-   "submissions": 12,
-   "rmp_id": "100000062987",
-   "url": "www.waynesandersonfarms.com",
-   "lat": "34.17884",
-   "lon": "-083.672158",
-   "validated": true,
-   "validation_note": "",
-   "account": "Wayne Sanderson Farms"
-  },
-  {
-   "name": "Wayne-Sanderson Farms - Union Springs Fresh Plant",
-   "city": "Union Springs",
-   "state": "AL",
-   "naics": "311615",
-   "ammonia_lb": 26291,
-   "program_level": 3,
-   "accidents": 0,
-   "recent_accidents": 0,
-   "submissions": 13,
-   "rmp_id": "100000065181",
-   "url": "www.waynesandersonfarms.com",
-   "lat": "32.136702",
-   "lon": "-85.723152",
-   "validated": true,
-   "validation_note": "",
-   "account": "Wayne Sanderson Farms"
   },
   {
    "name": "Ajinomoto Foods North America, Inc.",
@@ -16579,7 +16668,7 @@
    "lon": "-97.099126",
    "validated": true,
    "validation_note": "",
-   "account": "NorAm Cold Storage"
+   "account": "Nor Am Cold Storage"
   },
   {
    "name": "Nor-Am Cold Storage",
@@ -16597,7 +16686,7 @@
    "lon": "-096.186310",
    "validated": true,
    "validation_note": "",
-   "account": "NorAm Cold Storage"
+   "account": "Nor Am Cold Storage"
   },
   {
    "name": "Joseph Cold Storage #1",
@@ -17068,42 +17157,6 @@
    "account": "Tip Top Poultry"
   },
   {
-   "name": "Wayne-Sanderson Farms - Decatur Fresh Processing",
-   "city": "Decatur",
-   "state": "AL",
-   "naics": "11239",
-   "ammonia_lb": 16000,
-   "program_level": 3,
-   "accidents": 0,
-   "recent_accidents": 0,
-   "submissions": 10,
-   "rmp_id": "100000063094",
-   "url": "www.waynesandersonfarms.com",
-   "lat": "34.607828",
-   "lon": "-087.042784",
-   "validated": true,
-   "validation_note": "",
-   "account": "WayneSanderson Farms"
-  },
-  {
-   "name": "Wayne Sanderson Farms - Albertville",
-   "city": "Albertville",
-   "state": "AL",
-   "naics": "31161",
-   "ammonia_lb": 12000,
-   "program_level": 3,
-   "accidents": 0,
-   "recent_accidents": 0,
-   "submissions": 13,
-   "rmp_id": "100000065234",
-   "url": "waynesandersonfarms.com",
-   "lat": "34.262033",
-   "lon": "-086.204063",
-   "validated": true,
-   "validation_note": "",
-   "account": "WayneSanderson Farms"
-  },
-  {
    "name": "VDF Manteno Cold Storage",
    "city": "Manteno",
    "state": "IL",
@@ -17191,7 +17244,7 @@
    "lon": "-93.335486",
    "validated": true,
    "validation_note": "",
-   "account": "HyVee"
+   "account": "Hy Vee"
   },
   {
    "name": "Perishable Distributors of Iowa",
@@ -17209,7 +17262,7 @@
    "lon": "-093.585278",
    "validated": true,
    "validation_note": "",
-   "account": "HyVee"
+   "account": "Hy Vee"
   },
   {
    "name": "Dandy Cooling Company~Cross Dock Services",
@@ -17320,6 +17373,42 @@
    "account": "Underwood Fruit & Warehouse"
   },
   {
+   "name": "MDV/SpartanNash",
+   "city": "Oklahoma City",
+   "state": "OK",
+   "naics": "49312",
+   "ammonia_lb": 12000,
+   "program_level": 3,
+   "accidents": 1,
+   "recent_accidents": 0,
+   "submissions": 6,
+   "rmp_id": "100000065038",
+   "url": "www.spartannash.com",
+   "lat": "35.4078",
+   "lon": "-097.4859",
+   "validated": true,
+   "validation_note": "",
+   "account": "MDV SpartanNash"
+  },
+  {
+   "name": "SpartanNash - Columbus, GA",
+   "city": "Midland",
+   "state": "GA",
+   "naics": "42441",
+   "ammonia_lb": 12000,
+   "program_level": 3,
+   "accidents": 1,
+   "recent_accidents": 1,
+   "submissions": 3,
+   "rmp_id": "100000212469",
+   "url": "www.spartannash.com",
+   "lat": "32.531111",
+   "lon": "-084.845000",
+   "validated": true,
+   "validation_note": "",
+   "account": "MDV SpartanNash"
+  },
+  {
    "name": "KOCH FOODS MORRISTOWN",
    "city": "MORRISTOWN",
    "state": "TN",
@@ -17354,6 +17443,42 @@
    "validated": true,
    "validation_note": "",
    "account": "KOCH MEAT"
+  },
+  {
+   "name": "Save-A-Lot",
+   "city": "Hammond",
+   "state": "LA",
+   "naics": "42241",
+   "ammonia_lb": 9900,
+   "program_level": 3,
+   "accidents": 0,
+   "recent_accidents": 0,
+   "submissions": 5,
+   "rmp_id": "100000069917",
+   "url": "",
+   "lat": "30.506389",
+   "lon": "-90.548889",
+   "validated": true,
+   "validation_note": "",
+   "account": "Save A Lot"
+  },
+  {
+   "name": "Save A Lot Williamsport, MD",
+   "city": "Williamsport",
+   "state": "MD",
+   "naics": "42441",
+   "ammonia_lb": 13000,
+   "program_level": 3,
+   "accidents": 0,
+   "recent_accidents": 0,
+   "submissions": 5,
+   "rmp_id": "100000189681",
+   "url": "www.savealot.com",
+   "lat": "39.583838",
+   "lon": "-077.809952",
+   "validated": true,
+   "validation_note": "",
+   "account": "Save A Lot"
   },
   {
    "name": "Wawona Frozen Foods - Ranch",

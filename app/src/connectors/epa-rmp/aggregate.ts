@@ -229,17 +229,21 @@ export function aggregate(facilities: readonly RmpFacility[]): AggregateResult {
     for (const s of a._sites) s.account = a.account;
   });
 
-  const surviving = new Set<SiteRecord>(accounts.flatMap((a) => a._sites));
-  // QUIRK REPRODUCED DELIBERATELY: the reference only queues flagged sites that
-  // are NOT part of a surviving account. A flagged site belonging to a surviving
-  // account is excluded from scoring but does not appear in the review queue.
-  // That is a real gap — noted for a joint fix in both implementations, not
-  // silently corrected here, because a port that diverges cannot be verified.
+  // EVERY flagged site is queued, wherever it sits. Two ways one used to escape,
+  // both now closed in this port AND in the Python reference:
+  //   - its account was filtered out entirely, so nothing referenced it;
+  //   - its account SURVIVED, and a `surviving.has(s)` test skipped it on the
+  //     grounds that it was already visible. It was not: a flagged site is
+  //     excluded from the account's scoring totals, so it contributes to no
+  //     number a human ever sees, and appeared in no queue either.
+  // A site dropped from the arithmetic without a review item is exactly what the
+  // numeric gate exists to prevent. No real filing in the live pull currently
+  // takes this path, so the regression test for it uses a synthetic fixture.
   const flagged: ReviewRecord[] = [];
   for (const [, b] of buckets) {
     const name = b.name;
     for (const s of b.sites) {
-      if (s.validated || surviving.has(s)) continue;
+      if (s.validated) continue;
       flagged.push({
         kind: 'numeric_outlier', rmpId: s.rmpId, name: s.name, city: s.city, state: s.state,
         naics: s.naics, ammoniaLb: s.ammoniaLb, reportedName: name, account: name,

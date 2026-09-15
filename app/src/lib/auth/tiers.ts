@@ -89,7 +89,13 @@ function maxTierFor(principal: Principal | null): number {
   if (can(principal.roles, 'customer_list.manage')) return TIER_RANK.T4;
   if (can(principal.roles, 'research.read')) return TIER_RANK.T3;
   if (can(principal.roles, 'pii.read')) return TIER_RANK.T3;
-  if (can(principal.roles, 'library.read')) return TIER_RANK.T2;
+  // T1 and T2 are "rep and above" (AUTH-SPEC §7), which is `library.read_analysis`
+  // — NOT `library.read`. That distinction is the whole point: library.read is
+  // granted to every role including `viewer`, so gating T2 on it gave a viewer the
+  // identical field set to a rep, with icpScore, research state and published
+  // deliverable bodies. A viewer sees T0 and stops there.
+  if (can(principal.roles, 'library.read_analysis')) return TIER_RANK.T2;
+  if (can(principal.roles, 'library.read')) return TIER_RANK.T0;
   return -1;
 }
 

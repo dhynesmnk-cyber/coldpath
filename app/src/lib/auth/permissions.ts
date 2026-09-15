@@ -11,7 +11,14 @@ import { type Permission, type Role, ROLES } from './types.js';
  *     audit log describes; separation of duties is the point.
  */
 const MATRIX: Record<Permission, readonly Role[]> = {
+  // Reaching the library is not the same as reading what is IN it. Every role
+  // may open it and see T0 — the public registry data anyone could pull from EPA
+  // themselves. Seeing T1/T2 (our analysis and our research) needs the second
+  // permission, which is what keeps `viewer` distinct from `rep`. Before this
+  // split, maxTierFor() fell through to library.read and a viewer received the
+  // identical field set to a rep, contradicting AUTH-SPEC §7.
   'library.read':          ROLES,
+  'library.read_analysis': ['admin', 'marketing', 'sales_lead', 'rep'],
   'library.search':        ROLES,
   'correction.create':     ['admin', 'marketing', 'sales_lead', 'rep'],
   'brief.request':         ['admin', 'marketing', 'sales_lead', 'rep'],
@@ -64,8 +71,10 @@ export function canAccessPii(
 
 /**
  * Whether a contact detail may be used to generate outbound. Distinct from
- * reading it: gate S5 requires a recorded lawful basis, gate L8 blocks outbound
- * entirely for contacts below confidence 2.
+ * reading it: gate S5 requires a recorded lawful basis, and gate L8 blocks
+ * outbound for any contact AT or below confidence 2 — hence `>= 3`, not `>= 2`.
+ * A rep-pasted LinkedIn capture caps at 2 (gate L7) and so can never reach
+ * outbound on its own; only an independent level-3 source lifts it.
  */
 export function canUseForOutbound(
   roles: readonly Role[],

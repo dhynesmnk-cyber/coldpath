@@ -1,4 +1,4 @@
-import { JUNK, normName } from './normalise.js';
+import { JUNK, LEGAL_SUFFIXES, normName } from './normalise.js';
 
 /**
  * Canonical parent-company map, ported verbatim from
@@ -134,42 +134,69 @@ export const KNOWN_CUSTOMERS: ReadonlySet<string> = new Set([
 ]);
 
 /**
- * `incorporated` is spelled out here as well as `inc`. Without it, "Perdue Farms
- * Incorporated" keys as `perdue farms incorporated` while "Perdue Farms, Inc."
- * keys as `perdue farms` — one company, two accounts. The 250,000 lb pilot floor
- * hid that split (both sit near 60,000 lb); lowering the floor exposes it.
- *
- * Order matters: `incorporated` must precede `inc` in the alternation or the
- * regex engine matches `inc` first and leaves "orporated" behind.
+ * Separators sit BETWEEN two tokens; joiners sit INSIDE one. Only displayName
+ * needs the distinction — see the note on matchKey about why the key does not.
  */
-const LEGAL_SUFFIXES_CI = /\b(incorporated|inc|llc|ltd|lp|llp|corp|corporation|company|co|plc|gmbh|sa|nv|bv|the|and)\b/gi;
+const SEPARATORS = /[-/_,]/g;
+const JOINERS = /['\u2019.]/g;
 
 /**
- * Bucketing key: aggressively normalised, case-folded, punctuation removed.
+ * Bucketing key: case-folded, legal suffixes stripped, and every character that
+ * is not a letter, digit or ampersand removed — INCLUDING spaces.
  *
  * Two names that differ only by case, apostrophes, hyphens or legal suffix must
- * produce the SAME key, or one company splits into two accounts. This is not
- * theoretical: the first version of this port lowercased the fallback path while
- * the canonical-rule path returned title case, so "Dairy Farmers of America"
- * arrived as two separate accounts (9 sites and 4 sites) instead of one with 13.
+ * produce the SAME key, or one company splits into two accounts. Both halves of
+ * that sentence have been violated in production code:
+ *
+ *   1. The first version of this port lowercased the fallback path while the
+ *      canonical-rule path returned title case, so "Dairy Farmers of America"
+ *      arrived as two separate accounts (9 and 4 sites) instead of one with 13.
+ *   2. The second deleted punctuation but KEPT spaces, so "Save-A-Lot" keyed as
+ *      "savealot" and did not match "Save A Lot". That was documented as
+ *      deferred to the human resolution queue — but the deferral never happened.
+ *      A company split into halves that each fall below the multi-site pilot
+ *      filter is dropped from the output entirely and reaches no queue at all.
+ *      On the live 1,382-facility pull that silently lost MDV/SpartanNash and
+ *      Save-A-Lot, under-counted H-E-B (5 sites reported as 4), and listed
+ *      Wayne-Sanderson Farms twice as if it were two companies.
+ *
+ * Dropping spaces too is what makes the key robust rather than merely different.
+ * A hyphen is ambiguous — it stands for a space in "Wayne-Sanderson Farms" and
+ * for nothing in "Nor-Am Cold Storage" — so any rule that maps it to one or the
+ * other fixes half the cases and breaks the other half. Ignoring the distinction
+ * entirely is the only treatment that is correct for both.
+ *
+ * Measured across all 609 distinct reported names in the live pull: 511 buckets
+ * -> 506, five merge groups, every one a genuine same-company pair, and no two
+ * distinct companies merged.
+ *
+ * The cost is a key no human can read. That is fine — nobody reads it. Account
+ * names come from displayName, and the aliases column records every spelling
+ * that was folded in.
  */
 export function matchKey(name: string): string {
   return name
     .toLowerCase()
-    .replace(LEGAL_SUFFIXES_CI, ' ')
-    .replace(/[^a-z0-9& ]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
+    .replace(LEGAL_SUFFIXES, ' ')
+    .replace(/[^a-z0-9&]/g, '');
 }
 
 /**
- * Display name: same normalisation but preserving the reported capitalisation,
+ * Display name: same punctuation rule, preserving the reported capitalisation,
  * so canonical account names read as proper nouns rather than as match keys.
+ *
+ * Deliberately does NOT collapse single-character runs the way matchKey does. A
+ * key is never read by a human and only has to be stable; a display name is read
+ * by a marketer, and collapsing would turn "U. S. Foods" into "US Foods". Removing
+ * joiners rather than spacing them is what keeps "Bozzuto's" rendering as
+ * "Bozzutos" instead of "Bozzuto s".
  */
 export function displayName(name: string): string {
   return name
-    .replace(LEGAL_SUFFIXES_CI, ' ')
-    .replace(/[^A-Za-z0-9& ]/g, '')
+    .replace(LEGAL_SUFFIXES, ' ')
+    .replace(SEPARATORS, ' ')
+    .replace(JOINERS, '')
+    .replace(/[^A-Za-z0-9& ]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }

@@ -252,7 +252,8 @@ JUNK_NAMES = {"na", "n a", "n/a", "unknown", "none", "-", "", "test", "tbd", "xx
 
 
 def match_key(name: str) -> str:
-    """Bucketing key: case-folded, punctuation removed, legal suffixes stripped.
+    """Bucketing key: case-folded, legal suffixes stripped, and every character
+    that is not a letter, digit or ampersand removed — INCLUDING spaces.
 
     Two reported names for one company MUST produce the same key, or the company
     splits into two accounts. This was a real defect: an earlier version returned
@@ -260,17 +261,43 @@ def match_key(name: str) -> str:
     from the other, so "Dairy Farmers of America" arrived as two accounts (9 sites
     and 4 sites) instead of one with 13.
 
-    Punctuation is REMOVED, not replaced with a space. Consequence, documented
-    rather than hidden: "Wayne-Sanderson Farms" and "Wayne Sanderson Farms" do not
-    merge. That merge is the job of the human resolution queue, not of string
-    normalisation.
+    A second version deleted punctuation but KEPT spaces, so "Save-A-Lot" keyed as
+    "savealot" and did not match "Save A Lot". That was documented as deferred to
+    the human resolution queue, but the deferral did not happen — a split company
+    whose halves each fall below the multi-site pilot filter is dropped from the
+    output entirely, reaching no queue at all. On the live 1,382-facility pull that
+    silently lost MDV/SpartanNash and Save-A-Lot, under-counted H-E-B (5 sites
+    reported as 4), and listed Wayne-Sanderson Farms twice.
+
+    Dropping spaces too is what makes the key robust rather than merely different.
+    A hyphen is ambiguous — it stands for a space in "Wayne-Sanderson Farms" and
+    for nothing in "Nor-Am Cold Storage" — so any rule mapping it to one or the
+    other fixes half the cases and breaks the other half. Ignoring the distinction
+    entirely is the only treatment correct for both.
+
+    Verified on the live pull: 511 buckets -> 506, five merge groups, every one a
+    genuine same-company pair, and no two distinct companies merged.
+
+    The cost is a key no human can read. Nobody reads it: account names come from
+    display_name, and the aliases column records every spelling folded in.
     """
-    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9& ]", "", LEGAL_SUFFIXES.sub(" ", name.lower()))).strip()
+    return re.sub(r"[^a-z0-9&]", "", LEGAL_SUFFIXES.sub(" ", name.lower()))
 
 
 def display_name(name: str) -> str:
-    """Human-readable account name: same normalisation, original capitalisation."""
-    return re.sub(r"\s+", " ", re.sub(r"[^A-Za-z0-9& ]", "", LEGAL_SUFFIXES.sub(" ", name))).strip()
+    """Human-readable account name, preserving the reported capitalisation.
+
+    Unlike match_key this DOES care about spacing, because a marketer reads it.
+    Punctuation is therefore split by what it does to the tokens either side:
+      separators  - / _ ,    -> space   ("Mar-Jac Poultry" -> "Mar Jac Poultry")
+      joiners     . ' U+2019 -> removed ("Boar's Head" -> "Boars Head")
+    Spacing a joiner would stranded a letter: "Boar s Head".
+    """
+    s = LEGAL_SUFFIXES.sub(" ", name)
+    s = re.sub(r"[-/_,]", " ", s)
+    s = re.sub(r"['’.]", "", s)
+    s = re.sub(r"[^A-Za-z0-9& ]", " ", s)
+    return re.sub(r"\s+", " ", s).strip()
 
 
 def canonicalise(name: str | None) -> tuple[str, str, str] | None:
@@ -671,16 +698,22 @@ def aggregate(facilities: list[dict]) -> tuple[list[dict], list[dict], list[dict
 
     sites = [dict(s, account=a["account"]) for a in accounts for s in a["_sites"]]
 
-    # Flagged records must be queued even when their account is filtered out
-    # entirely — otherwise the loudest data-quality signal in the dataset is
-    # the one that disappears. Scan every bucket, not just surviving accounts.
-    surviving = {id(s) for a in accounts for s in a["_sites"]}
+    # EVERY flagged record is queued, wherever it sits. Scan every bucket.
+    #
+    # Two ways a flagged site used to escape the queue, both now closed:
+    #   - its account was filtered out entirely, so nothing referenced it;
+    #   - its account SURVIVED, and an `id(s) not in surviving` test excluded it
+    #     on the grounds that it was already visible. It was not: a flagged site
+    #     is excluded from the account's scoring totals, so it contributes to no
+    #     number a human ever sees, and appeared in no queue either.
+    # A site silently dropped from the arithmetic without a review item is exactly
+    # the failure the numeric gate exists to prevent.
     flagged = [
         {**s, "account": b["name"], "kind": "numeric_outlier",
          "reason": s.get("validation_note", ""),
          "action": "verify the filing, correct the value, or confirm exclusion"}
         for b in buckets.values() for s in b["sites"]
-        if not s.get("validated", True) and id(s) not in surviving
+        if not s.get("validated", True)
     ]
     def _largest(b: dict) -> dict | None:
         """The biggest site in a bucket stands for it in a queue row."""
@@ -809,22 +842,73 @@ def icp_score(a: dict) -> dict:
 # ---------------------------------------------------------------------------
 # Entrypoint
 # ---------------------------------------------------------------------------
-def run(naics: list[str] | None, state: str | None, outdir: str, dry: bool) -> int:
+def load_snapshot(path: str) -> tuple[dict, list[dict]]:
+    """Read a committed pull instead of calling the live API.
+
+    Regenerating the reference CSVs from the network is not reproducible: the API
+    returns TODAY's filings, so a diff taken after changing resolution logic mixes
+    the effect of that change with unrelated upstream drift, and the change becomes
+    unreviewable. Against a committed snapshot the diff contains only what the code
+    change did — which is the whole point of keeping the CSVs under version control.
+
+    Also makes the connector runnable in an air-gapped sandbox or CI.
+    """
+    with open(path) as fh:
+        blob = json.load(fh)
+    facilities = blob.get("facilities")
+    if not isinstance(facilities, list) or not facilities:
+        raise SystemExit(f"{path} has no 'facilities' array")
+    meta = blob.get("meta", {})
+    # The snapshot's meta block is the shape written by the pull script, not the
+    # shape of the live /version endpoint; map it across so the seed JSON keeps
+    # its provenance and licence fields either way.
+    ver = {
+        "version": meta.get("dataset_version", "snapshot"),
+        "dataExportDate": meta.get("pulled"),
+        "dataThroughDate": meta.get("pulled"),
+        "_meta": {
+            "source": meta.get("source"),
+            "license": meta.get("licence") or meta.get("license"),
+            "licenseUrl": meta.get("licence_url") or meta.get("license_url"),
+            "attribution": meta.get("attribution"),
+            "disclaimer": meta.get("disclaimer"),
+            "connector": os.path.basename(__file__),
+            "pulled_at": meta.get("pulled"),
+        },
+    }
+    return ver, facilities
+
+
+def run(naics: list[str] | None, state: str | None, outdir: str, dry: bool,
+        from_json: str | None = None) -> int:
     print("COLDPATH connector — EPA Risk Management Program")
     print("=" * 62)
-    ver = fetch_data_version()
+    if from_json:
+        ver, snapshot = load_snapshot(from_json)
+        print(f"  offline: {len(snapshot)} facilities from {from_json}")
+    else:
+        ver = fetch_data_version()
+        snapshot = None
     print(f"  dataset v{ver.get('version')} · exported {ver.get('dataExportDate')} · "
           f"through {ver.get('dataThroughDate')}")
     print(f"  licence {ver.get('_meta', {}).get('license')} — attribution required\n")
 
     codes = naics or list(NAICS_IN_SCOPE)
     facilities: dict[str, dict] = {}
-    for code in codes:
-        params = {"naicsCodes": code}
-        if state:
-            params["state"] = state
-        for f in search(params, f"NAICS {code} {NAICS_IN_SCOPE.get(code, '')[:26]}"):
+    if snapshot is not None:
+        for f in snapshot:
+            if naics and f.get("naicsCode") not in codes:
+                continue
+            if state and f.get("state") != state:
+                continue
             facilities[f["facilityId"]] = f
+    else:
+        for code in codes:
+            params = {"naicsCodes": code}
+            if state:
+                params["state"] = state
+            for f in search(params, f"NAICS {code} {NAICS_IN_SCOPE.get(code, '')[:26]}"):
+                facilities[f["facilityId"]] = f
     print(f"\n  unique facilities in scope: {len(facilities)}")
 
     accounts, sites, review_queue, unresolved_records = aggregate(list(facilities.values()))
@@ -897,8 +981,11 @@ def main() -> int:
     p.add_argument("--state", help="restrict to one state (e.g. PA)")
     p.add_argument("--outdir", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data"))
     p.add_argument("--dry-run", action="store_true", help="fetch and report, write nothing")
+    p.add_argument("--from-json", metavar="PATH",
+                   help="read a committed pull instead of the live API, so regenerating "
+                        "the reference output is reproducible and works offline")
     a = p.parse_args()
-    return run(a.naics, a.state, os.path.normpath(a.outdir), a.dry_run)
+    return run(a.naics, a.state, os.path.normpath(a.outdir), a.dry_run, a.from_json)
 
 
 if __name__ == "__main__":
