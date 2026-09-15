@@ -105,6 +105,19 @@ jobs:
       - name: Production migration entrypoint (real Postgres 16)
         run: node dist/scripts/migrate-prod.js
 
+      # Immediately again, on the database the step above just migrated. A
+      # migration path that only works on an empty database is not a migration
+      # path, and this is the cheapest place to find that out.
+      #
+      # It must run HERE, before the verifier below: that verifier does
+      # `DROP SCHEMA public CASCADE` to get a clean slate, which takes the
+      # coldpath_migration ledger with it while leaving the types and tables
+      # behind. Re-running after that is not an idempotency test — it is a fresh
+      # apply onto a populated schema, and it fails for that reason rather than
+      # for any defect in the migration path.
+      - name: Re-run migrations to prove they are idempotent
+        run: node dist/scripts/migrate-prod.js
+
       # The SAME assertions as the PGlite step above, on the engine we deploy.
       # PGlite is Postgres 18.3; production is 16. Tenancy isolation is engine
       # behaviour — role handling, FORCE semantics, policy evaluation — so
@@ -114,13 +127,6 @@ jobs:
       # breaking offboarding on any real server.
       - name: RLS + tenancy + auth acceptance (real Postgres 16)
         run: node dist/scripts/verify-postgres.js
-
-      # Run it a SECOND time. A migration path that only works on an empty
-      # database is not a migration path, and this is the cheapest place to find
-      # that out — it is exactly how the re-application bug was caught.
-      - name: Re-run migrations to prove they are idempotent
-        run: node dist/scripts/migrate-prod.js
-
 
       - name: Confirm the container builds
         run: docker build -t coldpath:ci .
