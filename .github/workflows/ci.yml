@@ -74,5 +74,24 @@ jobs:
       - name: RLS + tenancy + auth acceptance (real Postgres engine)
         run: node dist/scripts/verify-integration.js
 
+      # The one thing PGlite cannot prove. It connects as `postgres`, a
+      # superuser with BYPASSRLS, so every assertion about the NON-superuser,
+      # non-owner role wiring that tenancy isolation actually rests on is
+      # untestable there. This step runs the real migration entrypoint against a
+      # real server: it creates coldpath_app, verifies it is neither superuser
+      # nor BYPASSRLS, and refuses to complete unless tenant_isolation is present
+      # and RLS is ENABLEd+FORCEd on every tenant-scoped table.
+      #
+      # The Postgres service below was already being provisioned for this job and
+      # used by nothing.
+      - name: Migration entrypoint against real Postgres (role + RLS wiring)
+        run: node dist/scripts/migrate-prod.js
+
+      # Idempotent by design — roles, policies and triggers all re-apply cleanly.
+      # A migration path that only works on an empty database is not a migration
+      # path, and this is the cheapest place to find that out.
+      - name: Re-run migrations to prove they are idempotent
+        run: node dist/scripts/migrate-prod.js
+
       - name: Confirm the container builds
         run: docker build -t coldpath:ci .
