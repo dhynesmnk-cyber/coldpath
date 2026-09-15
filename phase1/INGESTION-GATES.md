@@ -39,7 +39,7 @@ These nine run in order on everything, regardless of source. Source-specific gat
 
 Entity resolution is the highest-risk gate in the system and the only one with a measured, documented failure mode. In the live EPA RMP pull:
 
-- **55 of 124 accounts (44%)** were filed under more than one legal name — 264 names collapsing to 124 accounts
+- **56 of 125 accounts (45%)** were filed under more than one legal name — 267 names collapsing to 125 accounts
 - **Americold** appears as `Americold Logistics, LLC` (88 sites), `Americold` (8), `Americold Realty` (5), `Americold Realty Trust` (3)
 - A naive exact-match customer blocklist **fails on the largest entities**, because `"Americold Logistics, LLC" != "Americold"`
 
@@ -301,7 +301,7 @@ Nothing is discarded. Every gate that refuses, defers or conflicts writes here, 
 | **Merge rescues** | G4 pattern guards | Near zero, high-stakes | Confirm the two companies really are separate |
 | **Operator is a person** | G2, G4 | 47 on the RMP pull | Confirm the substituted company, or supply the right one |
 
-In the live RMP run this machinery was already exercised end-to-end: **77 records** landed in review (1 numeric outlier, 2 unresolved names, 26 below threshold, 1 merge rescue, 47 operator-is-a-person), including the 89,000,000 lb marine-terminal filing that would otherwise have ranked #15 of the prospect list.
+In the live RMP run this machinery was already exercised end-to-end: **76 records** landed in review (1 numeric outlier, 2 unresolved names, 25 below threshold, 1 merge rescue, 47 operator-is-a-person), including the 89,000,000 lb marine-terminal filing that would otherwise have ranked #15 of the prospect list.
 
 ### 6.1 Below threshold — the largest category of silent refusal
 
@@ -336,7 +336,15 @@ The fix is not to prefer facility names generally. Measured on this pull, doing 
 
 Retaining that name is a deliberate trade against G2's usual instinct to quarantine. It is the one place in the system where an individual's name is stored, it exists so the call can be audited, and it will need a tier assignment when the review queue reaches the database at M2.
 
-A related split is fixed alongside: facility names identify a *site*, so `Magic Valley Fresh Frozen, Inc. (Military)` and `… (Trophy)` are one company at two plants. Trailing parentheticals are stripped before a facility name may stand for a company. Trailing numerals and Roman numerals (`Suzanna's Kitchen II`) split the same way and are **not** handled — guessing there would merge companies that are genuinely distinct.
+Two related splits are fixed alongside, both because facility names identify a *site* rather than a company.
+
+**Trailing parentheticals** are stripped: `Magic Valley Fresh Frozen, Inc. (Military)` and `… (Trophy)` are one company at two plants.
+
+**Trailing site numbers** are consolidated — but only when the unnumbered company is *already* a bucket. `Suzanna's Kitchen II` and `… III` merge into `Suzanna's Kitchen, Inc.`; split three ways each piece was a single site below the pilot floor, so a real three-site company was absent from the registry entirely.
+
+That sibling condition is the whole safety of the rule. `Joseph Cold Storage #1` and `ADUSA Distribution LLC DC5` have no unnumbered counterpart, so nothing says the number is a repetition rather than part of the name, and they are left alone. Guessing without a sibling is how genuinely distinct companies get merged, which is the more expensive mistake.
+
+The numeral must also be a **separate token**, with Roman numerals of at least two characters. Without that, `UNFI` parses as `UNF` + Roman numeral I and United Natural Foods is reduced to a stem matching nothing; a trailing state code (`…Cedar Grove, WI`) would parse the same way.
 
 ### 6.2 Merge rescues — recording a near-miss, not just preventing it
 
@@ -410,6 +418,7 @@ The build does not ship until all of these pass. Each corresponds to a real, mea
 12e. **One company does not become two on a spelled-out legal suffix.** `Perdue Farms Incorporated` and `Perdue Farms, Inc.` resolve to a single account.
 12f. **A person's name never becomes an account.** Where the operator field holds an individual, the company is taken from the facility name instead, and the substitution is recorded in the queue naming both. `Penske Logistics` must be present in the registry; `George Calhoon`, `Bradley Howard` and `Byron C Russell` must not. *(Blocking; §6.3.)*
 12g. **A site qualifier does not split a company.** `Magic Valley Fresh Frozen, Inc. (Military)` and `… (Trophy)` resolve to one account.
+12h. **A numbered plant does not become a separate company** when the unnumbered company exists: `Suzanna's Kitchen, Inc.`, `… II` and `… III` are one 3-site account. Where no unnumbered sibling exists the name is left intact, and `UNFI` must never be read as `UNF` + a numeral. *(Blocking; §6.3.)*
 13. **Distinct companies sharing only a generic or weak token do not merge.** `United Global Foods` / `United Natural Foods Inc.`, `Penske Logistics` / `VersaCold Logistics`, and `Vertical Cold Storage` / `Sodus Cold Storage` must each resolve independently or route to the human queue.
 14. **An unanchored duration is never filed as a clean tenure.** A LinkedIn "About" blurb reading *"18 years across ammonia systems"* must not be extracted as role tenure; only a duration anchored to the current role's date range may be marked clean. Everything else is marked `inferred` and shown for confirmation.
 15. **A SalesIntel spec missing `verification_date` blocks S2** with the reason stated, and the request text names the field explicitly.

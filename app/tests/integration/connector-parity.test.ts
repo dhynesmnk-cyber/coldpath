@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { aggregate, maxAmmoniaLb } from '@/connectors/epa-rmp/aggregate.js';
 import { canonicalName, KNOWN_CUSTOMERS, mergeRescue } from '@/lib/resolve/canonical.js';
-import { looksLikePerson, stripSiteQualifier } from '@/lib/resolve/person.js';
+import { looksLikePerson, siteNumberStem, stripSiteQualifier } from '@/lib/resolve/person.js';
 import { parseCsvObjects } from '@/lib/csv.js';
 import type { RmpFacility } from '@/connectors/epa-rmp/types.js';
 
@@ -76,12 +76,10 @@ describe('fixture integrity', () => {
     expect(fixture.meta.pulled).toBe('2026-09-13');
   });
   it('has a committed Python reference to compare against', () => {
-    // 122 -> 124: the operator field no longer outranks the facility name when
-    // it holds an individual, which recovers the real companies behind three
-    // person-named accounts (Penske Logistics among them); and stripping
-    // trailing site qualifiers un-split Magic Valley Fresh Frozen, Cheney
-    // Brothers and Eckert Cold Storage.
-    expect(expected.length).toBe(124);
+    // 124 -> 125: Suzanna's Kitchen was three accounts ("…, Inc.", "… II",
+    // "… III"), each a single site below the pilot floor, so the company was
+    // invisible. Consolidated it is a 3-site account.
+    expect(expected.length).toBe(125);
   });
 });
 
@@ -174,6 +172,51 @@ describe('REGRESSION: the VersaCold defect', () => {
   it('exactly three accounts are flagged as customers', () => {
     const customers = actual.accounts.filter((a) => a.isCustomer).map((a) => a.account).sort();
     expect(customers).toEqual(['Americold Realty Trust', 'Lineage, Inc.', 'United States Cold Storage']);
+  });
+});
+
+describe('REGRESSION: a numbered plant is not a separate company', () => {
+  /**
+   * "Suzanna's Kitchen II" and "… III" are the same company as
+   * "Suzanna's Kitchen, Inc." at other plants. Split three ways, each piece was
+   * a single site below the pilot floor, so a real three-site company was
+   * absent from the registry entirely.
+   */
+  it('consolidates numbered plants into the company that owns them', () => {
+    const suzanna = actual.accounts.filter((a) => /suzanna/i.test(a.account));
+    expect(suzanna.length, 'should be exactly one Suzanna account').toBe(1);
+    expect(suzanna[0]?.sites).toBe(3);
+    expect(suzanna[0]?.aliases).toContain("Suzanna's Kitchen II");
+    expect(suzanna[0]?.aliases).toContain("Suzanna's Kitchen III");
+  });
+
+  /**
+   * The safety property: a trailing number is only dropped when the unnumbered
+   * company is ALREADY a bucket. Without a sibling there is nothing saying the
+   * number is a repetition rather than part of the name, and guessing is how
+   * genuinely distinct companies get merged.
+   */
+  it('leaves a numbered name alone when no unnumbered sibling exists', () => {
+    const names = actual.accounts.map((a) => a.account);
+    const queued = actual.reviewQueue.map((q) => q.account);
+    const all = [...names, ...queued];
+    // Joseph Cold Storage #1 has no unnumbered counterpart in the pull.
+    expect(all.some((n) => /joseph cold storage/i.test(n))).toBe(true);
+    expect(all).not.toContain('Joseph Cold Storage');
+  });
+
+  it('does not mistake glued letters or state codes for a site number', () => {
+    // "UNFI" must never become "UNF" — the I is not a Roman numeral here.
+    expect(siteNumberStem('UNFI')).toBeNull();
+    expect(siteNumberStem('Cedar Grove Warehousing-Cedar Grove, WI')).toBeNull();
+    expect(siteNumberStem('ADUSA Distribution LLC DC5')).toBeNull();
+    // …but a separated numeral is one.
+    expect(siteNumberStem("Suzanna's Kitchen III")).toBe("Suzanna's Kitchen");
+    expect(siteNumberStem('Joseph Cold Storage #1')).toBe('Joseph Cold Storage');
+  });
+
+  it('keeps United Natural Foods intact', () => {
+    expect(actual.accounts.some((a) => /united natural/i.test(a.account))).toBe(true);
   });
 });
 
@@ -332,10 +375,9 @@ describe('REGRESSION: entity resolution does not over-merge', () => {
 
   it('multi-alias accounts really were merged', () => {
     const multi = actual.accounts.filter((a) => a.aliases.length > 1);
-    // 54 -> 55: adding `incorporated` to the legal-suffix list merged
-    // "Perdue Farms Incorporated" into "Perdue Farms", giving that account a
-    // second alias.
-    expect(multi.length).toBe(55);
+    // 55 -> 56: consolidating "Suzanna's Kitchen II" and "… III" into
+    // "Suzanna's Kitchen, Inc." gave that account three aliases.
+    expect(multi.length).toBe(56);
   });
   it('Americold absorbs all four of its reported names', () => {
     const a = byName.get('Americold Realty Trust');
