@@ -57,13 +57,17 @@ export function validateNumericField<T>(
   fieldName: string,
   factor: number = OUTLIER_FACTOR,
 ): { results: ValidatedRecord<T>[]; stats: OutlierStats } {
+  // Extract once per record, not twice. `extract` is caller-supplied and may do
+  // real work (maxAmmoniaLb walks two chemical arrays), and calling it again in
+  // the map below also means a non-pure extractor could disagree with the
+  // percentile it was measured against.
   const values = records.map(extract);
   const p99 = percentile(values, 0.99);
   const med = median(values);
   const ceiling = p99 * factor;
 
-  const results = records.map((record) => {
-    const value = extract(record);
+  const results = records.map((record, i) => {
+    const value = values[i] ?? 0;
     if (value > ceiling && ceiling > 0) {
       return {
         record,

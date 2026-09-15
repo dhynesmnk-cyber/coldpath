@@ -4,7 +4,7 @@ Production codebase. See `../PRODUCT-PLAN.md` for architecture and milestones; t
 
 **Status: M1 core complete.** Foundations, schema, tenancy and RLS (M0), plus the identity layer: OIDC client, session management, RBAC middleware, identity lifecycle and the AUTH-SPEC §12 acceptance suite. What M1 still needs from Ndustrial: an IdP choice and OIDC client registration (§13 of AUTH-SPEC), then live sign-on against it.
 
-Verification at this commit: typecheck clean, lint clean, 59 vitest tests (unit + a 16-test OIDC protocol suite against a local mock IdP + 19 connector-parity), and 40/40 plain-node integration checks (19 RLS + 21 acceptance).
+Verification at this commit: typecheck clean, lint clean, 109 vitest tests (unit + a 16-test OIDC protocol suite against a local mock IdP + connector-parity), and 43/43 plain-node integration checks (19 RLS + 24 acceptance).
 
 ---
 
@@ -92,7 +92,8 @@ tests/
     harness.ts           builds a migrated two-tenant PGlite instance
     rls.checks.ts        19 runner-agnostic assertions incl. the negative control
     rls.test.ts          vitest wrapper
-    connector-parity.test.ts   19 tests diffing the TS port against the Python CSV
+    connector-parity.test.ts   diffs the TS port against the Python CSV, plus
+                               the synthetic outlier-queue regression
   fixtures/
     rmp-facilities.json          1,382 real facilities from the live EPA pull
     coldchain_rmp_accounts.csv   the Python reference output
@@ -104,7 +105,19 @@ tests/
 
 **Licence: CC BY-SA 4.0.** Source: U.S. EPA Risk Management Program, obtained under FOIA by the Data Liberation Project. Redistribution must remain CC BY-SA compatible, and EPA states the data is self-reported and "may contain errors or omissions" — which is precisely why the numeric validation gate exists.
 
-The reference CSVs are the output of `../coldpath/phase1/connectors/epa_rmp.py`. **If you change resolution logic, change both implementations and regenerate the reference.** The parity test exists so a divergence is caught immediately rather than discovered in production as a missing prospect or an emailed customer.
+The reference CSVs are the output of `../coldpath/phase1/connectors/epa_rmp.py`. **If you change resolution logic, change both implementations and regenerate the reference:**
+
+```bash
+python3 ../phase1/connectors/epa_rmp.py \
+        --from-json tests/fixtures/rmp-facilities.json --outdir ../phase1/data
+cp ../phase1/data/coldchain_rmp_{accounts,sites,review_queue}.csv tests/fixtures/
+```
+
+`--from-json` reads the committed pull rather than the live API. That matters for
+more than offline convenience: regenerating from the network returns *today's*
+filings, so the CSV diff would mix your code change with unrelated upstream drift
+and stop being reviewable. Against the snapshot the diff shows only what your
+change did, and re-running produces byte-identical output. The parity test exists so a divergence is caught immediately rather than discovered in production as a missing prospect or an emailed customer.
 
 ## What is deliberately not here yet
 

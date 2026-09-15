@@ -71,8 +71,10 @@ export function canAccessPii(
 
 /**
  * Whether a contact detail may be used to generate outbound. Distinct from
- * reading it: gate S5 requires a recorded lawful basis, gate L8 blocks outbound
- * entirely for contacts below confidence 2.
+ * reading it: gate S5 requires a recorded lawful basis, and gate L8 blocks
+ * outbound for any contact AT or below confidence 2 — hence `>= 3`, not `>= 2`.
+ * A rep-pasted LinkedIn capture caps at 2 (gate L7) and so can never reach
+ * outbound on its own; only an independent level-3 source lifts it.
  */
 export function canUseForOutbound(
   roles: readonly Role[],
