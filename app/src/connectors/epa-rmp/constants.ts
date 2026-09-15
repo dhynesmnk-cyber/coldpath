@@ -35,5 +35,32 @@ export const RTO_BY_STATE: Readonly<Record<string, Rto>> = {
   CT: 'ISO-NE', MA: 'ISO-NE', NH: 'ISO-NE', VT: 'ISO-NE', RI: 'ISO-NE', ME: 'ISO-NE',
 };
 
-/** Pilot filter: single-site operators below this charge are not enterprise prospects. */
-export const SINGLE_SITE_AMMONIA_FLOOR = 250_000;
+/**
+ * Pilot filter: single-site operators below this charge are not auto-admitted.
+ *
+ * Was 250,000, which admitted exactly THREE single-site companies out of 357 —
+ * in practice "multi-site only" rather than a floor. It was also concealing
+ * genuine prospects whose single in-scope RMP filing understates the business:
+ * Smithfield Fresh Meats, Charoen Pokphand Foods and Mitsubishi all sit between
+ * 80,000 and 110,000 lb.
+ *
+ * At 100,000 the auto-admitted set stays clean. Below it the data quality drops
+ * sharply — operator names that are actually individuals, facility codes, and a
+ * duplicate Perdue — which is why the 50,000–100,000 band is QUEUED for a human
+ * rather than admitted. See SUBTHRESHOLD_QUEUE_FLOOR.
+ */
+export const SINGLE_SITE_AMMONIA_FLOOR = 100_000;
+
+/**
+ * Sub-threshold review floor — INGESTION-GATES.md §1, gate G9.
+ *
+ * A company that resolves cleanly but falls below the pilot filter is dropped.
+ * Silently, and 354 times over on the current pull, which makes "nothing is
+ * silently dropped" untrue for the largest category of refusal in the system.
+ *
+ * Companies above this charge but below the pilot floor are queued instead:
+ * roughly 29 on the current pull, a number a person can actually read. Lower
+ * floors do not help — the EPA reporting threshold is 10,000 lb, so the dropped
+ * set is dense at the bottom and a 25,000 floor would queue 120.
+ */
+export const SUBTHRESHOLD_QUEUE_FLOOR = 50_000;

@@ -1,18 +1,35 @@
+import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { aggregate, maxAmmoniaLb } from '@/connectors/epa-rmp/aggregate.js';
-import { canonicalName, KNOWN_CUSTOMERS } from '@/lib/resolve/canonical.js';
+import { canonicalName, KNOWN_CUSTOMERS, mergeRescue } from '@/lib/resolve/canonical.js';
+import { looksLikePerson, siteNumberStem, stripSiteQualifier } from '@/lib/resolve/person.js';
 import { parseCsvObjects } from '@/lib/csv.js';
 import type { RmpFacility } from '@/connectors/epa-rmp/types.js';
 
 /**
  * PARITY TEST — PRODUCT-PLAN.md §10 risk #3.
  *
- * The Python connector (phase1/connectors/epa_rmp.py) is the reference
- * implementation. It was run against the live EPA RMP API and its output is
- * committed as CSV. This test runs the TypeScript port against the SAME
- * 1,382-facility input and diffs every field of every account.
+ * WHAT THIS PROVES, AND WHAT IT DOES NOT.
+ *
+ * This file runs the TypeScript port against the committed fixture and diffs
+ * every field of every account against the committed reference CSVs. That is
+ * one leg of the proof:
+ *
+ *     leg 1 (here)  TypeScript(fixture) == committed CSV
+ *     leg 2 (CI)    committed CSV       == Python(fixture)
+ *
+ * Only together do they give TypeScript == Python, which is what "parity"
+ * claims. This file deliberately does NOT execute the Python: its value is that
+ * it needs no database and no toolchain, and a test that skips itself when
+ * python3 is absent would be a check that cannot fail.
+ *
+ * Leg 2 is `python3 phase1/connectors/regen_reference.py --check`, run in CI.
+ * Without it the Python could drift from its own committed output invisibly —
+ * which already happened once: max_ammonia_lb() read only the live API's
+ * chemical shape, so every facility in the fixture reported 0 lb and two
+ * accounts silently vanished. Nothing failed.
  *
  * The port is not done until this passes. No database is required — it reads two
  * fixtures — so it runs under vitest in any environment.
@@ -41,8 +58,31 @@ describe('fixture integrity', () => {
     expect(fixture.meta.count).toBe(1382);
     expect(fixture.meta.licence).toBe('CC BY-SA 4.0');
   });
+
+  /**
+   * The fixture is the SHARED INPUT to both implementations, which is exactly
+   * why counts alone do not protect it: edit a value in place and both sides
+   * move together, so every parity assertion still passes while the reference
+   * quietly stops corresponding to the documented 13 September 2026 EPA pull.
+   *
+   * A checksum is the only assertion here that an in-place edit cannot satisfy.
+   * If this fails because you deliberately re-pulled from EPA, update the hash
+   * in the same commit as the new fixture and regenerate the reference CSVs.
+   */
+  it('is the exact 13 September 2026 pull, byte for byte', () => {
+    const bytes = readFileSync(`${dir}/rmp-facilities.json`);
+    const digest = createHash('sha256').update(bytes).digest('hex');
+    expect(digest).toBe('967979bb5af6c323facf2f98c98bcae29d5646fad820d58eaf36d9035f2ce65f');
+    expect(fixture.meta.pulled).toBe('2026-09-13');
+  });
   it('has a committed Python reference to compare against', () => {
-    expect(expected.length).toBe(118);
+    // 124 -> 125: Suzanna's Kitchen was three accounts ("…, Inc.", "… II",
+    // "… III"), each a single site below the pilot floor, so the company was
+    // invisible. Consolidated it is a 3-site account.
+    // 125 -> 126: matchKey stopped splitting on punctuation, so MDV/SpartanNash
+    // and Save-A-Lot became accounts instead of vanishing, and Wayne-Sanderson
+    // stopped being listed twice.
+    expect(expected.length).toBe(126);
   });
 });
 
@@ -138,6 +178,167 @@ describe('REGRESSION: the VersaCold defect', () => {
   });
 });
 
+describe('REGRESSION: a numbered plant is not a separate company', () => {
+  /**
+   * "Suzanna's Kitchen II" and "… III" are the same company as
+   * "Suzanna's Kitchen, Inc." at other plants. Split three ways, each piece was
+   * a single site below the pilot floor, so a real three-site company was
+   * absent from the registry entirely.
+   */
+  it('consolidates numbered plants into the company that owns them', () => {
+    const suzanna = actual.accounts.filter((a) => /suzanna/i.test(a.account));
+    expect(suzanna.length, 'should be exactly one Suzanna account').toBe(1);
+    expect(suzanna[0]?.sites).toBe(3);
+    expect(suzanna[0]?.aliases).toContain("Suzanna's Kitchen II");
+    expect(suzanna[0]?.aliases).toContain("Suzanna's Kitchen III");
+  });
+
+  /**
+   * The safety property: a trailing number is only dropped when the unnumbered
+   * company is ALREADY a bucket. Without a sibling there is nothing saying the
+   * number is a repetition rather than part of the name, and guessing is how
+   * genuinely distinct companies get merged.
+   */
+  it('leaves a numbered name alone when no unnumbered sibling exists', () => {
+    const names = actual.accounts.map((a) => a.account);
+    const queued = actual.reviewQueue.map((q) => q.account);
+    const all = [...names, ...queued];
+    // Joseph Cold Storage #1 has no unnumbered counterpart in the pull.
+    expect(all.some((n) => /joseph cold storage/i.test(n))).toBe(true);
+    expect(all).not.toContain('Joseph Cold Storage');
+  });
+
+  it('does not mistake glued letters or state codes for a site number', () => {
+    // "UNFI" must never become "UNF" — the I is not a Roman numeral here.
+    expect(siteNumberStem('UNFI')).toBeNull();
+    expect(siteNumberStem('Cedar Grove Warehousing-Cedar Grove, WI')).toBeNull();
+    expect(siteNumberStem('ADUSA Distribution LLC DC5')).toBeNull();
+    // …but a separated numeral is one.
+    expect(siteNumberStem("Suzanna's Kitchen III")).toBe("Suzanna's Kitchen");
+    expect(siteNumberStem('Joseph Cold Storage #1')).toBe('Joseph Cold Storage');
+  });
+
+  it('keeps United Natural Foods intact', () => {
+    expect(actual.accounts.some((a) => /united natural/i.test(a.account))).toBe(true);
+  });
+});
+
+describe('REGRESSION: a person is not a company', () => {
+  /**
+   * The EPA operator field often holds whoever signed the filing. Because
+   * pick() preferred it over facilityName, people's names became account names
+   * — and the real companies behind them were lost. Penske Logistics is named
+   * in INGESTION-GATES.md §9 #13 and was absent from the registry entirely.
+   */
+  it('recovers the company hiding behind a person-named operator', () => {
+    const names = actual.accounts.map((a) => a.account);
+    expect(names.some((n) => /penske/i.test(n)), 'Penske Logistics should be an account').toBe(true);
+  });
+
+  it('keeps individuals out of the registry', () => {
+    const names = actual.accounts.map((a) => a.account);
+    for (const person of ['Bradley Howard', 'Byron C Russell', 'George Calhoon']) {
+      expect(names, `${person} is an individual, not a company`).not.toContain(person);
+    }
+  });
+
+  it('records every substitution so a misjudgement can be overturned', () => {
+    const subs = actual.reviewQueue.filter((q) => q.kind === 'operator_is_person');
+    expect(subs.length).toBeGreaterThan(0);
+    for (const q of subs) {
+      // The operator's name is retained deliberately: without it a reviewer
+      // cannot check whether the call was right.
+      expect(q.reportedName, 'the queue row must name the operator').not.toBe('');
+      expect(q.account, 'the row must name the company we substituted').not.toBe('');
+      expect(q.reason).toMatch(/looks like an individual/);
+    }
+  });
+
+  it('does not mistake companies that merely read like names', () => {
+    for (const company of ['KOCH MEAT', 'SpartanNash Omaha', 'Gordon Food Service', 'Aldi Incorporated']) {
+      expect(looksLikePerson(company), `${company} is a company`).toBe(false);
+    }
+    for (const person of ['Chad Paige', 'Byron C. Russell', 'George Calhoon']) {
+      expect(looksLikePerson(person), `${person} is an individual`).toBe(true);
+    }
+  });
+
+  it('does not let a site qualifier split one company in two', () => {
+    const names = actual.accounts.map((a) => a.account);
+    // "Magic Valley Fresh Frozen, Inc. (Military)" and "(Trophy)" are one company.
+    expect(names.filter((n) => /magic valley/i.test(n)).length).toBe(1);
+    expect(stripSiteQualifier('Magic Valley Fresh Frozen, Inc. (Military)'))
+      .toBe('Magic Valley Fresh Frozen, Inc.');
+  });
+});
+
+describe('the pilot floor and the sub-threshold queue', () => {
+  const queue = actual.reviewQueue;
+
+  /**
+   * 354 of 472 resolved companies used to be dropped by the pilot filter with
+   * no record at all, which made INGESTION-GATES.md's "nothing is silently
+   * dropped" untrue for the largest category of refusal in the system.
+   */
+  it('queues resolved companies dropped by the pilot floor', () => {
+    const below = queue.filter((q) => q.kind === 'below_threshold');
+    expect(below.length).toBeGreaterThan(0);
+    for (const q of below) {
+      expect(q.ammoniaLb, `${q.account} is under the queue floor`).toBeGreaterThanOrEqual(50_000);
+      expect(q.ammoniaLb, `${q.account} should have been admitted, not queued`).toBeLessThan(100_000);
+      expect(q.action).toMatch(/sub-threshold account/);
+    }
+  });
+
+  it('admits the single-site companies the old floor was hiding', () => {
+    const names = actual.accounts.map((a) => a.account);
+    for (const n of ['Harkins Street Holdings', 'DPF Holdings', 'Super Store Industries', 'Charoen Pokphand Foods']) {
+      expect(names, `${n} should now be an account`).toContain(n);
+    }
+  });
+
+  it('nothing sits in both the registry and the below-threshold queue', () => {
+    const accountNames = new Set(actual.accounts.map((a) => a.account));
+    const below = queue.filter((q) => q.kind === 'below_threshold').map((q) => q.account);
+    expect(below.filter((n) => accountNames.has(n))).toEqual([]);
+  });
+});
+
+describe('REGRESSION: a guarded near-miss is recorded, not just prevented', () => {
+  /**
+   * The guards stop Sodus Cold Storage being absorbed into the United States
+   * Cold Storage CUSTOMER account — but prevention is silent. Without a queue
+   * entry the only evidence is a prospect list one company longer, which is
+   * exactly as unreadable as the bug was.
+   */
+  it('queues Sodus as a merge rescue naming the customer it escaped', () => {
+    const rescues = actual.reviewQueue.filter((q) => q.kind === 'merge_rescue');
+    expect(rescues.length).toBe(1);
+    const [sodus] = rescues;
+    expect(sodus?.account).toMatch(/sodus/i);
+    expect(sodus?.reason).toMatch(/United States Cold Storage/);
+    expect(sodus?.reason).toMatch(/CUSTOMER/);
+    expect(sodus?.action).toMatch(/separate company/);
+  });
+
+  it('does not report a rescue when the bucket key is unchanged', () => {
+    // "SCHWANS COMPANY" moves between resolution paths but matchKey normalises
+    // both sides to `schwans`, so nothing was rescued. Comparing canonical
+    // NAMES reports this as a hit; comparing bucket KEYS does not.
+    expect(mergeRescue('SCHWANS COMPANY')).toBeNull();
+    expect(mergeRescue('Sodus Cold Storage Co., Inc.')).not.toBeNull();
+  });
+});
+
+describe('REGRESSION: Perdue Farms is one company', () => {
+  it('does not split on the spelled-out legal suffix', () => {
+    const perdue = actual.accounts.filter((a) => /perdue/i.test(a.account));
+    expect(perdue.length).toBe(1);
+    expect(perdue[0]?.aliases).toContain('Perdue Farms Incorporated');
+    expect(perdue[0]?.sites).toBe(2);
+  });
+});
+
 describe('REGRESSION: entity resolution does not over-merge', () => {
   it('distinct companies sharing generic or weak tokens stay separate', () => {
     const names = actual.accounts.map((a) => a.account);
@@ -145,12 +346,43 @@ describe('REGRESSION: entity resolution does not over-merge', () => {
       expect(names, `${n} must survive as its own account`).toContain(n);
     }
   });
+  /**
+   * INGESTION-GATES.md §9 #1, the over-reach half — the measured sibling of the
+   * VersaCold defect above, and the more damaging direction.
+   *
+   * `us cold storage` is a substring of "Sod-us cold storage", so Sodus Cold
+   * Storage Co., Inc. (Sodus NY, 14,693 lb, single site, a genuine independent
+   * prospect) was absorbed into United States Cold Storage — an existing
+   * CUSTOMER — and suppressed from outbound. Nothing errored and nothing was
+   * queued; the only symptom was a prospect list one company shorter.
+   */
+  it('Sodus Cold Storage is not absorbed into the US Cold Storage customer', () => {
+    const uscs = byName.get('United States Cold Storage');
+    expect(uscs).toBeDefined();
+    expect(uscs?.aliases, 'Sodus must not appear as an alias of a customer')
+      .not.toContain('Sodus Cold Storage Co., Inc.');
+    for (const a of actual.accounts) {
+      if (!a.isCustomer) continue;
+      for (const alias of a.aliases) {
+        expect(/\bsodus\b|\bseaonus\b/i.test(alias), `${alias} absorbed into customer ${a.account}`).toBe(false);
+      }
+    }
+  });
+
+  it('no site is attributed to a customer account it only matched mid-word', () => {
+    const suspect = actual.sites.filter(
+      (s) => /^(sodus|seaonus)/i.test(s.name) && KNOWN_CUSTOMERS.has(s.account ?? ''),
+    );
+    expect(suspect.map((s) => `${s.name} -> ${s.account}`)).toEqual([]);
+  });
+
   it('multi-alias accounts really were merged', () => {
     const multi = actual.accounts.filter((a) => a.aliases.length > 1);
-    // 58 accounts were filed under more than one legal name in the live pull.
-    // This rose from 54 when matchKey stopped splitting on punctuation: the four
-    // extra are the spellings that used to become separate accounts.
-    expect(multi.length).toBe(58);
+    // 55 -> 56: consolidating "Suzanna's Kitchen II" and "… III" into
+    // "Suzanna's Kitchen, Inc." gave that account three aliases.
+    // 56 -> 60: matchKey now folds punctuation variants into one bucket, so four
+    // more accounts carry both spellings of their reported name.
+    expect(multi.length).toBe(60);
   });
   it('Americold absorbs all four of its reported names', () => {
     const a = byName.get('Americold Realty Trust');

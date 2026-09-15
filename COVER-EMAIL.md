@@ -29,7 +29,7 @@ Worth saying plainly: those codes are a prototype convenience, not security. Bot
 
 If you only have five minutes, look at these three:
 
-1. **Build List → the EPA RMP panel.** Not sample data. Any US facility holding more than 10,000 lb of anhydrous ammonia has to file a Risk Management Plan with the EPA, and those filings are public. That makes the registry a free, near-complete map of the cold-chain market: **1,382 facilities, resolved into 117 accounts across 755 sites in 43 states.** The CSV of those accounts is in the zip and is yours to keep either way.
+1. **Build List → the EPA RMP panel.** Not sample data. Any US facility holding more than 10,000 lb of anhydrous ammonia has to file a Risk Management Plan with the EPA, and those filings are public. That makes the registry a free, near-complete map of the cold-chain market: **1,382 facilities, resolved into 125 accounts across 774 sites in 43 states.** The CSV of those accounts is in the zip and is yours to keep either way.
 
 2. **Ingest → CRM Target List → "Load a sample export."** The sample has faults planted in it deliberately. Watch eleven validation gates respond — including two existing customers being suppressed even though they're filed under different legal names than the ones on your customer list.
 
@@ -77,7 +77,7 @@ If a brief is wrong, thin, or missing something you'd need before a call — tel
 | `[Your name]` | You |
 | Marketing owner in Email 2 | The prototype's marketing user is **Madeline Belvin**. If that isn't a real person at Ndustrial, tell me and I'll rename her in the app before you send it — she appears in 27 places including account ownership and deliverable bylines. |
 
-**Two numbers to double-check if you edit:** the prototype currently reports **117 accounts / 755 sites**. If you regenerate the EPA pull before sending, those figures move — the README and the in-app panel both read from the same data, but the email body is hardcoded.
+**Two numbers to double-check if you edit:** the prototype currently reports **125 accounts / 774 sites**. If you regenerate the EPA pull before sending, those figures move — the README and the in-app panel both read from the same data, but the email body is hardcoded.
 
 **Don't promise the whitespace number.** The demo's "106 accounts not in your CRM" comes from the *sample* CSV, not theirs. If they ask, the honest answer is: run your real export through it and that number becomes meaningful — which is a good reason to ask for the export.
 

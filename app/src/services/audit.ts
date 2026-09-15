@@ -1,6 +1,7 @@
-import { sql } from 'drizzle-orm';
+import { and, eq, sql, type SQL } from 'drizzle-orm';
 import type { Db, Tx } from '../db/client.js';
 import { auditLog } from '../db/schema/index.js';
+import { log } from '../lib/log.js';
 
 /**
  * Append-only audit writer — AUTH-SPEC.md §5.
@@ -52,8 +53,13 @@ export async function audit(db: Db | Tx, entry: AuditEntry): Promise<boolean> {
     });
     return true;
   } catch (e) {
-    // Structured log rather than a swallowed exception.
-    console.error('audit write failed', { action: entry.action, error: String(e) });
+    // Structured, and deliberately loud. An audit trail that silently stops
+    // recording is worse than one that errors: the absence of entries reads as
+    // "nothing happened". This is the signal that the trail is incomplete.
+    log.error(
+      { action: entry.action, outcome: entry.outcome, tenantId: entry.tenantId, err: String(e) },
+      'audit write failed',
+    );
     return false;
   }
 }
@@ -73,14 +79,25 @@ export async function auditPiiRead(
   });
 }
 
-/** Read the trail. admin-only — enforced by the caller's permission check. */
+/**
+ * Read the trail. admin-only — enforced by the caller's permission check.
+ *
+ * `userId` and `action` were declared here and never applied: the query filtered
+ * on tenant alone, so an admin narrowing the trail to one user or one action got
+ * the WHOLE trail back with no indication the filter had been ignored. For an
+ * audit tool that is worse than an error — the answer looks authoritative and
+ * the reviewer has no reason to doubt it.
+ */
 export async function readAudit(
   db: Db | Tx,
   filter: { tenantId: string; limit?: number; userId?: string; action?: AuditAction },
 ) {
-  const q = db.select().from(auditLog)
-    .where(sql`${auditLog.tenantId} = ${filter.tenantId}`)
+  const conditions: SQL[] = [eq(auditLog.tenantId, filter.tenantId)];
+  if (filter.userId !== undefined) conditions.push(eq(auditLog.userId, filter.userId));
+  if (filter.action !== undefined) conditions.push(eq(auditLog.action, filter.action));
+
+  return db.select().from(auditLog)
+    .where(and(...conditions))
     .orderBy(sql`${auditLog.at} DESC`)
     .limit(filter.limit ?? 100);
-  return q;
 }

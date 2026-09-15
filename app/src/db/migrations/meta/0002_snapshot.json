@@ -1,5 +1,5 @@
 {
-  "id": "b0e9656a-1a47-46a9-9949-d7bf2cb08d34",
+  "id": "525cf0cd-fdbb-4f8b-bba2-c9b5fb460f7e",
   "prevId": "aed6d2e9-42ad-45b4-a401-e1e89d00e4a5",
   "version": "7",
   "dialect": "postgresql",
@@ -812,11 +812,26 @@
           "method": "btree",
           "with": {}
         },
-        "ix_session_refresh": {
-          "name": "ix_session_refresh",
+        "ix_session_refresh_hash": {
+          "name": "ix_session_refresh_hash",
           "columns": [
             {
               "expression": "refresh_hash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ix_session_issued_at": {
+          "name": "ix_session_issued_at",
+          "columns": [
+            {
+              "expression": "issued_at",
               "isExpression": false,
               "asc": true,
               "nulls": "last"

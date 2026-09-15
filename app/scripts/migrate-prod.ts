@@ -9,7 +9,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import postgres from 'postgres';
 import { allSecuritySql, tenantScopedTables } from '../src/db/rls.js';
-import { migrationsDir } from '../src/db/migrate.js';
+import { migrationsDir } from '../src/db/migrations-dir.js';
 
 const configured = process.env.DATABASE_URL;
 if (typeof configured !== 'string' || configured.length === 0) {

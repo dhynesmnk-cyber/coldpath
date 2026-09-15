@@ -2,7 +2,7 @@
 
 **Purpose:** define every checkpoint data must pass before it is trusted, and every condition under which it is refused.
 **Scope:** four data paths plus one specification path — CRM CSV, BD research reports, LinkedIn Sales Navigator capture, SalesIntel feed, and the SalesIntel field specification that governs it.
-**Companion:** `../index.html` (working in-browser implementation of all four paths) · `what-is-this/` (first-run explainers)
+**Companion:** `../archive/index.html` (working in-browser implementation of all four paths) · `what-is-this/` (first-run explainers)
 
 ---
 
@@ -39,7 +39,7 @@ These nine run in order on everything, regardless of source. Source-specific gat
 
 Entity resolution is the highest-risk gate in the system and the only one with a measured, documented failure mode. In the live EPA RMP pull:
 
-- **54 of 117 accounts (46%)** were filed under more than one legal name — 254 names collapsing to 117 accounts
+- **56 of 125 accounts (45%)** were filed under more than one legal name — 267 names collapsing to 125 accounts
 - **Americold** appears as `Americold Logistics, LLC` (88 sites), `Americold` (8), `Americold Realty` (5), `Americold Realty Trust` (3)
 - A naive exact-match customer blocklist **fails on the largest entities**, because `"Americold Logistics, LLC" != "Americold"`
 
@@ -297,8 +297,62 @@ Nothing is discarded. Every gate that refuses, defers or conflicts writes here, 
 | **Unassigned accounts** | C6 | Low | Allocate an owner |
 | **Outbound blocked** | L8, S5 | Per-contact | Resolve the contact, or accept the block |
 | **PII quarantined** | G2, L12, S4 | Should be near zero | Review and release or delete |
+| **Below threshold** | G9, pilot filter | 27 on the RMP pull | Confirm whether it is a prospect; approving admits it |
+| **Merge rescues** | G4 pattern guards | Near zero, high-stakes | Confirm the two companies really are separate |
+| **Operator is a person** | G2, G4 | 47 on the RMP pull | Confirm the substituted company, or supply the right one |
 
-In the live RMP run this machinery was already exercised end-to-end: **5 records** landed in review (1 numeric outlier, 2 unresolved names), including the 89,000,000 lb marine-terminal filing that would otherwise have ranked #15 of 114 prospects.
+In the live RMP run this machinery was already exercised end-to-end: **76 records** landed in review (1 numeric outlier, 2 unresolved names, 25 below threshold, 1 merge rescue, 47 operator-is-a-person), including the 89,000,000 lb marine-terminal filing that would otherwise have ranked #15 of the prospect list.
+
+### 6.1 Below threshold — the largest category of silent refusal
+
+The pilot filter admits multi-site operators, or single sites above an ammonia floor. Everything else was **dropped with no record**: 354 of 472 resolved companies on the current pull. That is not a rounding error at the edge of the dataset, it is the biggest refusal the system performs, and it performed it silently — which made "nothing is discarded" untrue.
+
+Two changes, because one number could not do both jobs:
+
+- **The pilot floor came down to 100,000 lb** (from 250,000). At 250,000 the filter admitted exactly *three* single-site companies out of 357 — in practice "multi-site only" rather than a floor — while excluding genuine prospects whose single in-scope RMP filing understates the business. Smithfield Fresh Meats (88,000 lb), Charoen Pokphand Foods (110,000 lb) and Mitsubishi (82,000 lb) are not small companies.
+
+- **The 50,000–100,000 lb band is queued, not admitted.** Below 100,000 the data quality falls off sharply, and it falls off in ways a person spots instantly and a rule does not: operator names that are actually individuals, facility codes filed as company names, and a duplicate Perdue. Admitting that band unreviewed would have put **named private individuals into a prospect registry** — a G2 concern, not untidiness.
+
+Lower floors do not help. The EPA reporting threshold is 10,000 lb, so the dropped set is dense at the bottom: a 25,000 lb floor queues 120 records and a queue that size goes unread, which is silent dropping wearing a hat.
+
+**On approval**, a queued company becomes an ordinary account — ICP-scored, outbound-eligible like any other — carrying a flag that records it entered below the pilot floor. The flag is what later answers whether the queue is finding real business or just noise. *(The approval step itself needs the M2 review UI; the connector emits the queue rows and the rule is specified and tested now.)*
+
+### 6.3 Operator is a person — a name is not a company
+
+The EPA operator field frequently holds the individual who signed the filing rather than a company. Because the name-picking order preferred it over the facility name, **people's names became account names**, and the companies behind them were lost:
+
+| operator field | the company actually operating the site |
+|---|---|
+| Christopher Hawk | **Penske Logistics, LLC** |
+| George Calhoon | Magic Valley Fresh Frozen, Inc. |
+| Gary Crowder | Smith Frozen Foods, INC |
+| Bradley Howard | Suzanna's Kitchen, Inc. |
+
+Two harms, and the second is the larger one. Named private individuals entered a prospect registry, which G2 exists to prevent. And real prospects were **missing**: Penske Logistics is named in §9 #13 of this document and was absent from the registry entirely, because a person's name outranked it.
+
+The fix is not to prefer facility names generally. Measured on this pull, doing so gains 4 accounts and loses 21 — California Dairies, National Beef Packing, Seneca Foods, Boar's Head and others, whose facility names are site labels rather than companies. The operator field is usually right; it is wrong in a specific, detectable way.
+
+**Detection is pattern-based and deliberately has no dictionary of given names.** A name list would be more precise — it would spare the three real companies this pattern misjudges — but it is a shared word list both implementations would have to keep identical forever. Instead *every* substitution is recorded in the queue, **including the operator's name**, so a reviewer can check the judgement and overturn it. Failing visibly beats failing precisely.
+
+Retaining that name is a deliberate trade against G2's usual instinct to quarantine. It is the one place in the system where an individual's name is stored, it exists so the call can be audited, and it will need a tier assignment when the review queue reaches the database at M2.
+
+Two related splits are fixed alongside, both because facility names identify a *site* rather than a company.
+
+**Trailing parentheticals** are stripped: `Magic Valley Fresh Frozen, Inc. (Military)` and `… (Trophy)` are one company at two plants.
+
+**Trailing site numbers** are consolidated — but only when the unnumbered company is *already* a bucket. `Suzanna's Kitchen II` and `… III` merge into `Suzanna's Kitchen, Inc.`; split three ways each piece was a single site below the pilot floor, so a real three-site company was absent from the registry entirely.
+
+That sibling condition is the whole safety of the rule. `Joseph Cold Storage #1` and `ADUSA Distribution LLC DC5` have no unnumbered counterpart, so nothing says the number is a repetition rather than part of the name, and they are left alone. Guessing without a sibling is how genuinely distinct companies get merged, which is the more expensive mistake.
+
+The numeral must also be a **separate token**, with Roman numerals of at least two characters. Without that, `UNFI` parses as `UNF` + Roman numeral I and United Natural Foods is reduced to a stem matching nothing; a trailing state code (`…Cedar Grove, WI`) would parse the same way.
+
+### 6.2 Merge rescues — recording a near-miss, not just preventing it
+
+Gate G4's pattern guards stop a name being absorbed into the wrong canonical account. `us cold storage` is a substring of "Sod-us cold storage", so before the guards **Sodus Cold Storage Co. was filed under United States Cold Storage — an existing customer — and suppressed from outbound**, with no error and no queue entry.
+
+The guard prevents that now. But prevention is *silent*: the only evidence is a prospect list one company longer, which is exactly as unreadable as the original bug. So when a guard fires, the record goes to the queue naming the account it escaped and whether that account is a customer.
+
+The detector compares **bucket keys, not canonical names**, and the distinction is load-bearing. "SCHWANS COMPANY" looks rescued on names — the guard moves it from the rule path to the fallback path — but normalisation maps both to the same key, so it lands in the same bucket and nothing was rescued. Comparing names reports two hits on the current pull; comparing keys reports the one that is real.
 
 ---
 
@@ -325,7 +379,7 @@ In the live RMP run this machinery was already exercised end-to-end: **5 records
 
 **Authentication caveat.** The prototype's PIN gate is **obfuscation, not authentication** — both codes are in the page source and the session is a `localStorage` entry. Gate L2 in the prototype is satisfied by a self-selected name after a shared code, which makes captures distinguishable but not attributable. `AUTH-SPEC.md` specifies what replaces it, and why L2, R8, S1, S4 and S5 all depend on real server-asserted identity.
 
-**Implementation status:** all five paths are working in the browser in `../index.html` — real CSV parsing, real field mapping, real entity resolution against the 118-account registry, real LinkedIn field extraction with attribution, real document classification, real verification-window evaluation, and real field-specification parsing with alternative-name matching. Sample fixtures with deliberate faults are built into each path so the gates can be watched firing rather than taken on trust.
+**Implementation status:** all five paths are working in the browser in `../archive/index.html` — real CSV parsing, real field mapping, real entity resolution against the 114-account registry, real LinkedIn field extraction with attribution, real document classification, real verification-window evaluation, and real field-specification parsing with alternative-name matching. Sample fixtures with deliberate faults are built into each path so the gates can be watched firing rather than taken on trust.
 
 **The review queue is unified.** Refusals, deferrals and conflicts from all five paths and from account research land in one severity-ranked list, surfaced both on the Ingest overview and on the Command dashboard. A gate whose output is only visible on a screen nobody opened is not a gate.
 
@@ -359,6 +413,12 @@ The build does not ship until all of these pass. Each corresponds to a real, mea
 11. **Bulk paste into the LinkedIn capture box is refused** with an explanation referencing the manual-capture rule.
 12. **Nothing writes to the CRM.** Verified by absence of credentials, not by configuration.
 12b. **Attribution cannot be forged.** No request parameter, header or body field can set `captured_by` to anyone other than the session user (`AUTH-SPEC.md` §12, item 3).
+12c. **A company dropped by the pilot filter is queued, not discarded**, when its charge is above the review floor — and approving it admits it as an account flagged sub-threshold. *(Gate G9; §6.1.)*
+12d. **A guarded near-miss is recorded.** Where a pattern guard stops a name merging into another account, the record appears in the queue naming that account and whether it is a customer. `Sodus Cold Storage Co.` must appear there naming `United States Cold Storage`. Detection compares bucket keys, so `SCHWANS COMPANY` — which normalises to the same key either way — must **not** appear. *(Blocking; §6.2.)*
+12e. **One company does not become two on a spelled-out legal suffix.** `Perdue Farms Incorporated` and `Perdue Farms, Inc.` resolve to a single account.
+12f. **A person's name never becomes an account.** Where the operator field holds an individual, the company is taken from the facility name instead, and the substitution is recorded in the queue naming both. `Penske Logistics` must be present in the registry; `George Calhoon`, `Bradley Howard` and `Byron C Russell` must not. *(Blocking; §6.3.)*
+12g. **A site qualifier does not split a company.** `Magic Valley Fresh Frozen, Inc. (Military)` and `… (Trophy)` resolve to one account.
+12h. **A numbered plant does not become a separate company** when the unnumbered company exists: `Suzanna's Kitchen, Inc.`, `… II` and `… III` are one 3-site account. Where no unnumbered sibling exists the name is left intact, and `UNFI` must never be read as `UNF` + a numeral. *(Blocking; §6.3.)*
 13. **Distinct companies sharing only a generic or weak token do not merge.** `United Global Foods` / `United Natural Foods Inc.`, `Penske Logistics` / `VersaCold Logistics`, and `Vertical Cold Storage` / `Sodus Cold Storage` must each resolve independently or route to the human queue.
 14. **An unanchored duration is never filed as a clean tenure.** A LinkedIn "About" blurb reading *"18 years across ammonia systems"* must not be extracted as role tenure; only a duration anchored to the current role's date range may be marked clean. Everything else is marked `inferred` and shown for confirmation.
 15. **A SalesIntel spec missing `verification_date` blocks S2** with the reason stated, and the request text names the field explicitly.
@@ -368,4 +428,4 @@ The build does not ship until all of these pass. Each corresponds to a real, mea
 
 ---
 
-*Companion artefacts: `../index.html` (working in-browser implementation of all five ingestion paths, with live gate results) · `what-is-this/` (first-run explainers, one per process) · `AUTH-SPEC.md` (authentication, roles, data tiers, attribution integrity) · `PHASE-1-SPEC.md` (build specification)*
+*Companion artefacts: `../archive/index.html` (working in-browser implementation of all five ingestion paths, with live gate results) · `what-is-this/` (first-run explainers, one per process) · `AUTH-SPEC.md` (authentication, roles, data tiers, attribution integrity) · `PHASE-1-SPEC.md` (build specification)*

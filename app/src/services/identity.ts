@@ -1,4 +1,4 @@
-import { and, eq, inArray, isNull, ne, or, sql } from 'drizzle-orm';
+import { and, eq, gt, inArray, isNull, ne, or, sql } from 'drizzle-orm';
 import { tenantCtx, withTenant, type Db, type Tx } from '../db/client.js';
 import { account, appUser, piiGrant, roleGrant, type AppUser } from '../db/schema/index.js';
 import { activeRoles, createSession, revokeAllSessions, type IssuedSession } from '../lib/auth/session.js';
@@ -293,7 +293,12 @@ export async function offboardUser(
     .where(and(
       eq(roleGrant.userId, p.userId),
       eq(roleGrant.tenantId, p.tenantId),
-      or(isNull(roleGrant.expiresAt), sql`${roleGrant.expiresAt} > ${now}`),
+      // gt(), not a raw sql template. Interpolating a JS Date into sql`...`
+      // binds it without the column's type mapping: PGlite tolerates that,
+      // postgres.js throws ERR_INVALID_ARG_TYPE, and offboarding therefore
+      // failed on a real server while passing every test. See
+      // scripts/verify-postgres.ts for why this is now caught.
+      or(isNull(roleGrant.expiresAt), gt(roleGrant.expiresAt, now)),
     ))
     .returning({ id: roleGrant.id });
 
@@ -304,7 +309,7 @@ export async function offboardUser(
     .where(and(
       eq(piiGrant.userId, p.userId),
       eq(piiGrant.tenantId, p.tenantId),
-      or(isNull(piiGrant.expiresAt), sql`${piiGrant.expiresAt} > ${now}`),
+      or(isNull(piiGrant.expiresAt), gt(piiGrant.expiresAt, now)),
     ))
     .returning({ id: piiGrant.id });
 

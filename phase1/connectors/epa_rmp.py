@@ -111,7 +111,64 @@ RTO_BY_STATE = {
 #
 # This map is a SEED. In production it is a database table maintained by the
 # marketer, and every unresolved facility is surfaced for human assignment.
-CANONICAL_PARENTS = [
+# The patterns below are SOURCES, compiled through _guard() so that none of them
+# can match mid-word. They were plain unanchored regexes used with re.search(),
+# and because this pass runs FIRST and returns immediately, a substring match
+# here is final — it bypasses the distinctive-token protection entirely.
+#
+# `us cold storage` therefore matched "Sod-us cold storage": Sodus Cold Storage
+# Co., Inc. of Sodus, NY, an independent single-site operator and a genuine
+# prospect, was absorbed into the United States Cold Storage account — an
+# existing CUSTOMER — and silently suppressed from outbound. Same family:
+# `aldi` matched Rinaldi/Baldinger/Garibaldi/Aldine, `nestl` matched Nestlerode,
+# `tyson` matched Tysons Corner, `jbs` matched WJBS.
+#
+# The guards are asymmetric, and deliberately so:
+#   LEADING  applies to every pattern; nothing legitimate starts mid-word.
+#   TRAILING applies only to _WORD_FINAL. A blanket trailing guard would break
+#            two CORRECT matches: "U.S. Foodservice" (the former name of US
+#            Foods) and "Performance Foodservice" (Performance Food Group's
+#            operating brand), so suffix continuation stays legal by default.
+#
+# Mirrors app/src/lib/resolve/canonical.ts. Both must change together — the
+# parity test diffs this implementation against the TypeScript port.
+
+# Canonical tokens that are complete words and must not absorb a suffix.
+# Short tokens that genuinely absorb a following word and land in the wrong
+# bucket: aldi/Aldine, tyson/Tysons Corner, jbs/WJBS, nestle/Nestlerode.
+#
+# Deliberately NOT here:
+#   schwan  — "SCHWANS COMPANY" is a legitimate continuation, and the guard only
+#             looked safe because match_key() normalises both sides to `schwans`
+#             anyway. A guard whose safety depends on a downstream accident is
+#             worse than no guard: it moves the name onto the fallback path for
+#             no benefit.
+#   lineage, tippmann, pictsweet, stouffer, safeway, albertsons, sysco, kroger,
+#   cargill — long or already start-anchored; the leading guard is sufficient
+#             and no observed name continues them.
+_WORD_FINAL = {
+    "costco", "tyson", "jbs", "hormel", "aldi", "saputo", "publix",
+    "nestl[e\u00e9]",
+}
+
+
+def _guard(source):
+    """Compile one raw alternation so it cannot match mid-word.
+
+    Applied per alternative, not to the whole source: `safeway|albertsons`
+    needs a guard either side of the pipe, not one wrapping the group.
+    """
+    parts = []
+    for alt in source.split("|"):
+        start_anchored = alt.startswith("^")
+        body = alt[1:] if start_anchored else alt
+        lead = "^" if start_anchored else r"(?<![a-z0-9])"
+        tail = r"(?![a-z0-9])" if body in _WORD_FINAL else ""
+        parts.append(lead + body + tail)
+    return re.compile("|".join(parts))
+
+
+CANONICAL_PARENT_SOURCES = [
     (r"americold", "Americold Realty Trust"),
     (r"lineage", "Lineage, Inc."),
     (r"united states cold storage|us cold storage", "United States Cold Storage"),
@@ -129,7 +186,7 @@ CANONICAL_PARENTS = [
     (r"aldi", "ALDI US"),
     (r"koch foods", "Koch Foods"),
     (r"saputo", "Saputo Inc."),
-    (r"nestl", "Nestlé USA"),
+    (r"nestl[eé]", "Nestlé USA"),
     (r"publix", "Publix Super Markets"),
     (r"dollar general", "Dollar General"),
     (r"gordon food", "Gordon Food Service"),
@@ -148,6 +205,27 @@ CANONICAL_PARENTS = [
     (r"pictsweet", "Pictsweet Farms"),
 ]
 
+# Anchoring is a property of the structure, not something each row remembers.
+CANONICAL_PARENTS = [(_guard(src), canonical) for src, canonical in CANONICAL_PARENT_SOURCES]
+
+# Patterns as they were BEFORE guarding. Used only by merge_rescue(); never for
+# resolution.
+_UNGUARDED = [(re.compile(src), canonical) for src, canonical in CANONICAL_PARENT_SOURCES]
+
+# Pilot filter: single-site operators below this charge are not auto-admitted.
+# Was 250,000, which admitted exactly THREE single-site companies out of 357 —
+# in practice "multi-site only" rather than a floor, and it concealed genuine
+# prospects whose single in-scope filing understates the business (Smithfield
+# Fresh Meats, Charoen Pokphand Foods, Mitsubishi all sit at 80,000-110,000 lb).
+SINGLE_SITE_AMMONIA_FLOOR = 100_000
+
+# Below the pilot floor but above this, a company is QUEUED rather than dropped.
+# 354 companies used to disappear silently, which made "nothing is silently
+# dropped" untrue for the largest category of refusal in the system. This floor
+# yields a queue a person can actually read; the EPA reporting threshold is
+# 10,000 lb, so lower floors flood it (25,000 would queue 120).
+SUBTHRESHOLD_QUEUE_FLOOR = 50_000
+
 # Existing Ndustrial customers. Populated from CRM in production, never hardcoded.
 KNOWN_CUSTOMERS = {
     "Americold Realty Trust",
@@ -155,8 +233,15 @@ KNOWN_CUSTOMERS = {
     "United States Cold Storage",
 }
 
+# `incorporated` is spelled out as well as `inc`. Without it "Perdue Farms
+# Incorporated" keys as `perdue farms incorporated` while "Perdue Farms, Inc."
+# keys as `perdue farms` — one company, two accounts. The 250,000 lb pilot floor
+# hid that split (both sit near 60,000 lb); lowering the floor exposes it.
+#
+# Order matters: `incorporated` must precede `inc` in the alternation, or the
+# engine matches `inc` first and leaves "orporated" behind.
 LEGAL_SUFFIXES = re.compile(
-    r"\b(inc|llc|ltd|lp|llp|corp|corporation|company|co|plc|gmbh|sa|nv|bv|the|and)\b",
+    r"\b(incorporated|inc|llc|ltd|lp|llp|corp|corporation|company|co|plc|gmbh|sa|nv|bv|the|and)\b",
     re.IGNORECASE,
 )
 
@@ -229,7 +314,7 @@ def canonicalise(name: str | None) -> tuple[str, str, str] | None:
         return None
     low = name.lower()
     for pattern, canonical in CANONICAL_PARENTS:
-        if re.search(pattern, low):
+        if pattern.search(low):
             return match_key(canonical), canonical, "rule"
     key = match_key(name)
     if not key or key in JUNK_NAMES:
@@ -238,6 +323,148 @@ def canonicalise(name: str | None) -> tuple[str, str, str] | None:
     if not shown:
         return None
     return key, shown, "fallback"
+
+
+# Telling a person's name from a company's — EPA RMP operator fields.
+#
+# pick() chose parentCompanyName, then operatorName, then facilityName. For 263
+# active facilities there is no parent company, so the OPERATOR wins — and the
+# EPA operator field frequently holds the individual who signed the filing:
+#
+#     operatorName          facilityName (the actual company)
+#     Christopher Hawk  ->  Penske Logistics, LLC
+#     George Calhoon    ->  Magic Valley Fresh Frozen, Inc.
+#     Gary Crowder      ->  Smith Frozen Foods, INC
+#
+# Two harms: named private individuals entered a prospect registry (gate G2),
+# and real companies were LOST — Penske Logistics is named in §9 #13 and was
+# absent purely because a person's name outranked it.
+#
+# NOT fixed by reordering pick() globally. Measured: preferring facilityName
+# everywhere gains 4 accounts and loses 21 (California Dairies, National Beef
+# Packing, Seneca Foods, Boar's Head…), whose facility names are site labels.
+# The operator field is usually right; it is wrong in a detectable way.
+#
+# Mirrors app/src/lib/resolve/person.ts.
+_BUSINESS_WORD = re.compile(
+    r"\b(incorporated|inc|llc|ltd|lp|llp|corp|corporation|co|company|group|holdings?|farms?"
+    r"|foods?|storage|logistics|cold|warehouse|packing|meats?|dairy|dairies|market|markets"
+    r"|produce|fresh|frozen|services?|supply|industries|packers|cooperative|coop|distribution"
+    r"|transport|brands?|kitchen|provisions|cheese|beef|pork|poultry|seafood|grocer\w*|wholesale"
+    r"|terminal|plant|division|center|centre|intl|international|usa|america\w*|bakers?|chef|pure)\b",
+    re.IGNORECASE,
+)
+
+# `Firstname Lastname` or `Firstname M. Lastname`, title-cased, nothing else.
+# Strict on purpose: title case and two-or-three tokens keep "KOCH MEAT" and
+# "SpartanNash Omaha" out, and the middle-initial branch catches "Byron C. Russell".
+_PERSON_NAME = re.compile(r"^[A-Z][a-z]+(?: [A-Z]\.?)? [A-Z][a-z]+$")
+
+_SITE_QUALIFIER = re.compile(r"\s*\([^)]*\)\s*$")
+
+
+def looks_like_person(name: str | None) -> bool:
+    """Does this reported name look like an individual rather than an organisation?
+
+    Pattern only — deliberately no dictionary of given names. A list would be
+    more precise (it would spare "Home Chef", "Universal Pure" and "Valley
+    Bakers", the three real companies this pattern misjudges) but it is a shared
+    word list both implementations would have to keep identical forever. Instead
+    every firing is recorded in the review queue, so a misjudgement is visible
+    and a person can overturn it. Failing visibly beats failing precisely.
+    """
+    if not isinstance(name, str):
+        return False
+    trimmed = name.strip()
+    if not trimmed or _BUSINESS_WORD.search(trimmed):
+        return False
+    return bool(_PERSON_NAME.match(trimmed))
+
+
+def strip_site_qualifier(name: str | None) -> str | None:
+    """Strip a trailing site qualifier from a facility name.
+
+    Facility names identify a SITE: "Magic Valley Fresh Frozen, Inc. (Military)"
+    and "… (Trophy)" are one company at two plants, and left alone they key
+    separately and split the company in two. This matters because the fix above
+    makes facilityName load-bearing for 47 facilities, so without it fixing the
+    person-name bug would INTRODUCE a split. It also un-splits Cheney Brothers
+    and Eckert Cold Storage, already broken this way.
+
+    Only a TRAILING parenthetical is removed. Trailing numerals and Roman
+    numerals ("Suzanna's Kitchen II", "Joseph Cold Storage 1") split the same way
+    and are NOT handled — that is a broader normalisation question, and guessing
+    would merge companies that are genuinely distinct.
+    """
+    if not isinstance(name, str):
+        return None
+    stripped = _SITE_QUALIFIER.sub("", name).strip()
+    return stripped if stripped else name.strip()
+
+
+_SITE_NUMBER = re.compile(r"^(.+?)\s+[#\-]?\s*(?:[IVX]{2,4}|\d{1,3})$")
+
+
+def site_number_stem(name: str | None) -> str | None:
+    """The company name behind a trailing site number, or None if there isn't one.
+
+    "Suzanna's Kitchen II" and "Suzanna's Kitchen III" are the same company as
+    "Suzanna's Kitchen, Inc." at different plants, and left alone they key
+    separately into three accounts.
+
+    The rule is deliberately narrow, because the dataset punishes a loose one:
+
+      - The numeral must be a SEPARATE token. Without that, "UNFI" parses as
+        "UNF" + Roman numeral I, reducing United Natural Foods to a stem that
+        matches nothing.
+      - Roman numerals must be at least two characters, for the same reason.
+      - A trailing state code must not parse as a numeral, which is why
+        "Cedar Grove Warehousing-Cedar Grove, WI" is left alone.
+      - Glued codes are not site numbers: "ADUSA Distribution LLC DC5" keeps its
+        DC5, which identifies the distribution centre, not a repetition.
+
+    Extracting a stem is NOT the same as using it — see the consolidation pass
+    in aggregate(). Mirrors siteNumberStem() in app/src/lib/resolve/person.ts.
+    """
+    if not isinstance(name, str):
+        return None
+    m = _SITE_NUMBER.match(name.strip())
+    if not m:
+        return None
+    stem = m.group(1).strip()
+    return stem or None
+
+
+def merge_rescue(name: str | None) -> tuple[str, bool] | None:
+    """Did a pattern guard stop this name being absorbed into another account?
+
+    Returns (would_be_account, would_be_is_customer) or None.
+
+    This is the detector for the Sodus class. `us cold storage` is a substring of
+    "Sod-us cold storage", so before the guards Sodus Cold Storage Co. was filed
+    under United States Cold Storage — an existing CUSTOMER — and suppressed from
+    outbound with no error and no queue entry. The guard prevents that now, but
+    prevention is silent: nothing records that a near-miss occurred.
+
+    COMPARES BUCKET KEYS, NOT CANONICAL NAMES, and that is the whole subtlety.
+    On names, "SCHWANS COMPANY" looks rescued — the guard moves it from the rule
+    path to the fallback path — but match_key() normalises both to `schwans`, so
+    it lands in the same bucket and nothing was rescued. Comparing names reports
+    two hits on the current pull; comparing keys reports the one real one.
+
+    Mirrors mergeRescue() in app/src/lib/resolve/canonical.ts.
+    """
+    if not isinstance(name, str):
+        return None
+    low = name.lower()
+    hit = next(((pattern, canonical) for pattern, canonical in _UNGUARDED if pattern.search(low)), None)
+    if hit is None:
+        return None
+    _, would_be = hit
+    resolved = canonicalise(name)
+    if resolved is not None and resolved[0] == match_key(would_be):
+        return None  # same bucket: no rescue
+    return would_be, would_be in KNOWN_CUSTOMERS
 
 
 # ---------------------------------------------------------------------------
@@ -290,13 +517,18 @@ def max_ammonia_lb(facility: dict) -> int:
     This is the closest public proxy for refrigeration plant size, and it is
     the single most useful qualification field in the dataset.
 
-    Reads BOTH shapes the dataset appears in, because the connector must be able
-    to consume its own committed snapshot:
-      live API   -> chemicals[{chemicalId, chemicalName, quantity}]
-      snapshot   -> _chem[{id, name, qty}]   (the compacted form we store)
-    Reading only the live shape made --from-json silently score every facility at
-    0 lb of ammonia, which is worse than failing: the run completes and produces a
-    plausible-looking but entirely wrong account list.
+    Two record shapes carry the same fact and BOTH must be read:
+
+      live API   {"chemicalId": 56, "chemicalName": ..., "quantity": 410000}
+      frozen pull {"id": 56, "name": ..., "qty": 410000}   <- the committed fixture
+
+    Reading only the live shape meant every facility in the committed fixture
+    reported 0 lb, because the fixture is stored compact. The symptom was not an
+    error: single-site accounts that qualify ONLY on a large ammonia charge
+    silently vanished (Molson Coors Golden Brewery at 410,000 lb and Tropicana
+    Manufacturing at 400,000 lb both dropped out), so this reference could not
+    reproduce its own committed CSVs from its own committed input. Mirrors
+    maxAmmoniaLb() in app/src/connectors/epa-rmp/aggregate.ts, which reads both.
     """
     charges = [
         c.get("quantity") or 0
@@ -325,12 +557,22 @@ def aggregate(facilities: list[dict]) -> tuple[list[dict], list[dict], list[dict
     """
     buckets: dict[str, dict] = collections.defaultdict(lambda: {"sites": [], "aliases": set(), "name": ""})
     unresolved_records: list[dict] = []
+    operator_persons: list[dict] = []
 
     for f in facilities:
         if f.get("isDeregistered"):
             continue  # closed / deregistered plants are not prospects
-        reported = next((v for v in (f.get("parentCompanyName"), f.get("operatorName"),
-                                     f.get("facilityName")) if isinstance(v, str) and v.strip()), None)
+        # Facility names identify a site, so a trailing qualifier is stripped
+        # before the name can stand for a company. See strip_site_qualifier.
+        facility_name = strip_site_qualifier(f.get("facilityName"))
+        parent = f.get("parentCompanyName")
+        has_parent = isinstance(parent, str) and bool(parent.strip())
+        # The EPA operator field often holds the person who signed the filing.
+        # When it does, it must not outrank the company in facilityName.
+        operator_is_person = (not has_parent) and looks_like_person(f.get("operatorName"))
+        order = ((parent, facility_name, f.get("operatorName")) if operator_is_person
+                 else (parent, f.get("operatorName"), facility_name))
+        reported = next((v for v in order if isinstance(v, str) and v.strip()), None)
         resolved = canonicalise(reported)
         if resolved is None:
             unresolved_records.append({
@@ -344,6 +586,28 @@ def aggregate(facilities: list[dict]) -> tuple[list[dict], list[dict], list[dict
         key, shown, by = resolved
         bucket = buckets[key]
         bucket["aliases"].add(reported)
+
+        # Every substitution is recorded so a misjudgement is visible and
+        # overturnable. The operator's name is retained in the row deliberately:
+        # without it a reviewer cannot check whether the call was right.
+        if operator_is_person:
+            operator_persons.append({
+                "kind": "operator_is_person",
+                "rmp_id": f.get("facilityId"), "name": f.get("facilityName"),
+                "city": f.get("city"), "state": f.get("state"),
+                "naics": f.get("naicsCode"), "ammonia_lb": max_ammonia_lb(f),
+                "reported_name": f.get("operatorName"), "account": shown,
+                "reason": f'operator field "{f.get("operatorName")}" looks like an '
+                          f"individual, not a company",
+                "validation_note": "",
+                "action": f"confirm {shown} is the operating company, or supply the correct one",
+            })
+        # One row per bucket, not per site: the reviewer is confirming that two
+        # COMPANIES are distinct, which is a fact about the bucket.
+        if not bucket.get("rescue"):
+            rescued = merge_rescue(reported)
+            if rescued is not None:
+                bucket["rescue"] = (rescued[0], rescued[1], reported)
         if by == "rule":
             bucket["name"] = shown          # a canonical rule outranks a fallback name
         elif not bucket.get("name"):
@@ -364,10 +628,35 @@ def aggregate(facilities: list[dict]) -> tuple[list[dict], list[dict], list[dict
             "lon": f.get("facilityLong"),
         })
 
+    # A trailing site number is only removed when the same company ALREADY
+    # EXISTS without it. That condition is the whole safety of this pass:
+    # "Suzanna's Kitchen II" merges because "Suzanna's Kitchen, Inc." is right
+    # there, while "Joseph Cold Storage #1" and "ADUSA Distribution LLC DC5" are
+    # left alone because nothing says the number is a repetition rather than
+    # part of the name. Guessing without a sibling is how genuinely distinct
+    # companies get merged, which is the more expensive mistake.
+    #
+    # Runs after bucketing because it needs to know every key that exists.
+    for key in list(buckets):
+        bucket = buckets[key]
+        stem = site_number_stem(bucket["name"])
+        if stem is None:
+            continue
+        stem_key = match_key(stem)
+        if stem_key == key or stem_key not in buckets:
+            continue  # no sibling: do not guess
+        target = buckets[stem_key]
+        target["sites"].extend(bucket["sites"])
+        target["aliases"].update(bucket["aliases"])
+        if bucket.get("rescue") and not target.get("rescue"):
+            target["rescue"] = bucket["rescue"]
+        del buckets[key]
+
     all_sites = [s for b in buckets.values() for s in b["sites"]]
     validate_numerics(all_sites)
 
     accounts = []
+    below_threshold = []
     for b in buckets.values():
         name = b["name"]
         sites = b["sites"]
@@ -375,7 +664,11 @@ def aggregate(facilities: list[dict]) -> tuple[list[dict], list[dict], list[dict
         # Pilot filter: multi-site operators, or single sites with a large
         # enough ammonia charge to justify an enterprise motion.
         largest = max((s["ammonia_lb"] for s in scored_sites), default=0)
-        if len(scored_sites) < 2 and largest < 250_000:
+        if len(scored_sites) < 2 and largest < SINGLE_SITE_AMMONIA_FLOOR:
+            # Dropped — but no longer silently. Anything with a charge worth a
+            # look goes to the queue instead of vanishing (gate G9).
+            if largest >= SUBTHRESHOLD_QUEUE_FLOOR:
+                below_threshold.append(b)
             continue
         states = collections.Counter(s["state"] for s in sites)
         rtos = collections.Counter(RTO_BY_STATE.get(s["state"], "Other") for s in sites)
@@ -422,7 +715,51 @@ def aggregate(facilities: list[dict]) -> tuple[list[dict], list[dict], list[dict
         for b in buckets.values() for s in b["sites"]
         if not s.get("validated", True)
     ]
-    review_queue = flagged + [{**r, "kind": "unresolved_name"} for r in unresolved_records]
+    def _largest(b: dict) -> dict | None:
+        """The biggest site in a bucket stands for it in a queue row."""
+        return max(b["sites"], key=lambda s: s["ammonia_lb"], default=None)
+
+    # Resolved, under the pilot floor, but carrying enough ammonia to be worth a
+    # person's attention. Previously these just disappeared.
+    sub_threshold = []
+    for b in below_threshold:
+        s_ = _largest(b)
+        if s_ is None:
+            continue
+        sub_threshold.append({
+            **s_, "kind": "below_threshold", "reported_name": b["name"], "account": b["name"],
+            "reason": f"single site at {s_['ammonia_lb']} lb, below the "
+                      f"{SINGLE_SITE_AMMONIA_FLOOR} lb pilot floor",
+            "validation_note": "",
+            "action": "confirm whether this is a prospect; approving admits it as a "
+                      "sub-threshold account",
+        })
+
+    # A guard stopped this bucket merging into another account. Emitted whether
+    # or not the bucket became an account: "it nearly became an existing
+    # customer" is a fact a person should confirm either way.
+    rescues = []
+    for b in buckets.values():
+        if not b.get("rescue"):
+            continue
+        would_be, is_customer, reported_name = b["rescue"]
+        s_ = _largest(b)
+        if s_ is None:
+            continue
+        rescues.append({
+            **s_, "kind": "merge_rescue", "reported_name": reported_name, "account": b["name"],
+            "reason": (f"would have merged into {would_be}, an existing CUSTOMER, and been "
+                       f"suppressed from outbound") if is_customer
+                      else f"would have merged into {would_be}",
+            "validation_note": "",
+            "action": f"confirm {b['name']} is a separate company from {would_be}",
+        })
+
+    review_queue = (flagged
+                    + [{**r, "kind": "unresolved_name"} for r in unresolved_records]
+                    + sub_threshold
+                    + rescues
+                    + operator_persons)
     return accounts, sites, review_queue, unresolved_records
 
 

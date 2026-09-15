@@ -19,8 +19,8 @@
     {
       "idx": 2,
       "version": "7",
-      "when": 1789435081410,
-      "tag": "0002_session_refresh_index",
+      "when": 1789407815951,
+      "tag": "0002_session_lookup",
       "breakpoints": true
     }
   ]

@@ -7,13 +7,14 @@ import { tenantCtx, withTenant } from '../../src/db/client.js';
 import { account, appUser, auditLog, capture, piiGrant, roleGrant, session } from '../../src/db/schema/index.js';
 import { CSRF_COOKIE, CSRF_HEADER, randomOpaqueToken, SESSION_COOKIE } from '../../src/lib/auth/cookies.js';
 import { authorizeRequest, type InboundRequest } from '../../src/lib/auth/middleware.js';
+import { pruneExpiredSessions, REFRESH_TTL_SECONDS } from '../../src/lib/auth/session.js';
 import { ROLES } from '../../src/lib/auth/types.js';
 import type { IdpProfile, Principal, Role } from '../../src/lib/auth/types.js';
 import { AuthError } from '../../src/lib/auth/types.js';
 import { canAccessPii, canUseForOutbound } from '../../src/lib/auth/permissions.js';
 import { serialise, visibleFields } from '../../src/lib/auth/tiers.js';
-import { createSession, pruneExpiredSessions, resolveSession, revokeSession, rotateRefresh, sessionCookies } from '../../src/lib/auth/session.js';
-import { auditPiiRead } from '../../src/services/audit.js';
+import { resolveSession, revokeSession, rotateRefresh, sessionCookies } from '../../src/lib/auth/session.js';
+import { audit, auditPiiRead, readAudit } from '../../src/services/audit.js';
 import { createCapture, type CaptureInput } from '../../src/services/capture.js';
 import {
   deriveInitials, hasActivePiiGrant, mapGroupsToRoles, offboardUser,
@@ -459,29 +460,6 @@ export const authChecks: Check[] = [
   },
 
   {
-    group: 'session hygiene',
-    name: 'pruneExpiredSessions removes only sessions already past expiry',
-    async run(h) {
-      const user = await signIn(h.db, { tenantId: TENANT_A, profile: REP('entra-6003'), groupRoleMap: GROUP_MAP });
-      const live = user.session.sessionToken;
-
-      await withTenant(h.db, tenantCtx(TENANT_A), async (tx) => {
-        // One row expired an hour ago, alongside the live session above.
-        const stale = await createSession(tx, { userId: user.user.id, tenantId: TENANT_A });
-        await tx.update(session)
-          .set({ expiresAt: new Date(Date.now() - 3_600_000) })
-          .where(eq(session.id, stale.sessionId));
-
-        const removed = await pruneExpiredSessions(tx, new Date());
-        assert.ok(removed >= 1, 'the expired row must be pruned');
-
-        // The live session is untouched and still resolves.
-        assert.notEqual(await resolveSession(tx, live), null, 'pruning must not touch live sessions');
-      });
-    },
-  },
-
-  {
     group: 'acceptance #7 — leaving the IdP group removes the role',
     name: 'revokes group-derived grants on next sign-in, immediately killing live sessions',
     async run(h) {
@@ -589,6 +567,48 @@ export const authChecks: Check[] = [
         tx.select({ c: sql<number>`count(*)::int` }).from(auditLog)
           .where(and(eq(auditLog.action, 'pii.read'), eq(auditLog.resourceId, piiAuditPersonId))));
       assert.equal(left?.c, 2);
+    },
+  },
+  {
+    group: 'acceptance #8 — audit records T3 reads, is append-only',
+    name: 'readAudit applies its userId and action filters',
+    async run(h) {
+      // These two filters were declared and never applied, so narrowing the
+      // trail to one user or one action silently returned the WHOLE trail. An
+      // audit answer that looks authoritative and is wrong is worse than an
+      // error, because nothing prompts the reviewer to check.
+      const mkt = await signIn(h.db, { tenantId: TENANT_A, profile: MADELINE(), groupRoleMap: GROUP_MAP });
+      const other = randomUUID();
+      await withTenant(h.db, tenantCtx(TENANT_A), async (tx) => {
+        await audit(tx, {
+          tenantId: TENANT_A, userId: mkt.user.id, action: 'account.suppress',
+          resourceType: 'account', resourceId: other, outcome: 'allow',
+        });
+      });
+
+      const all = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        readAudit(tx, { tenantId: TENANT_A, limit: 500 }));
+      assert.ok(all.length > 1, 'fixture should hold more than one entry');
+
+      const byAction = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        readAudit(tx, { tenantId: TENANT_A, limit: 500, action: 'account.suppress' }));
+      assert.ok(byAction.length > 0, 'action filter returned nothing');
+      assert.ok(byAction.length < all.length, 'action filter was ignored');
+      for (const r of byAction) assert.equal(r.action, 'account.suppress');
+
+      const byUser = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        readAudit(tx, { tenantId: TENANT_A, limit: 500, userId: mkt.user.id }));
+      assert.ok(byUser.length > 0, 'user filter returned nothing');
+      for (const r of byUser) assert.equal(r.userId, mkt.user.id);
+
+      // Both together must AND, not OR.
+      const both = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        readAudit(tx, { tenantId: TENANT_A, limit: 500, userId: mkt.user.id, action: 'account.suppress' }));
+      for (const r of both) {
+        assert.equal(r.userId, mkt.user.id);
+        assert.equal(r.action, 'account.suppress');
+      }
+      assert.ok(both.length <= byUser.length && both.length <= byAction.length);
     },
   },
   {
@@ -750,6 +770,85 @@ export const authChecks: Check[] = [
     },
   },
 
+  {
+    group: 'session internals under RLS',
+    name: 'pruning removes only sessions past the refresh window',
+    async run(h) {
+      // Rotation only ever INSERTS — the consumed row is kept as the replay
+      // tripwire — so without a sweep this table grows without bound. The sweep
+      // must not touch anything still inside the refresh window.
+      const live = await signIn(h.db, {
+        tenantId: TENANT_A,
+        profile: REP('prune-live'),
+        groupRoleMap: GROUP_MAP,
+      });
+
+      const before = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        tx.select({ id: session.id }).from(session));
+
+      // A sweep at "now" must delete nothing: every row was just issued.
+      const noop = await withTenant(h.db, tenantCtx(TENANT_A), (tx) => pruneExpiredSessions(tx));
+      assert.equal(noop, 0, 'pruning removed a session inside the refresh window');
+
+      const stillThere = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        tx.select({ id: session.id }).from(session));
+      assert.equal(stillThere.length, before.length);
+
+      // The live session must still authenticate after a sweep.
+      const resolved = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        resolveSession(tx, live.session.sessionToken));
+      assert.ok(resolved !== null, 'a swept-but-live session stopped resolving');
+
+      // Now sweep with a clock far enough forward that the whole refresh window
+      // has elapsed. Everything issued so far becomes inert and is collected.
+      const future = new Date(Date.now() + (REFRESH_TTL_SECONDS + 3600) * 1000);
+      const removed = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        pruneExpiredSessions(tx, future));
+      assert.ok(removed > 0, 'pruning collected nothing past the refresh window');
+
+      const after = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        tx.select({ id: session.id }).from(session));
+      assert.equal(after.length, 0, 'inert rows survived the sweep');
+
+      // A token whose row was collected must not resolve — pruning revokes in
+      // effect, it does not resurrect.
+      const gone = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        resolveSession(tx, live.session.sessionToken));
+      assert.equal(gone, null, 'a pruned session still authenticated');
+    },
+  },
+  {
+    group: 'session internals under RLS',
+    name: 'indexed lookup still detects refresh replay and burns the family',
+    async run(h) {
+      // resolveSession and rotateRefresh moved from a full table scan to an
+      // indexed lookup. The tripwire depends on a CONSUMED row remaining
+      // findable by its retained hash, so the lookup change could have silently
+      // turned 'reused' into 'unknown' and stopped revoking the family.
+      const first = await signIn(h.db, {
+        tenantId: TENANT_A,
+        profile: REP('replay-after-index'),
+        groupRoleMap: GROUP_MAP,
+      });
+
+      const rotated = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        rotateRefresh(tx, first.session.refreshToken));
+      assert.ok(rotated.ok, 'first rotation must succeed'); // also narrows for tsc
+
+      // Replaying the consumed token must still report 'reused', not 'unknown'.
+      const replay = await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+        rotateRefresh(tx, first.session.refreshToken));
+      assert.deepEqual(replay, { ok: false, reason: 'reused' });
+
+      // And the successor issued by the legitimate rotation is dead too.
+      assert.equal(
+        await withTenant(h.db, tenantCtx(TENANT_A), (tx) =>
+          resolveSession(tx, rotated.issued.sessionToken)),
+        null,
+        'family was not revoked on replay',
+      );
+    },
+  },
   {
     group: 'session internals under RLS',
     name: 'resolveSession refuses unknown, expired and role-less tokens',
