@@ -7,7 +7,7 @@ export type Role = (typeof ROLES)[number];
  * read THIS contact's email" is expressible — see canAccessPii.
  */
 export const PERMISSIONS = [
-  'library.read', 'library.search', 'correction.create', 'brief.request',
+  'library.read', 'library.read_analysis', 'library.search', 'correction.create', 'brief.request',
   'capture.create', 'pii.read', 'dashboard.view', 'research.read',
   'ingest.execute', 'review.approve', 'deliverable.publish', 'review.resolve',
   'account.assign', 'cost.read', 'role.grant', 'audit.read', 'customer_list.manage',

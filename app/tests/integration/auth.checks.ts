@@ -11,7 +11,7 @@ import { ROLES } from '../../src/lib/auth/types.js';
 import type { IdpProfile, Principal, Role } from '../../src/lib/auth/types.js';
 import { AuthError } from '../../src/lib/auth/types.js';
 import { canAccessPii, canUseForOutbound } from '../../src/lib/auth/permissions.js';
-import { serialise } from '../../src/lib/auth/tiers.js';
+import { serialise, visibleFields } from '../../src/lib/auth/tiers.js';
 import { resolveSession, revokeSession, rotateRefresh, sessionCookies } from '../../src/lib/auth/session.js';
 import { auditPiiRead } from '../../src/services/audit.js';
 import { createCapture, type CaptureInput } from '../../src/services/capture.js';
@@ -276,6 +276,53 @@ export const authChecks: Check[] = [
       assert.equal(canUseForOutbound(['rep'], { isOwner: true, consentBasisPresent: true, confidence: 2 }), false);
       assert.equal(canUseForOutbound(['rep'], { isOwner: true, consentBasisPresent: true, confidence: 3 }), true);
       assert.equal(canUseForOutbound(['rep'], { isOwner: false, consentBasisPresent: true, confidence: 3 }), false);
+    },
+  },
+
+  {
+    group: 'AUTH-SPEC §7 — every role\'s field set, pinned',
+    name: 'viewer receives T0 only; T1/T2 start at rep',
+    run() {
+      // This check exists because its absence let a real regression ship. Tier
+      // assertions were per-field ("can a viewer read email?"), and a viewer
+      // failing the PII check looked like the tier model working. It was not:
+      // maxTierFor() fell through to library.read — granted to EVERY role — so a
+      // viewer received the identical field set to a rep, including icpScore,
+      // researchState and published deliverable bodies. Asserting one field at a
+      // time cannot catch that. Asserting the WHOLE set can.
+      const account = (r: Role[]): string[] => visibleFields('account', principalOf(r)).sort();
+
+      // T0 is public registry data — what anyone could pull from EPA themselves.
+      const T0_ACCOUNT = ['hq', 'ticker', 'website'];
+      assert.deepEqual(account(['viewer']), T0_ACCOUNT, 'viewer must see T0 and nothing else');
+
+      // rep and above add T1/T2. The exact set, not a spot check.
+      const REP_ACCOUNT = [
+        'canonicalName', 'crmId', 'hq', 'icpComponents', 'icpScore', 'ownerId', 'priority',
+        'refreshDueAt', 'repId', 'researchState', 'researchedAt', 'status', 'ticker',
+        'vertical', 'website',
+      ];
+      assert.deepEqual(account(['rep']), REP_ACCOUNT);
+      assert.deepEqual(account(['sales_lead']), REP_ACCOUNT);
+
+      // T4 (isCustomer) is marketing/admin only — the suppression flag, never content.
+      assert.deepEqual(account(['marketing']), [...REP_ACCOUNT, 'isCustomer'].sort());
+      assert.deepEqual(account(['admin']), [...REP_ACCOUNT, 'isCustomer'].sort());
+
+      // A viewer must not reach T1 analysis or T2 research through any entity.
+      for (const entity of ['account', 'person', 'deliverable', 'signal'] as const) {
+        const seen = visibleFields(entity, principalOf(['viewer']));
+        assert.equal(seen.includes('icpScore'), false, `viewer saw icpScore on ${entity}`);
+        assert.equal(seen.includes('body'), false, `viewer saw a deliverable body on ${entity}`);
+        assert.equal(seen.includes('email'), false, `viewer saw PII on ${entity}`);
+      }
+
+      // Unauthenticated and deactivated principals receive nothing at all.
+      assert.deepEqual(visibleFields('account', null), []);
+      assert.deepEqual(
+        visibleFields('account', { ...principalOf(['admin']), isActive: false }), [],
+        'a deactivated admin must serialise to nothing',
+      );
     },
   },
 
