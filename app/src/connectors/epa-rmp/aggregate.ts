@@ -1,4 +1,5 @@
 import { canonicaliseParent, KNOWN_CUSTOMERS, mergeRescue, type MergeRescue } from '../../lib/resolve/canonical.js';
+import { looksLikePerson, stripSiteQualifier } from '../../lib/resolve/person.js';
 import { validateNumericField } from '../../lib/validation/outliers.js';
 import { modeByInsertion, pyRound, pySorted } from '../../lib/resolve/pycompat.js';
 import { AMMONIA_IDS, NAICS_IN_SCOPE, RTO_BY_STATE, SINGLE_SITE_AMMONIA_FLOOR, SUBTHRESHOLD_QUEUE_FLOOR } from './constants.js';
@@ -59,6 +60,8 @@ export function aggregate(facilities: readonly RmpFacility[]): AggregateResult {
     rescue: (MergeRescue & { reportedName: string }) | null;
   }>();
   const unresolved: ReviewRecord[] = [];
+  /** Facilities where the operator field held an individual, not a company. */
+  const operatorPersons: ReviewRecord[] = [];
 
   // Python's `a or b or c` falls through on empty string; `??` does not. Use an
   // explicit falsy chain so an empty parentCompanyName does not become an account.
@@ -71,7 +74,17 @@ export function aggregate(facilities: readonly RmpFacility[]): AggregateResult {
   for (const f of facilities) {
     if (f.isDeregistered === true) continue; // closed plants are not prospects
     active += 1;
-    const reported = pick(f.parentCompanyName, f.operatorName, f.facilityName);
+    // Facility names identify a site, so a trailing qualifier is stripped before
+    // the name can stand for a company. See stripSiteQualifier.
+    const facilityName = stripSiteQualifier(f.facilityName);
+
+    // The EPA operator field often holds the person who signed the filing. When
+    // it does, it must not outrank the company in facilityName — see person.ts.
+    const operatorIsPerson =
+      pick(f.parentCompanyName) === null && looksLikePerson(f.operatorName);
+    const reported = operatorIsPerson
+      ? pick(f.parentCompanyName, facilityName, f.operatorName)
+      : pick(f.parentCompanyName, f.operatorName, facilityName);
     const resolved = canonicaliseParent(reported);
     if (resolved === null) {
       unresolved.push({
@@ -100,6 +113,26 @@ export function aggregate(facilities: readonly RmpFacility[]): AggregateResult {
       bucket.byRule = true;
     }
     if (reported !== null) bucket.aliases.add(reported);
+
+    // Every substitution is recorded so a misjudgement is visible and
+    // overturnable. The operator's name is retained in the row deliberately:
+    // without it a reviewer cannot check whether the call was right.
+    if (operatorIsPerson) {
+      operatorPersons.push({
+        kind: 'operator_is_person',
+        rmpId: f.facilityId,
+        name: f.facilityName ?? '',
+        city: f.city ?? '',
+        state: f.state ?? '',
+        naics: f.naicsCode ?? '',
+        ammoniaLb: maxAmmoniaLb(f),
+        reportedName: f.operatorName ?? '',
+        account: resolved.name,
+        reason: `operator field "${f.operatorName ?? ''}" looks like an individual, not a company`,
+        validationNote: '',
+        action: `confirm ${resolved.name} is the operating company, or supply the correct one`,
+      });
+    }
     // One row per bucket, not per site: the reviewer is confirming that two
     // COMPANIES are distinct, which is a fact about the bucket.
     if (bucket.rescue === null && reported !== null) {
@@ -235,7 +268,7 @@ export function aggregate(facilities: readonly RmpFacility[]): AggregateResult {
   return {
     accounts,
     sites,
-    reviewQueue: [...flagged, ...unresolved, ...subThreshold, ...rescues],
+    reviewQueue: [...flagged, ...unresolved, ...subThreshold, ...rescues, ...operatorPersons],
     unresolved,
     stats: { facilitiesIn: facilities.length, active, ...stats },
   };
