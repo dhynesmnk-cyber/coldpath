@@ -42,7 +42,7 @@ describe('fixture integrity', () => {
     expect(fixture.meta.licence).toBe('CC BY-SA 4.0');
   });
   it('has a committed Python reference to compare against', () => {
-    expect(expected.length).toBe(117);
+    expect(expected.length).toBe(118);
   });
 });
 
@@ -147,8 +147,10 @@ describe('REGRESSION: entity resolution does not over-merge', () => {
   });
   it('multi-alias accounts really were merged', () => {
     const multi = actual.accounts.filter((a) => a.aliases.length > 1);
-    // The live pull produced 51 such accounts; the port must reproduce that.
-    expect(multi.length).toBe(54);
+    // 58 accounts were filed under more than one legal name in the live pull.
+    // This rose from 54 when matchKey stopped splitting on punctuation: the four
+    // extra are the spellings that used to become separate accounts.
+    expect(multi.length).toBe(58);
   });
   it('Americold absorbs all four of its reported names', () => {
     const a = byName.get('Americold Realty Trust');
@@ -174,5 +176,53 @@ describe('maxAmmoniaLb', () => {
   });
   it('returns 0 when no ammonia is reported', () => {
     expect(maxAmmoniaLb({ facilityId: 'x' })).toBe(0);
+  });
+});
+
+describe('every flagged site reaches the review queue', () => {
+  /**
+   * Synthetic, because the live pull cannot exercise this path: its single
+   * numeric outlier belongs to an account that the pilot filter drops, so the
+   * bug was invisible in the fixture.
+   *
+   * A flagged site is excluded from its account's scoring totals. If it is also
+   * excluded from the review queue — which it was, whenever its account survived
+   * — it contributes to no number a human ever sees and appears on no screen.
+   * That is the exact failure the numeric gate exists to prevent.
+   */
+  const site = (id: string, ammoniaLb: number): RmpFacility => ({
+    facilityId: id,
+    facilityName: `Plant ${id}`,
+    parentCompanyName: 'Synthetic Cold Holdings',
+    city: 'Testville',
+    state: 'PA',
+    naicsCode: '49312',
+    _chem: [{ id: 56, name: 'Ammonia (anhydrous)', qty: ammoniaLb }],
+  });
+
+  // 200 normal sites so the p99 lands on a NORMAL value. With only a handful the
+  // outlier becomes its own p99 and the gate never fires — which is how the first
+  // version of this test passed against the unfixed code.
+  const NORMAL_SITES = 200;
+  const facilities: RmpFacility[] = [
+    ...Array.from({ length: NORMAL_SITES }, (_, i) => site(`ok-${i}`, 20_000)),
+    site('outlier', 500_000_000),
+  ];
+  const result = aggregate(facilities);
+
+  it('keeps the account alive on its validated sites alone', () => {
+    const account = result.accounts.find((a) => a.account === 'Synthetic Cold Holdings');
+    expect(account).toBeDefined();
+    expect(account?.unvalidatedSites).toBe(1);
+  });
+
+  it('queues the flagged site even though its account survived', () => {
+    const queued = result.reviewQueue.filter((r) => r.kind === 'numeric_outlier');
+    expect(queued.map((r) => r.rmpId)).toContain('outlier');
+  });
+
+  it('excludes the flagged value from the account total', () => {
+    const account = result.accounts.find((a) => a.account === 'Synthetic Cold Holdings');
+    expect(account?.ammoniaLb).toBe(NORMAL_SITES * 20_000);
   });
 });

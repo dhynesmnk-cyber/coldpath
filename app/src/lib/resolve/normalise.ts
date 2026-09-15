@@ -15,7 +15,18 @@ export const JUNK: ReadonlySet<string> = new Set([
   'na', 'n a', 'n/a', 'unknown', 'none', '-', '', 'test', 'tbd', 'xxx', 'not applicable',
 ]);
 
-const LEGAL_SUFFIXES = /\b(inc|llc|ltd|lp|llp|corp|corporation|company|co|plc|gmbh|sa|nv|bv|the|and)\b/g;
+/**
+ * Legal-entity suffixes, stripped before any comparison.
+ *
+ * Exported and shared with canonical.ts rather than duplicated. It used to exist
+ * twice, once here and once there with an added `i` flag, and the two copies
+ * diverging is precisely how a company acquires two match keys — the defect
+ * matchKey's own doc comment describes. One list, one place to edit.
+ *
+ * Case-insensitive because displayName() runs it against the ORIGINAL casing;
+ * normName() and matchKey() lowercase first, where the flag is a harmless no-op.
+ */
+export const LEGAL_SUFFIXES = /\b(inc|llc|ltd|lp|llp|corp|corporation|company|co|plc|gmbh|sa|nv|bv|the|and)\b/gi;
 
 /** Lowercase, strip punctuation and legal suffixes, collapse whitespace. */
 export function normName(input: string | null | undefined): string {

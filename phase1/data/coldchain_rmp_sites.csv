@@ -523,6 +523,11 @@ Taylor Farms California,SALINAS,CA,31199,12000,3,2,1,6,100000174269,www.taylorfa
 Taylor Farms Retail,San Juan Bautista,CA,115114,27500,3,0,0,7,100000187861,http://www.ebfarm.com,36.873056,-121.55333,True,,Taylor Fresh Foods
 Taylor Farms Retail,Yuma,AZ,115114,15000,3,0,0,5,100000204753,www.taylorfarms.com,32.648611,-114.575000,True,,Taylor Fresh Foods
 Taylor Farms Retail,Salinas,CA,49312,35000,3,1,0,3,100000214555,www.taylorfarms.com,36.658582,-121.622599,True,,Taylor Fresh Foods
+SARSC Combo Warehouse,San Antonio,TX,49312,18000,3,0,0,6,100000124714,,29.425000,-098.401336,True,,H E Butt Grocery
+SARSC Milk Plant,San Antonio,TX,311511,36828,3,1,0,7,100000124956,HEB.com,29.476111,-098.400000,True,,H E Butt Grocery
+HRSC Milk Plant,Houston,TX,311511,18000,3,0,0,6,100000124965,HEB.com,29.831944,-095.541111,True,,H E Butt Grocery
+HEB Kirby Distribution Center,San Antonio,TX,49312,11790,3,0,0,5,100000170502,HEB.com,29.476346,-098.376182,True,,H E Butt Grocery
+San Antonio Retail Support Center South,San Antonio,TX,49312,9000,3,0,0,6,100000176926,www.heb.com,29.473611,-098.400556,True,,H E Butt Grocery
 Interstate Warehousing Denver,Denver,CO,49312,15900,3,1,0,7,100000168374,www.tippmanngroup.com,39.823889,-104.869167,True,,Tippmann Group
 Interstate Warehousing Cincinnati,Hamilton,OH,49312,12100,3,0,0,7,100000185239,www.tippmanngroup.com,39.335833,-084.505000,True,,Tippmann Group
 Interstate Warehousing Newport News,Newport News,VA,49312,14700,3,0,0,7,100000185293,,37.177222,-076.589444,True,,Tippmann Group
@@ -561,10 +566,10 @@ Americold - Mobile,Mobile,AL,49312,13000,3,1,0,7,100000029355,americold.com,30.6
 Americold Pendergrass,Pendergrass,GA,49312,40000,3,0,0,8,100000054451,,34.158889,-083.672222,True,,Art Al Holding
 Americold - Cartersville,Cartersville,GA,49312,40000,3,0,0,7,100000089726,,34.232425,-084.791211,True,,Art Al Holding
 "Americold Logistics - Plant City, Frontage",Plant City,FL,49312,9550,3,1,0,8,100000133367,,28.038011,-082.124270,True,,Art Al Holding
-SARSC Combo Warehouse,San Antonio,TX,49312,18000,3,0,0,6,100000124714,,29.425000,-098.401336,True,,H E Butt Grocery
-SARSC Milk Plant,San Antonio,TX,311511,36828,3,1,0,7,100000124956,HEB.com,29.476111,-098.400000,True,,H E Butt Grocery
-HRSC Milk Plant,Houston,TX,311511,18000,3,0,0,6,100000124965,HEB.com,29.831944,-095.541111,True,,H E Butt Grocery
-San Antonio Retail Support Center South,San Antonio,TX,49312,9000,3,0,0,6,100000176926,www.heb.com,29.473611,-098.400556,True,,H E Butt Grocery
+Wayne-Sanderson Farms - Pendergrass,Pendergrass,GA,11239,20000,3,0,0,12,100000062987,www.waynesandersonfarms.com,34.17884,-083.672158,True,,Wayne Sanderson Farms
+Wayne-Sanderson Farms - Decatur Fresh Processing,Decatur,AL,11239,16000,3,0,0,10,100000063094,www.waynesandersonfarms.com,34.607828,-087.042784,True,,Wayne Sanderson Farms
+Wayne-Sanderson Farms - Union Springs Fresh Plant,Union Springs,AL,311615,26291,3,0,0,13,100000065181,www.waynesandersonfarms.com,32.136702,-85.723152,True,,Wayne Sanderson Farms
+Wayne Sanderson Farms - Albertville,Albertville,AL,31161,12000,3,0,0,13,100000065234,waynesandersonfarms.com,34.262033,-086.204063,True,,Wayne Sanderson Farms
 SpartanNash,Grand Rapids,MI,49312,30000,3,0,0,6,100000060097,www.spartannash.com,42.820995,-085.689407,True,,SpartanNash
 "Nash Finch Company - Lumberton, NC Division",Lumberton,NC,42241,15000,3,1,0,6,100000177961,www.spartannash.com,34.659053,-079.107658,True,,SpartanNash
 SpartanNash - Severn Distribution Center,Severn,MD,49312,14077,3,0,0,9,100000181297,"500, Macy Dr",39.121082,-076.691991,True,,SpartanNash
@@ -686,14 +691,12 @@ National Frozen Foods Corporation,Albany,OR,31141,40000,3,0,0,7,100000061666,www
 "Boar's Head Provisions Co., Inc. - Petersburg",Petersburg,VA,49312,19000,3,1,0,5,100000193417,,37.175860,-077.412540,True,,Boar's Head
 Food Lion - (Distribution Center # 7),Greencastle,PA,49312,34000,3,0,0,5,100000194274,www.foodlion.com,39.766139,-077.738361,True,,Food Lion
 Food Lion - (Distribution Center # 4),Dunn,NC,49312,17000,3,1,0,4,100000201168,,35.276880,-078.632500,True,,Food Lion
-"Mar-Jac Poultry, Inc.",Gainesville,GA,49312,20500,3,0,0,7,100000056681,www.marjacpoultry.com,34.279722,-083.828333,True,,MarJac Poultry
-"Mar-Jac Poultry MS, LLC",Hattiesburg,MS,31161,30000,3,0,0,9,100000158385,www.marjacpoultry.com,31.305968,-089.277997,True,,MarJac Poultry
+"Mar-Jac Poultry, Inc.",Gainesville,GA,49312,20500,3,0,0,7,100000056681,www.marjacpoultry.com,34.279722,-083.828333,True,,Mar Jac Poultry
+"Mar-Jac Poultry MS, LLC",Hattiesburg,MS,31161,30000,3,0,0,9,100000158385,www.marjacpoultry.com,31.305968,-089.277997,True,,Mar Jac Poultry
 "Seneca Foods Corp.-Cold Storage, Rochester,MN",Rochester,MN,49312,18300,3,0,0,7,100000042731,,43.990175,-092.458282,True,,Seneca Foods
 "Seneca Foods Corporation, Montgomery, Minnesota",Montgomery,MN,31141,30000,3,1,0,7,100000115467,,44.431944,-93.578056,True,,Seneca Foods
 MWCold Pendleton,Pendleton,IN,49312,18400,3,0,0,6,100000195246,,39.999304,-085.76710,True,,Merchandise Warehouse
 Merchandise Warehouse Company Incorporated,Indianapolis,IN,49312,29000,3,0,0,5,100000200294,,39.747690,-086.167761,True,,Merchandise Warehouse
-Wayne-Sanderson Farms - Pendergrass,Pendergrass,GA,11239,20000,3,0,0,12,100000062987,www.waynesandersonfarms.com,34.17884,-083.672158,True,,Wayne Sanderson Farms
-Wayne-Sanderson Farms - Union Springs Fresh Plant,Union Springs,AL,311615,26291,3,0,0,13,100000065181,www.waynesandersonfarms.com,32.136702,-85.723152,True,,Wayne Sanderson Farms
 "Ajinomoto Foods North America, Inc.",Oakland,MS,31161,29500,3,0,0,7,100000186032,,34.073500,-089.905972,True,,Ajinomoto Foods North America
 Ajinomoto Foods,Carthage,MO,311611,15000,3,1,0,14,100000135551,,37.101389,-94.31462,True,,Ajinomoto Foods North America
 Llano Logistics,Lubbock,TX,49312,22000,3,2,0,6,100000173082,www.UnitedSupermarkets.com,33.541111,-101.813056,True,,United Supermarkets
@@ -706,8 +709,8 @@ Cheney Brothers Inc. (Ocala),Ocala,FL,49311,25000,3,0,0,5,100000196094,www.chene
 "Estherville Foods, Inc.",Estherville,IA,311999,26000,3,0,0,6,100000179273,www.sonstegardfoods.com,43.403833,-094.840278,True,,Sonstegard Foods
 "Vertical Cold Storage, Richardson",Richardson,TX,49312,17028,3,1,0,7,100000010052,https://www.verticalcold.com/richardson-tx-dallas,32.9555,-96.7191,True,,Vertical Cold Storage
 "Vertical Cold Storage LLC, Marshville",Marshville,NC,312113,26000,3,0,0,12,100000145014,www.verticalcold.com,34.9839,-80.3926,True,,Vertical Cold Storage
-Nor-Am Cold Storage,Schuyler,NE,49312,29000,3,0,0,5,100000190081,www.nor-am.com,41.450744,-97.099126,True,,NorAm Cold Storage
-Nor-Am Cold Storage,Le Mars,IA,49312,13000,3,0,0,5,100000191277,www.nor-am.com,42.768166,-096.186310,True,,NorAm Cold Storage
+Nor-Am Cold Storage,Schuyler,NE,49312,29000,3,0,0,5,100000190081,www.nor-am.com,41.450744,-97.099126,True,,Nor Am Cold Storage
+Nor-Am Cold Storage,Le Mars,IA,49312,13000,3,0,0,5,100000191277,www.nor-am.com,42.768166,-096.186310,True,,Nor Am Cold Storage
 Joseph Cold Storage #1,Bakersfield,CA,49312,21000,3,1,0,6,100000171262,,35.506332,-119.149837,True,,Joseph Cold Storage 1
 Joseph Cold Storage #2,Delano,CA,49312,20450,3,0,0,6,100000174704,,35.796793,-119.18291,True,,Joseph Cold Storage 1
 Central Storage & Warehouse LLC,Madison,WI,49312,20000,3,1,0,7,100000125116,www.csw-wi.com,43.08253,-089.30893,True,,Central Storage & Warehouse
@@ -734,22 +737,24 @@ Tops Markets Distribution Center,Lancaster,NY,49312,20000,3,0,0,8,100000099635,w
 "FPL FOOD, LLC",Augusta,GA,31161,15000,3,0,0,9,100000129498,,33.447222,-081.978611,True,,FPL FOOD
 Tip Top Poultry - Rockmart Division,Rockmart,GA,31161,12000,3,0,0,6,100000053443,,34.012089,-085.062953,True,,Tip Top Poultry
 Tip Top Poultry - Marietta Division,Marietta,GA,31161,16000,3,0,0,6,100000101418,,33.959196,-084.514154,True,,Tip Top Poultry
-Wayne-Sanderson Farms - Decatur Fresh Processing,Decatur,AL,11239,16000,3,0,0,10,100000063094,www.waynesandersonfarms.com,34.607828,-087.042784,True,,WayneSanderson Farms
-Wayne Sanderson Farms - Albertville,Albertville,AL,31161,12000,3,0,0,13,100000065234,waynesandersonfarms.com,34.262033,-086.204063,True,,WayneSanderson Farms
 VDF Manteno Cold Storage,Manteno,IL,49312,14000,3,0,0,6,100000025643,300 W. 6th Street,41.242500,-087.818500,True,,Van Drunen Farms
 Van Drunen Farms Crown Point,Crown Point,IN,49312,13500,3,0,0,5,100000184677,www.vandrunen.com,41.4282,-87.3413,True,,Van Drunen Farms
 Fresh Express - Morrow GA,Morrow,GA,311991,16000,3,1,0,6,100000125946,,33.563389,-084.346028,True,,Fresh Express
 Grand Prairie Texas Facility,Grand Prairie,TX,49312,11312,3,0,0,6,100000170343,,32.700432,-097.038798,True,,Fresh Express
-Hy-Vee Perishables Center,Chariton,IA,49312,14000,3,2,0,12,100000166161,www.Hy-Vee.com,41.031501,-93.335486,True,,HyVee
-Perishable Distributors of Iowa,Ankeny,IA,49312,13000,3,0,0,7,100000172074,"2741 S E PDI PLACE, 2741 S E PDI PLACE",41.700556,-093.585278,True,,HyVee
+Hy-Vee Perishables Center,Chariton,IA,49312,14000,3,2,0,12,100000166161,www.Hy-Vee.com,41.031501,-93.335486,True,,Hy Vee
+Perishable Distributors of Iowa,Ankeny,IA,49312,13000,3,0,0,7,100000172074,"2741 S E PDI PLACE, 2741 S E PDI PLACE",41.700556,-093.585278,True,,Hy Vee
 Dandy Cooling Company~Cross Dock Services,Salinas,CA,49312,12000,3,0,0,7,100000122066,,36.649747,-121.631714,True,,Dandy Cooling
 "Yuma Express Cooling, LLC - Site #2",Yuma,AZ,49312,14000,3,1,0,7,100000127873,1761 Moccasin Trail Cir.,32.683482,-114.563421,True,,Dandy Cooling
 "Wegmans Food Markets, Inc. Frozen Foods",Rochester,NY,49312,15010,3,0,0,7,100000096264,www.Wegmans.com,43.120326,-077.696884,True,,Wegmans Food Markets
 "Wegmans Food Markets, Inc. Fresh Foods Facility",Rochester,NY,49312,10200,3,0,0,8,100000175678,WWW.WEGMANS.COM,43.121018,-077.699670,True,,Wegmans Food Markets
 Underwood Fruit & Warehouse Company,Bingen,WA,49312,13983,3,1,0,6,100000084829,,45.720556,-121.477778,True,,Underwood Fruit & Warehouse
 The Dalles Fruit Company,Dallesport,WA,49312,10135,3,0,0,3,100000208401,,45.623056,-121.139167,True,,Underwood Fruit & Warehouse
+MDV/SpartanNash,Oklahoma City,OK,49312,12000,3,1,0,6,100000065038,www.spartannash.com,35.4078,-097.4859,True,,MDV SpartanNash
+"SpartanNash - Columbus, GA",Midland,GA,42441,12000,3,1,1,3,100000212469,www.spartannash.com,32.531111,-084.845000,True,,MDV SpartanNash
 KOCH FOODS MORRISTOWN,MORRISTOWN,TN,49312,16300,3,1,0,4,100000193881,,36.20599,-083.30624,True,,KOCH MEAT
 Koch Foods Berteau,Chicago,IL,49312,7497,3,0,0,11,100000201373,,41.957179,-087.738815,True,,KOCH MEAT
+Save-A-Lot,Hammond,LA,42241,9900,3,0,0,5,100000069917,,30.506389,-90.548889,True,,Save A Lot
+"Save A Lot Williamsport, MD",Williamsport,MD,42441,13000,3,0,0,5,100000189681,www.savealot.com,39.583838,-077.809952,True,,Save A Lot
 Wawona Frozen Foods - Ranch,Clovis,CA,49312,11168,3,0,0,4,100000211736,www.wawona.com,36.854449,-119.707851,True,,Wawona Frozen Foods
 Wawona Frozen Foods - Main Plant,Clovis,CA,31141,11000,3,0,0,8,100000197253,www.wawona.com,36.844132,-119.714383,True,,Wawona Frozen Foods
 Molson Coors USA LLC -- Golden Brewery,Golden,CO,31212,410000,3,5,0,54,100000139735,molsoncoors.com,39.756667,-105.219167,True,,Molson Coors Beverage USA
