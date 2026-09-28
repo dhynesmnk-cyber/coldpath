@@ -1,7 +1,7 @@
-# Python bytecode from the reference connector
+# Compiled and build artifacts
 __pycache__/
-*.py[cod]
+*.pyc
 
-# OS and editor noise
-.DS_Store
-Thumbs.db
+# Logs and temp files
+*.log__pycache__/
+.env

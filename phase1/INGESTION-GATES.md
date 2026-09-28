@@ -106,6 +106,9 @@ Promotion is always evidence-driven: a level-2 record becomes level 3 when an *i
 | **C7** | **Cross-source reconciliation** | Match CRM accounts against the RMP-resolved universe. Report: matched, CRM-only, RMP-only. | No refusal — this gate produces the whitespace report, which is often the most valuable output of the whole import. |
 | **C8** | **CRM activity currency** | Capture last-activity and created dates. An account untouched for 12+ months is flagged. | Flag only. Stale CRM records are still real accounts. |
 | **C9** | **Read-only guarantee** | The engine never writes back to the CRM in Phase 1. | Structural — no write credentials exist. |
+| **C10** | **Judged-but-unconfirmed never exports** *(Ndustrial decision, 2026-09-29: NO outbound on AI judgment alone; reaffirmed same day when Q1 was answered Option B — judgment may lift score caps, it may not lift export eligibility)* | Any export feeding outbound sequences/SDR lists requires `qualification_basis ∈ {deterministic, human_confirmed}`. An LLM/Jev judgment (buffer inference, alias adjudication, trigger relevance) may only order or badge review work — it can never flip a confirmation flag or clear a suppression. See `JEVS-PLAN.md` §5.2 and §5.3(5). | Judged-only accounts stay visible in the app with a "judged, pending confirmation" badge and are excluded from the export — visibly listed, never silently dropped (same audit principle as C5). A judgment-derived score bump (e.g. sheddability 15→20 via the calibrated-high path) changes rank ordering only; the account still cannot export until a human confirms. |
+
+*(Note: this gate is numbered C10 because C6 "Ownership" already exists in this table; `JEVS-PLAN.md` §5 anticipated it as "C6" before the collision was checked.)*
 
 ### What C7 produces, and why it matters
 
