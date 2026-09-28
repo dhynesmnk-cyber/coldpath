@@ -18,6 +18,11 @@ HARD RULES enforced in code, not convention:
     account export-eligible.
   * A judgment from source='mock' can never lift a cap — mock exists to test
     plumbing, and pretending otherwise would launder a fake into a score.
+  * Only source='engine' (our own Kev server) may lift caps. Legacy
+    source='live' rows were produced by the hosted TypeSafe/Jev API before
+    the 2026-09-29 billing-permission decision; they are frozen history —
+    displayed, but not trusted for lifts (a sidecar edit could otherwise
+    smuggle billed-API judgments into post-decision scores).
   * If the eval gate fails (version bump shifted >N labeled scores), ALL
     lifts are quarantined: scores fall back to deterministic-only values and
     the run says so loudly.
@@ -107,10 +112,14 @@ def apply_rules(a: dict, row: dict | None) -> dict:
     lifted = False
     shed = parts["sheddability"]
 
-    if src != "live":
-        # Mock judgments inform DISPLAY and triage ordering only. They cannot
-        # move points: a synthetic judge must never touch a real number.
-        note = "mock_source_no_lift"
+    if src != "engine":
+        # Mock (synthetic) and legacy hosted-'live' (pre-Kev TypeSafe API,
+        # billing permission lost 2026-09-29) judgments inform DISPLAY and
+        # triage ordering only. They cannot move points: a synthetic judge
+        # must never touch a real number, and frozen-history rows from the
+        # discontinued backend must not keep influencing new scores either.
+        note = ("mock_source_no_lift" if src == "mock"
+                else "legacy_live_frozen_no_lift")
     elif j["continuous_p_yes"] >= TAU_CONTINUOUS:
         # UC-4 asymmetry: suspicion can only lower trust. Cap hard, tag review.
         shed = min(shed, DEMOTE_CAP)
@@ -143,7 +152,7 @@ def apply_rules(a: dict, row: dict | None) -> dict:
         regulated_p_yes=j["regulated_p_yes"],
         regex_buffer=regex_lbl,
         agreement=("yes" if agr else "no" if agr is False else "n/a"),
-        confirm_candidate=bool(lifted is False and agr and src == "live" and p >= P_LIFT),
+        confirm_candidate=bool(lifted is False and agr and src == "engine" and p >= P_LIFT),
         review_flag="continuous_suspect" if j["continuous_p_yes"] >= TAU_CONTINUOUS else "",
         note=note,
         model_version=row["model_version"],
@@ -235,9 +244,11 @@ def main(limit: int = 50, force_mock_ok: bool = True) -> None:
             r["disposition"] = "quarantined_fallback"
             r["note"] = "eval_gate_fail:" + r["note"]
 
-    live_n = sum(1 for r in results if r.get("source") == "live")
+    engine_n = sum(1 for r in results if r.get("source") == "engine")
     mock_n = sum(1 for r in results if r.get("source") == "mock")
-    print(f"joined judgments: {live_n} live, {mock_n} mock, "
+    legacy_n = sum(1 for r in results if r.get("source") == "live")
+    print(f"joined judgments: {engine_n} engine/Kev, {mock_n} mock, "
+          f"{legacy_n} legacy-hosted (frozen), "
           f"{sum(1 for r in results if not r['judged'])} missing", file=sys.stderr)
 
     # --- triage CSV ------------------------------------------------------

@@ -1,28 +1,44 @@
-"""JEV / TypeSafe integration layer for the water-vertical expansion prototype.
+"""JUDGMENT ENGINE integration layer for the water-vertical expansion prototype.
 
-This module is the ONLY place in the repo allowed to talk to the TypeSafe API.
-It implements the Option-B contract from JEVS-PLAN.md §5.3 step 1: every
-judgment is stored with full provenance (model version, prompt version,
-request hash, response hash) in a JSONL sidecar, and scoring reads the
-sidecar — never the live API. Ingestion must not block on an LLM call; this
-module is run asynchronously *after* `water_rmp.py` finishes.
+Backend decision (2026-09-29): Ndustrial does not have permission for
+TypeSafe/Jev API billing, so the project runs on **Kev** — the open-source
+(Apache-2.0) Jev-family decision model at
+github.com/jaredpalmer/kev. Kev's HTTP API matches TypeSafe's System One
+endpoint (`POST /v1/systemone`) and the same `typesafe_sdk` Python client
+works against a local/self-hosted Kev server unchanged (verified against
+the Kev README and SDK 0.7.2, whose `TypeSafeClient.__init__` accepts
+`base_url`). This module is the ONLY place in the repo allowed to talk to
+the judgment server. It implements the Option-B contract from JEVS-PLAN.md
+§5.3 step 1: every judgment is stored with full provenance (model version,
+prompt version, request hash, response hash) in a JSONL sidecar, and
+scoring reads the sidecar — never the live server. Ingestion must not block
+on an LLM call; this module is run asynchronously *after* `water_rmp.py`
+finishes.
 
 Design rules enforced here (see JEVS-PLAN.md §1/§5, INGESTION-GATES.md C10):
-  * Jev returns RAW typed judgments only. No score arithmetic lives in this
-    file. Composition happens in `jev_score.py`.
+  * The engine returns RAW typed judgments only. No score arithmetic lives
+    in this file. Composition happens in `jev_score.py`.
   * Questions are narrow and independent, asked over shared state in ONE
     request per account (parallel-question pattern from the skill).
   * UC-1 flagship questions: buffer_class (Score), process_continuous (Noul,
     the exclusion-pass tripwire = UC-4), operator_is_regulated_utility (Noul).
-  * Credentials come from TYPESAFE_API_KEY in the environment only; nothing
+  * Server URL/key come from the environment only (KEV_BASE_URL,
+    KEV_API_KEY, with legacy TYPESAFE_API_KEY accepted as fallback); nothing
     here logs or persists the key.
 
-Primitives chosen per docs.typesafe.ai (read 2026-09-29):
+Primitives chosen per Kev README + docs.typesafe.ai (read 2026-09-29):
   - Score for buffer_class: ordered descriptive levels that stand on their
     own; answer carries probability-weighted position + legend.
   - Noul for the two yes/no conditions: probability of yes, no separate
     confidence field (near 0.5 == genuinely uncertain, which is exactly the
     signal we route to review).
+
+CALIBRATION WARNING (Kev README "What to Expect"): Kev ships fitted
+temperatures, but its confidence *ranking* is measurably worse than Jev's
+(at a 5% error budget Kev automates 0.45-0.57 of decisions vs Jev 0.70).
+The P_LIFT threshold in jev_score.py MUST be re-checked on our labeled eval
+set before any lift rule is trusted in production. Do not assume Jev's
+thresholds transfer.
 """
 
 from __future__ import annotations
@@ -39,7 +55,11 @@ from typing import Any
 # It participates in request_hash so a prompt edit invalidates cached sidecar
 # rows instead of silently mixing old and new judgments (drift defense #1).
 PROMPT_VERSION = "uc1-water-v1"
-MODEL = "jev"          # pinned explicitly; do NOT rely on server-side default
+# Backend: Kev (open-source, Apache-2.0) — self-hosted or Modal endpoint.
+# KEV_MODEL selects the checkpoint; default kev-4b per README's "Start with
+# Kev-4B" guidance (~9 GB VRAM in bf16; CPU fallback is slow but works for a
+# 50-account batch). Pinned explicitly; do NOT rely on server-side default.
+MODEL = os.environ.get("KEV_MODEL", "kev-latest").strip() or "kev-latest"
 MAX_SITE_NAMES = 8     # state budget: cap evidence, never truncate mid-name
 
 
@@ -216,21 +236,36 @@ def append_sidecar(rows: list[dict], path: str = SIDECAR_PATH) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Live client (server-side key only)
+# Engine client (Kev — local `kev.serve` or self-hosted Modal endpoint)
 # ---------------------------------------------------------------------------
 
 def make_client():
+    """Point the TypeSafe SDK at a Kev server (drop-in; same System One API).
+
+    Env vars:
+      KEV_BASE_URL   default http://127.0.0.1:8009  (local `python -m kev.serve`)
+      KEV_API_KEY    bearer key if the server sets KEV_API_KEY; 'local' otherwise
+      KEV_MODEL      checkpoint name, e.g. kev-latest / kev-4b
+    Legacy TYPESAFE_API_KEY is accepted as a credential fallback only —
+    base_url ALWAYS targets Kev now, so a stale hosted-Jev key can never be
+    used to silently bill the TypeSafe plan we are not allowed to use.
+    """
     from typesafe_sdk import TypeSafeClient   # lazy: offline/mock runs need no SDK
-    key = os.environ.get("TYPESAFE_API_KEY", "").strip()
-    if not key:
-        raise SystemExit(
-            "TYPESAFE_API_KEY not set. Either export it, or run with --mock to "
-            "exercise the full pipeline against the deterministic offline judge.")
-    return TypeSafeClient(api_key=key, model=MODEL)
+    base_url = os.environ.get("KEV_BASE_URL", "http://127.0.0.1:8009").strip()
+    key = (os.environ.get("KEV_API_KEY", "").strip()
+           or os.environ.get("TYPESAFE_API_KEY", "").strip()
+           or "local")                        # unauthenticated local server
+    return TypeSafeClient(api_key=key, base_url=base_url, model=MODEL)
 
 
-def ask_live(client, state: dict) -> tuple[dict, dict]:
-    """One system_one call per account. Returns (answers_dict, usage)."""
+def ask_engine(client, state: dict) -> tuple[dict, dict]:
+    """One system_one call per account. Returns (answers_dict, usage).
+
+    Named 'engine' rather than 'live' because the backend is our own Kev
+    server; rows written by this path carry source='engine'. jev_score.py
+    treats 'engine' as the ONLY lift-eligible source (hosted-Jev-era rows
+    keep their 'live' label but are frozen history, never re-trusted for
+    lifts after the billing-permission decision of 2026-09-29)."""
     from typesafe_sdk import Noul, Score, Choice  # noqa: F401 (Choice reserved for UC-2)
     q_objs = {}
     for qid, spec in QUESTIONS.items():
@@ -310,20 +345,20 @@ def run_batch(accounts: list[dict], sites_by_account: dict[str, list[dict]],
         todo.append((acc, state, rh))
 
     print(f"jev batch: {len(done)} cached, {len(todo)} to judge "
-          f"({'mock' if mock else 'live'} mode)", file=sys.stderr)
+          f"({'mock' if mock else 'engine/Kev'} mode)", file=sys.stderr)
     for i, (acc, state, rh) in enumerate(todo, 1):
         t0 = time.time()
         if mock:
             answers, usage = ask_mock(state)
         else:
-            answers, usage = ask_live(client, state)
+            answers, usage = ask_engine(client, state)
         judged = normalize_answers({"model": MODEL, "answers": answers})
         row = {
             "request_hash": rh,
             "response_hash": response_hash(answers),
             "prompt_version": PROMPT_VERSION,
             "model_version": judged.pop("model_version"),
-            "source": "mock" if mock else "live",
+            "source": "mock" if mock else "engine",
             "account": acc["account"],
             "state": state,
             "answers": answers,
