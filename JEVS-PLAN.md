@@ -284,3 +284,35 @@ steps 1–2 rather than by hope.
 Remaining open sub-question (was flagged in EXPANSION-PLAN §7 item 6): cost
 ceiling for re-running the sidecar after each version bump (~732 accounts ×
 3 questions per refresh; measure tokens, don't assume).
+
+## 6. Build log — Option-B machinery implemented (2026-09-29)
+
+§5.3 steps 1–4 are now code, not intentions. Files:
+
+| File | Contract step | What it enforces |
+|---|---|---|
+| `phase1/connectors/jev.py` | §5.3(1) provenance + §3 questions | The ONLY module that may call the API. UC-1 state builder (site-name sample capped at 8 with explicit overflow count), Score/Noul definitions, request/response hashes, append-only JSONL sidecar (`data/jev_judgments.jsonl`), live client (key from env only), deterministic `--mock` judge for offline plumbing tests. Zero score arithmetic lives here. |
+| `phase1/jev_score.py` | §5.3(2)(3)(4) | `SCORING_RULES_VERSION="optb-v1"`; lift rule (elevated∧p≥0.85 ⇒ cap 20, never 25), wet-well physics floor (cap 9 regardless of p), contradiction demote (cap 10), UC-4 tripwire (asymmetric: suspicion lowers trust + tags review, never auto-drops), confirm-candidate tag (zero points). Eval gate quarantines ALL lifts when a rules OR prompt version bump shifts >5/50 labeled scores. Audit columns render `judged · v · p=` per row. |
+| `phase1/jev_triage.py` | §3 runner | Async-after-ingestion batch: sidecar cache hit ⇒ zero API calls, byte-stable output. Then composes + writes `data/water_jev_triage.csv` + eval snapshot. |
+| `phase1/test_jev_rules.py` | regression | 9 synthetic-judgment tests covering every mapping branch incl. both gate-fail paths and the C10 invariant ("composition never emits buffer_confirmed, never touches qualification_basis"). |
+
+Hard rules enforced in code, not convention: mock-sourced judgments can NEVER
+move points (they exist to test plumbing); `buffer_confirmed` is not writable
+from this layer at all; sidecar is read-only for scoring and the nightly path
+never blocks on the API.
+
+### Status of the §3 success metric — NOT YET EVALUATED
+First run was `--mock` over the top 50 accounts: 50 rows judged, sidecar
+round-trip verified (re-run = 0 API calls, identical CSV), eval-gate baseline
+snapshot written. Mock results prove the PIPELINE, not the judgment — per §3
+the money-shot test ("does Jev find elevated-storage plants the regex missed?")
+requires a live run with `TYPESAFE_API_KEY`, which this environment does not
+have. Command ready: `python phase1/jev_triage.py --limit 50`.
+
+Known conservatism found while testing: the lift rule as planned requires
+regex-agreement AND level-4 ∧ p≥0.85, so accounts whose site NAMES are
+registry-blind (hypochlorite/UV plants the regex called "unknown", shed=4)
+cannot be lifted even if Jev is confidently right — they only get demoted or
+kept. That is exactly the population the §3 metric targets; whether to add a
+"Jev-high-confidence-over-regex-unknown" lift path is a rules-version bump
+(optb-v2) decision gated by the eval set, deliberately NOT taken unilaterally.
