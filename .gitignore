@@ -1,13 +1,2 @@
-
-# Environment/Sensitive files
-# Logs and temp files
-# Python cache
-*.env.*
-*.log
-*.pyc
-.deploy.log
-.endpoint
-.env
-.env.local
-.kev_key
 __pycache__/
+*.pyc
