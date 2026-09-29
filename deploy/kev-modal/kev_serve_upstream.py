@@ -53,7 +53,7 @@ SECRET = {k: os.environ[k] for k in ("KEV_API_KEY", "HF_TOKEN") if os.environ.ge
 
 app = modal.App(SETTINGS["KEV_APP_NAME"])
 image = (
-    modal.Image.debian_slim(python_version="3.13")
+    modal.Image.debian_slim(python_version="3.12")
     .apt_install("git")
     .uv_pip_install(f"kev[serve] @ git+https://github.com/jaredpalmer/kev.git@{KEV_REF}")
     .uv_pip_install("flash-linear-attention==0.5.2", "triton>=3.7.1")   # the fused Qwen3.5 kernels are built on this fla (it needs triton >= 3.7.1 on Hopper)
