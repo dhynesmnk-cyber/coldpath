@@ -206,3 +206,37 @@ Two findings to tell as stories, because they prove engineering rigour rather th
 **Dirty data.** One facility — a *marine terminal* in Beaumont, Texas — declares 89,000,000 lb of ammonia. That is 445× the p99 and **78% of all ammonia reported in the entire raw pull**. Unvalidated it ranked #15 of 111 prospects, above Hormel and Cargill. The validation gate flags it, excludes it from scoring, retains it, and writes it to a human review queue.
 
 Then hand over `phase1/data/coldchain_rmp_accounts.csv`. It is a usable target list they keep whether or not they buy anything. That is the strongest possible close.
+---
+
+## The expansion demo — run this after the cold-chain story lands
+
+Build List now has a **Cold chain | Water & wastewater** toggle. The water tab is the same engine on a new vertical, and that is the pitch: horizontal expansion is a connector + a scoring brief, not a rebuild.
+
+Real pull (`phase1/connectors/water_rmp.py`, EPA RMP NAICS 2213x, chlorine as scale proxy), pulled 28 September 2026:
+
+- **1,196 resolved sites → 732 utility accounts, 44 states**, 34.5M lb validated chlorine, 1.95 GW estimated aggregate peak (engineering estimate, stated as such on-screen). Top ICP scores: American Water 77, Dallas Water Utilities 76, Great Lakes Water Authority 69 — only two ≥70, deliberately.
+- **American Water** files under **8 distinct parent strings across 22 sites in 7 states** — merged into one account. Same failure class as Americold's four names; the resolution logic generalised instead of special-casing.
+- The **continuous-process exclusion gate caught live contamination**: 8 sites misfiled under water NAICS refused before scoring — including fertilizer plants reporting up to **180M lb ammonia** via parent aliasing, a pulp mill, a refinery. Hard-refused with logged reasons, never silently dropped.
+- **The honesty moment, lead with it:** scores top out at 63–77 with only a handful ≥70 *by design*. Sheddability is capped until a human confirms the buffer, because an inferred tank must never outvote physics. Say: "the engine could score these 90 if we let it guess — it won't."
+- If the Jev/Kev triage badges are visible (Jev column): Option-B machinery demonstrated live — judgments applied through versioned rules only, physics floors held, continuous-process flags added as review burden, and gate C10 means no judged-but-unconfirmed account can ever export. Per the pre-declared success metric, lifts ship only if the eval gate passes; otherwise the badges render as review tags and nothing else changes.
+
+**The close becomes a choice question:** *"Which vertical do you fund next — water, district energy, cement, EV depots?"* Cement/district/EV connectors are specced in EXPANSION-PLAN.md §triggers table with named sources; each is the same two-week shape.
+
+**Expansion Pilot offer (mirror of Phase 1 pricing logic):** fixed fee, 10 water-utility account briefs in ~2 weeks, same acceptance gates (customer suppression tested day 1, negative test included). Deliverable they keep either way: `phase1/data/water_rmp_accounts.csv` — 732 named utilities with site counts, states, grid territory and ICP scores.
+
+Watch-out when demoing water: expect the question *"isn't chlorine about disinfection, not refrigeration?"* — answer: exactly, which is why the panel prints the proxy caveat instead of hiding it. Chlorine inventory correlates with plant scale; the kW number is tiered engineering inference pending bill data. This is the same honest-proxy discipline that made the Neches outlier story land.
+
+
+---
+
+## Demo handoff — how to open the prototype (added after download confusion)
+
+**The water vertical is on the Build List screen, behind a segmented toggle.** If you open the file and land on the Dashboard, it looks identical to the old cold-chain demo. Two ways in:
+
+1. **Toggle:** left sidebar → **Build List** → click the **"Water & wastewater · 732 accounts"** tab above the table.
+2. **Deep link (recommended for demos):** append query params to the file URL, e.g.
+   `coldpath-prototype.html?view=list&vert=water` — opens directly on the water panel. Works with `file://` URLs in Chrome/Edge/Firefox.
+
+Canonical copy lives at `archive/index.html`; the download target is `prototype/coldpath-prototype.html` (same build + deep-link patch). Both are fully self-contained single files — no server, no network, no downloads needed beyond the file itself.
+
+What to show once on the water tab (the scripted flow): stat cards (732 accounts / ~1.95 GW est.) → the honest-proxy caveat banner → triangle component column (meter·price·shed, shed capped amber until human confirmation) → Jev badge column → the review queue (9 unresolved names + 8 continuous-process exclusions, incl. Koch fertilizer misfiles) → click **American Water** for the account brief modal.
