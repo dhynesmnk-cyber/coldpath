@@ -1784,6 +1784,9 @@ const NAV=[
  {id:'engine',n:'How It Works',ic:'cog'},
 ];
 let S={view:'dash',acct:'kroger',intelTab:'snapshot',dt:'brief',listSort:'fit',listF:'',queueSel:'kroger',vert:'cold',wsort:'icp',wf:''};
+try{const q=new URLSearchParams(location.search);
+ if(q.get('view'))S.view=q.get('view');
+ if(q.get('vert')==='water'||q.get('vert')==='cold')S.vert=q.get('vert');}catch(e){}
 const countDeliv=()=>Object.values(DELIV).reduce((n,a)=>n+Object.values(a).filter(x=>x.status==='published'||x.status==='in-review').length,0);
 const A=()=>ACCOUNTS.find(a=>a.id===S.acct)||ACCOUNTS[0];
 const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');

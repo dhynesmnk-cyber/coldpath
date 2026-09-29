@@ -1,7 +1,13 @@
-# Compiled and build artifacts
-__pycache__/
-*.pyc
 
+# Environment/Sensitive files
 # Logs and temp files
-*.log__pycache__/
+# Python cache
+*.env.*
+*.log
+*.pyc
+.deploy.log
+.endpoint
 .env
+.env.local
+.kev_key
+__pycache__/

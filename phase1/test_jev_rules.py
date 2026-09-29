@@ -21,8 +21,11 @@ seed = json.load(open(os.path.join(HERE, "data", "water_rmp_seed.json"), encodin
 accs = {a["account"]: a for a in seed["accounts"]}
 
 
-def fake_row(acct, top, p, cont=0.05, reg=0.9, source="live"):
-    """Synthesize a sidecar-shaped row through the REAL normalize path."""
+def fake_row(acct, top, p, cont=0.05, reg=0.9, source="engine"):
+    """Synthesize a sidecar-shaped row through the REAL normalize path.
+
+    Default source='engine' = our own Kev server (the only lift-eligible
+    backend since 2026-09-29; see jev_score.py hard rules)."""
     probs = {str(i): 0.0 for i in range(5)}
     probs[str(top)] = p
     probs[str(max(0, top - 1))] = round(1 - p, 4)
@@ -76,6 +79,17 @@ def t5_mock_never_moves_points():
     assert r["note"] == "mock_source_no_lift"
 
 
+def t5b_legacy_hosted_live_frozen():
+    """Rows from the discontinued hosted TypeSafe/Jev API (source='live')
+    must NOT lift caps post-decision — frozen history, display-only."""
+    r = S.apply_rules(AW, fake_row("t5b", 4, 0.9, source="live"))
+    assert not r["lifted"] and r["shed"] == r["baseline_shed"]
+    assert r["note"] == "legacy_live_frozen_no_lift"
+    # ...and they cannot earn confirm-candidate tags either (§5.3 rule: tag
+    # requires engine provenance)
+    assert not r["confirm_candidate"]
+
+
 def t6_candidate_tag_only():
     """Agreement at level 3 (elevated_weak): tag confirm-candidate, zero points."""
     r = S.apply_rules(AW, fake_row("t6", 3, 0.9))
@@ -126,7 +140,8 @@ def t9_sidecar_roundtrip_determinism():
 
 if __name__ == "__main__":
     tests = [t1_lift, t2_contradiction_demotes, t3_physics_floor, t4_tripwire_asymmetric,
-             t5_mock_never_moves_points, t6_candidate_tag_only, t7_c10_invariants,
+             t5_mock_never_moves_points, t5b_legacy_hosted_live_frozen,
+             t6_candidate_tag_only, t7_c10_invariants,
              t8_eval_gate, t9_sidecar_roundtrip_determinism]
     for t in tests:
         t()
