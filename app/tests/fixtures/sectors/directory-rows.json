@@ -1,0 +1,9 @@
+{
+  "meta": { "source": "de-dtc-directory", "fixtureNote": "Recorded-shape fixture for connector #1 parity test (EXPANSION-PLAN §6 step 4). Values are plausible directory rows, not a live pull." },
+  "rows": [
+    { "systemName": "Chattanooga District Energy", "city": "Chattanooga", "state": "tn", "systemType": "hot water + steam", "capacityMwTh": 250 },
+    { "systemName": "Stanford University Central Energy Facility", "city": "Stanford", "state": "CA", "systemType": "hot water + chilled water (TES)", "capacityMwTh": "300" },
+    { "systemName": "", "city": "Nowhere", "state": "XX", "systemType": "steam", "capacityMwTh": 10 },
+    { "systemName": "Bad Units System", "city": "Test", "state": "TX", "systemType": "hot water", "capacityMwTh": "n/a" }
+  ]
+}

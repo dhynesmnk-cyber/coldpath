@@ -5,6 +5,9 @@ import { account, site } from './account.js';
 export const sourceKind = pgEnum('source_kind', [
   'rmp', 'edgar', 'news', 'web', 'job', 'enforcement', 'tariff', 'rto', 'sustainability',
   'crm', 'enrichment', 'capture', 'document', 'internal',
+  // Sector universe sources wired 2026-09-30 (EXPANSION-PLAN §6 steps 4-7);
+  // endpoints registered in src/connectors/{cement,district-energy,ev-depot}/constants.ts.
+  'directory', 'usgs', 'afdc', 'grants',
 ]);
 
 export const confidenceEnum = pgEnum('confidence', ['gap', 'medium', 'high']);
