@@ -226,3 +226,17 @@ Real pull (`phase1/connectors/water_rmp.py`, EPA RMP NAICS 2213x, chlorine as sc
 
 Watch-out when demoing water: expect the question *"isn't chlorine about disinfection, not refrigeration?"* — answer: exactly, which is why the panel prints the proxy caveat instead of hiding it. Chlorine inventory correlates with plant scale; the kW number is tiered engineering inference pending bill data. This is the same honest-proxy discipline that made the Neches outlier story land.
 
+
+---
+
+## Demo handoff — how to open the prototype (added after download confusion)
+
+**The water vertical is on the Build List screen, behind a segmented toggle.** If you open the file and land on the Dashboard, it looks identical to the old cold-chain demo. Two ways in:
+
+1. **Toggle:** left sidebar → **Build List** → click the **"Water & wastewater · 732 accounts"** tab above the table.
+2. **Deep link (recommended for demos):** append query params to the file URL, e.g.
+   `coldpath-prototype.html?view=list&vert=water` — opens directly on the water panel. Works with `file://` URLs in Chrome/Edge/Firefox.
+
+Canonical copy lives at `archive/index.html`; the download target is `prototype/coldpath-prototype.html` (same build + deep-link patch). Both are fully self-contained single files — no server, no network, no downloads needed beyond the file itself.
+
+What to show once on the water tab (the scripted flow): stat cards (732 accounts / ~1.95 GW est.) → the honest-proxy caveat banner → triangle component column (meter·price·shed, shed capped amber until human confirmation) → Jev badge column → the review queue (9 unresolved names + 8 continuous-process exclusions, incl. Koch fertilizer misfiles) → click **American Water** for the account brief modal.
