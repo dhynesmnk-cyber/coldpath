@@ -1,0 +1,9 @@
+{
+  "meta": { "source": "cem-usgs-plants", "fixtureNote": "Recorded-shape fixture for the USGS cement plant parse. Names/states from public plant lists; capacities rounded." },
+  "rows": [
+    { "plantName": "Redding Cement Plant", "company": "Hanson AGG", "city": "Redding", "state": "CA", "clinkerKtpy": 850 },
+    { "plantName": "Newport Cement Plant", "company": "Holcim", "city": "Newport", "state": "OR", "clinkerKtpy": "2,700" },
+    { "plantName": "", "company": "Unknown", "city": "?", "state": "?", "clinkerKtpy": 100 },
+    { "plantName": "Hallam Mill", "company": "CRH", "city": "Derby", "state": "GB", "clinkerKtpy": -5 }
+  ]
+}

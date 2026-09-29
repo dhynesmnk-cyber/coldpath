@@ -4,6 +4,10 @@ import { appUser } from './identity.js';
 
 export const verticalEnum = pgEnum('vertical', [
   'cold_storage_logistics', 'manufacturing_food_production', 'retail_food_service', 'other',
+  // Expansion verticals — EXPANSION-PLAN.md §6 step 2. Migration 0003 adds the
+  // same values to the Postgres enum (ALTER TYPE ... ADD VALUE cannot run in a
+  // transaction, hence the separate no-tx migration file).
+  'cement_bulk_minerals', 'district_energy', 'heavy_transport_ev_depots',
 ]);
 
 export const accountStatus = pgEnum('account_status', [

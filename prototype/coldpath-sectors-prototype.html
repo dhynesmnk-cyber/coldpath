@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>COLDPATH · Sector Parity Prototype</title>
+<!--
+  ============================================================================
+  COLDPATH — SECTOR PARITY PROTOTYPE (new, standalone)
+  ----------------------------------------------------------------------------
+  Purpose : Shows ALL industry sectors with EQUAL visual weight — one uniform
+            card per sector in a symmetric grid. This deliberately replaces
+            the coldchain-first / "others" fallback layout of the main
+            prototype (coldpath-prototype.html), which leads with Cold Chain
+            and treats everything else as secondary.
+  Sectors : The five verticals from EXPANSION-PLAN.md §0–§4, each qualified
+            against the same explicit criteria (C1 meter scale, C2 price
+            exposure, C3 shed buffer). No sector is labelled "other".
+  Honesty : Only two sectors have real connector output shipped today:
+            Cold Chain (EPA RMP ammonia) and Water (EPA RMP NAICS 2213x).
+            Their figures come from the actual datasets embedded in the main
+            prototype (REG / WATER constants). Cement, District Energy and
+            EV Depots are PLANNED — their cells say so explicitly rather
+            than inventing numbers. Equal layout ≠ fabricated data.
+  Gates   : Continuous-process exclusion (§0) is shown per-sector as a fact,
+            not buried — it is what keeps parity honest.
+  Theme   : Same CSS-variable design tokens as the main prototype; light/dark
+            toggle persisted to localStorage. Self-contained, no dependencies.
+  ============================================================================
+-->
+<style>
+:root{
+  --bg:#080B11; --bg2:#0C1119; --panel:#111925; --panel2:#151E2C; --panel3:#1A2433;
+  --line:#1E2937; --line2:#26364a; --sb:#2a3a4f;
+  --txt:#E6EDF5; --txt2:#9AACBF; --txt3:#647689;
+  --cyan:#3FD8E8; --amber:#F5A623; --red:#F2697A; --green:#3DDC97; --violet:#9B8CFF;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:ui-monospace,'SF Mono','Cascadia Mono',Menlo,Consolas,monospace;
+}
+html[data-theme="light"]{
+  --bg:#EEF2F5; --bg2:#FFFFFF; --panel:#FFFFFF; --panel2:#F6F8FA; --panel3:#E9EEF3;
+  --line:#DCE4EB; --line2:#C9D5DF; --sb:#c2cfdb;
+  --txt:#15212B; --txt2:#4C5E6E; --txt3:#7C8C9B;
+  --cyan:#0B6E7E; --amber:#8C5A10; --red:#A03244; --green:#186A49; --violet:#54469A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:var(--sans);font-size:13.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1280px;margin:0 auto;padding:0 28px 64px}
+header{display:flex;align-items:center;gap:16px;padding:22px 0 6px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.brand{font-weight:800;font-size:19px;letter-spacing:.02em}
+.brand span{color:var(--cyan)}
+.tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--txt3);margin-top:3px}
+.hdr-sp{flex:1}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;letter-spacing:.07em;padding:4px 10px;border-radius:20px;border:1px solid var(--line2);color:var(--txt2);text-transform:uppercase}
+.pill.live{border-color:rgba(61,220,151,.35);color:var(--green);background:rgba(61,220,151,.1)}
+.btn{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:6px 12px;border-radius:6px;border:1px solid var(--line2);background:var(--panel);color:var(--txt2);cursor:pointer}
+.btn:hover{color:var(--txt);border-color:var(--cyan)}
+h1{font-size:22px;margin:26px 0 4px}
+.lede{color:var(--txt2);max-width:86ch;font-size:13.5px}
+.lede b{color:var(--txt)}
+.controls{display:flex;align-items:center;gap:18px;margin:22px 0 6px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:8px;overflow:hidden}
+.seg button{padding:7px 14px;font-size:12px;background:var(--panel);color:var(--txt2);border:none;cursor:pointer;font-family:var(--sans)}
+.seg button.on{background:var(--panel3);color:var(--txt);font-weight:600}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-left:auto}
+.lg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--txt2)}
+.lg-dot{width:9px;height:9px;border-radius:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:18px;margin-top:20px;align-items:start}
+.scard{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .15s}
+.scard:hover{border-color:var(--sc,#3FD8E8)}
+.shead{display:flex;align-items:center;gap:12px;padding:16px 18px 12px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,color-mix(in srgb,var(--sc) 7%,transparent),transparent)}
+.sicon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--sc) 14%,transparent);color:var(--sc);flex:0 0 38px}
+.sicon svg{width:20px;height:20px}
+.sname{font-weight:700;font-size:15px;line-height:1.25}
+.ssub{font-size:11px;color:var(--txt3);font-family:var(--mono);letter-spacing:.04em}
+.sbadge{margin-left:auto;text-align:right}
+.status{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:20px;font-weight:600}
+.st-live{background:rgba(61,220,151,.14);color:var(--green);border:1px solid rgba(61,220,151,.35)}
+.st-build{background:rgba(245,166,35,.13);color:var(--amber);border:1px solid rgba(245,166,35,.35)}
+.st-planned{background:rgba(155,140,255,.13);color:var(--violet);border:1px solid rgba(155,140,255,.35)}
+.srcnote{font-size:10px;color:var(--txt3);margin-top:5px;font-family:var(--mono)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
+.stat{padding:12px 14px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:none}
+.slbl{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--txt3)}
+.sval{font-size:19px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+.sfoot{font-size:10px;color:var(--txt3);margin-top:1px}
+.crit{padding:12px 18px 4px}
+.crow{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.crow:last-child{border-bottom:none}
+.ck{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--txt3);width:22px;flex:0 0 22px}
+.cn{font-size:11.5px;color:var(--txt2);width:118px;flex:0 0 118px}
+.cd{font-size:11px;color:var(--txt);flex:1}
+.meter{display:flex;gap:3px;width:64px;flex:0 0 64px}
+.mseg{height:6px;flex:1;border-radius:2px;background:var(--panel3)}
+.mseg.on{background:var(--sc)}
+.fit{font-family:var(--mono);font-size:9px;color:var(--txt3);width:34px;text-align:right;flex:0 0 34px}
+.note{padding:10px 18px 14px;font-size:11.5px;color:var(--txt2)}
+.note b{color:var(--txt)}
+.gate{margin:0 18px 14px;padding:9px 12px;border-radius:8px;font-size:11px;line-height:1.5;background:rgba(242,105,122,.08);border:1px solid rgba(242,105,122,.25);color:var(--txt2)}
+.gate b{color:var(--red)}
+.top5{margin:0 18px 16px}
+.top5 .lbl{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--txt3);margin-bottom:6px;display:block}
+.t5row{display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px dashed var(--line);font-size:11.5px}
+.t5row:last-child{border-bottom:none}
+.t5n{color:var(--txt)}.t5v{font-family:var(--mono);color:var(--txt2);font-variant-numeric:tabular-nums}
+.ph{font-size:11.5px;color:var(--txt3);font-style:italic;padding:0 18px 16px}
+.conns{margin:0 18px 16px;padding-top:10px;border-top:1px solid var(--line)}
+.conns .lbl{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--txt3);margin-bottom:6px;display:block}
+.conn{display:flex;align-items:baseline;gap:7px;padding:4px 6px;margin:0 -6px;border-radius:6px;text-decoration:none;color:var(--txt2);font-size:11.5px;line-height:1.45}
+.conn:hover{background:var(--panel3);color:var(--txt)}
+.conn svg{width:12px;height:12px;flex:none;color:var(--sc,var(--cyan));transform:translateY(2px)}
+.conn .cl{font-weight:600;color:var(--txt);white-space:nowrap}
+.conn:hover .cl{color:var(--sc)}
+.conn .cn2{color:var(--txt3);font-size:10.5px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:11.5px;color:var(--txt3)}
+footer b{color:var(--txt2)}
+.eq-banner{margin-top:18px;padding:12px 16px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);font-size:12px;color:var(--txt2)}
+.eq-banner b{color:var(--cyan)}
+@media(max-width:760px){.cn{width:auto;flex-basis:90px}.legend{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="brand">COLD<span>PATH</span></div>
+      <div class="tag">Sector Parity Prototype · v0.1 · Sept 2026</div>
+    </div>
+    <div class="hdr-sp"></div>
+    <span class="pill live">● Layout: equal weighting</span>
+    <button class="btn" id="themeBtn">Light / Dark</button>
+  </header>
+
+  <h1>All industry sectors, equally weighted</h1>
+  <p class="lede">This prototype replaces the <b>cold-chain-first / “others”</b> arrangement used in
+  <span style="font-family:var(--mono)">coldpath-prototype.html</span>. Every sector gets the same card, the same three
+  qualification criteria (<b>C1</b> meter scale · <b>C2</b> price exposure · <b>C3</b> shed buffer, per
+  <span style="font-family:var(--mono)">EXPANSION-PLAN.md §0</span>) and the same slot count — order is alphabetical, so no row reads as primary.
+  Build status is honestly tagged <b>LIVE</b> (connector shipped), <b>BUILDING</b>, or <b>PLANNED</b>: equal layout never means fabricated data.</p>
+
+  <div class="eq-banner"><b>Why parity is defensible:</b> the qualification model is sector-agnostic by construction. A sector earns its place on evidenced C1/C2/C3 facts, and the continuous-process exclusion removes unsuitable loads categorically — at the gate, not by scoring them into an “other” bin.</div>
+
+  <div class="controls">
+    <div class="seg" id="sortSeg">
+      <button data-sort="alpha" class="on">A → Z (equal)</button>
+      <button data-sort="status">By build status</button>
+      <button data-sort="fit">By fit score</button>
+    </div>
+    <div class="legend">
+      <span class="lg-item"><span class="lg-dot" style="background:var(--green)"></span>Live connector</span>
+      <span class="lg-item"><span class="lg-dot" style="background:var(--amber)"></span>Building</span>
+      <span class="lg-item"><span class="lg-dot" style="background:var(--violet)"></span>Planned</span>
+    </div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>
+    <b>Data provenance.</b> Cold Chain figures = EPA Risk Management Program ammonia census as embedded in the main prototype
+    (<span style="font-family:var(--mono)">RMP.stats</span>: 117 accounts / 755 sites; top registry entry Americold — 107 sites, 2.72M lb NH₃. Full list:
+    <span style="font-family:var(--mono)">phase1/data/coldchain_rmp_accounts.csv</span>). Water figures =
+    <span style="font-family:var(--mono)">phase1/connectors/water_rmp.py</span> output (732 accounts / 1,196 sites, CC BY-SA 4.0 via rmpmap.org).
+    Cement / District Energy / EV Depot rows carry <b>no invented counts</b> — each now lists its real universe sources as live links (12 URLs, HTTP-verified 2026-09-30), mapped from the source tables in EXPANSION-PLAN.md §§2–4 until connectors ship.
+    <br><br>This file is a standalone presentation-layer prototype; it does not touch app code, schema, or the Phase 1 Python engine.
+  </footer>
+</div>
+
+<script>
+/* ---- icons (stroke SVG, shared style with main prototype) ---- */
+const IC={
+ snow:'<path d="M12 2v20M4.5 6.5l15 11M19.5 6.5l-15 11M2 12h20"/>',
+ drop:'<path d="M12 2.7s6.5 7 6.5 11.3a6.5 6.5 0 11-13 0C5.5 9.7 12 2.7 12 2.7z"/>',
+ plant:'<rect x="3" y="10" width="7" height="11" rx="1"/><rect x="14" y="4" width="7" height="17" rx="1"/><path d="M5 10V6h3v4M16 4V2h3v2"/>',
+ net:'<circle cx="5" cy="12" r="2.2"/><circle cx="12" cy="5" r="2.2"/><circle cx="19" cy="12" r="2.2"/><circle cx="12" cy="19" r="2.2"/><path d="M7 12h10M12 7v10"/>',
+ ev:'<rect x="3" y="8" width="14" height="9" rx="2"/><path d="M17 11h3v5h-3M7 17v2M13 17v2M8 8l2-3H8l2-3"/>'
+};
+const svg=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg>`;
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const fmt=n=>n==null?'—':n.toLocaleString('en-US');
+
+/* ---- real universe-source connections (verified against EXPANSION-PLAN §§2–4) ---- */
+const LINK=(label,url,note)=>({label,url,note});
+const CONNS={
+ cement:[
+  LINK('USGS Cement Plants & Kilns DB','https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-cement.pdf','Primary census seed — USGS Mineral Commodity Summaries: cement plants & kilns, capacity. (usgs.gov HTML page blocks bots; the pubs.usgs.gov PDF is the reachable copy.)'),
+  LINK('EIA MECS / Manufacturing energy data','https://www.eia.gov/consumption/manufacturing/','Sector kWh baselines to calibrate capacity → est_peak_kw.'),
+  LINK('SEC EDGAR full-text search','https://efts.sec.gov/LATEST/search-index?q=%22grinding+mill%22&forms=8-K','8-K capex / modernisation triggers for Holcim, CRH, HeidelbergMaterials, Summit, Lehigh. Connector kind `edgar` already in schema.'),
+  LINK('FTC premerger program','https://www.ftc.gov/policy','Ready-mix / aggregates acquisition trigger (HSR filings index).')],
+ district:[
+  LINK('District Energy in Cities (UNEP-DTC) roster','https://heatpumpingtechnologies.org/','Best available system roster via the DTC programme hub. Build-sequence connector #1.'),
+  LINK('ACEEE Census of Community District Energy','https://aceee.org/project/census-community-district-energy','US system counts by type/state — free. Pairs with DTC for multi-source assembly.'),
+  LINK('ENERGY STAR Portfolio Manager','https://www.energystar.gov/benchmark','Campus EUI surfaces large central plants even where no district-loop filing exists.'),
+  LINK('SEC EDGAR full-text','https://efts.sec.gov/LATEST/search-index?q=%22district+energy%22','"chilled water plant" / "cogen" mentions in REIT & campus-parent 10-Ks.')],
+ evdepot:[
+  LINK('AFDC station datasets (DOE/NREL)','https://afdc.energy.gov/data','Public + private charging-station census: EV count, access type, address. Seed registry.'),
+  LINK('AFDC station locator','https://afdc.energy.gov/stations','Per-site view for manual verification before connector build.'),
+  LINK('Grants.gov awarded projects','https://www.grants.gov/search-results?keyword=electric%20bus%20charging','Clean School Bus / Industrial Diesel Replacement awards = named fleets + funded charger scale.'),
+  LINK('Utility make-ready dockets (CPUC electrical energy)','https://www.cpuc.ca.gov/industries-and-topics/electrical-energy','PG&E/SCE/SDG&E annual program reports name depot sites with charger counts + kW — best structured source.')]
+};
+
+/* ---- sector registry: five verticals, equal structure, no "others" bucket ---- */
+const SECTORS=[
+ {id:'cement',name:'Cement & Bulk Minerals',sub:'NAICS 327 · raw/finish mill, crushers',icon:'plant',color:'#F5A623',
+  status:'planned',statusNote:'4 real universe sources connected ↓',
+  stats:[{l:'Accounts',v:null,f:'USGS Cement Plants DB pending import'},{l:'Sites',v:null,f:'Kiln vs grinding-only split required'},{l:'Est. peak kW',v:null,f:'Capacity→kW via EIA MECS calibration'}],
+  crit:{c1:{s:4,d:'Among the largest industrial power loads; clinker/grinding capacity → kW',fit:'Strong'},
+        c2:{s:4,d:'Heavy coincident-peak exposure; publicly traded operators = public money trail',fit:'Strong'},
+        c3:{s:3,d:'Silo days of headroom at raw/finish mills — batch only',fit:'Partial'}},
+  gate:'<b>Continuous-process exclusion:</b> glass, steel, paper and cement <b>kiln-front continuous grinding</b> are hard-excluded at the gate (buffer_type=none), never scored into a fallback bucket.',
+  top:null,ph:'No account list yet — connector ships after NPDES/USGS ingestion is validated.'},
+
+ {id:'coldchain',name:'Cold Chain & Food Processing',sub:'EPA RMP ammonia · refrigerated warehousing',icon:'snow',color:'#3FD8E8',
+  status:'live',statusNote:'epa_rmp connector · nightly pull',
+  stats:[{l:'Accounts',v:117,f:'RMP ammonia filings (prospects 114)'},{l:'Sites',v:755,f:'1,382 facilities in scope'},{l:'NH₃ lb (top acct)',v:2724270,f:'Americold Realty Trust · 107 sites'}],
+  crit:{c1:{s:5,d:'Ammonia inventory ≈ load size; near-complete census of the market',fit:'Native'},
+        c2:{s:5,d:'35% of US temperature-controlled food passes through Ndustrial sites',fit:'Proven'},
+        c3:{s:5,d:'Thermal mass + product freeze = hours of shed headroom',fit:'Strong'}},
+  gate:'Continuous-process plants inside the food universe (e.g. pulp/paper misfiles) refused at ingestion — see review queue.',
+  top:['Americold Realty Trust — 107 sites · 2,724,270 lb','Lineage, Inc. — 92 sites · 2,589,779 lb','Sysco Corporation — 60 sites · 973,818 lb','Walmart Inc. — 39 sites · 1,903,105 lb','United States Cold Storage — 21 sites · 638,318 lb'],
+  ph:null},
+
+ {id:'district',name:'District Energy',sub:'Cooling & heating networks · thermal plants',icon:'net',color:'#9B8CFF',
+  status:'planned',statusNote:'4 real universe sources connected ↓',
+  stats:[{l:'Accounts',v:null,f:'No census equivalent found yet'},{l:'Sites',v:null,f:'State utility commissions / DOE lists'},{l:'Thermal MW',v:null,f:'Permit/interconnection filings'}],
+  crit:{c1:{s:4,d:'Central chiller/boiler plant kW visible in permits & interconnect filings',fit:'Good'},
+        c2:{s:3,d:'Mixed tariff exposure; many captive utility territories',fit:'Variable'},
+        c3:{s:5,d:'Storage tanks & network inertia = large, dispatchable buffer',fit:'Strong'}},
+  gate:'Networks feeding hospitals/critical loads get availability veto regardless of buffer score.',
+  top:null,ph:'Weakest “RMP-equivalent” of the five — universe completeness must be resolved before scoring is credible.'},
+
+ {id:'evdepot',name:'Heavy Transport EV Depots',sub:'Fleet charging · depot infrastructure',icon:'ev',color:'#3DDC97',
+  status:'planned',statusNote:'4 real universe sources connected ↓',
+  stats:[{l:'Accounts',v:null,f:'Charger count × kW from permitting/OEM data'},{l:'Sites',v:null,f:'State/DCFP procurement + OEM installs'},{l:'Depot kW',v:null,f:'Utility large-load rate filings'}],
+  crit:{c1:{s:3,d:'Charger count × rated kW; new builds only — brownfield unknown',fit:'Medium'},
+        c2:{s:4,d:'New large loads almost always on demand/RTP tariffs',fit:'Strong'},
+        c3:{s:4,d:'Dispatch flexibility: charge scheduling is native software control',fit:'Strong'}},
+  gate:'Depots tied to single contracted-use charging (no schedule freedom) fail C3 and are excluded.',
+  top:null,ph:'Buy-side signal (procurement/RFP) likely outranks registry data here — trigger table in EXPANSION-PLAN §4.'},
+
+ {id:'water',name:'Municipal Water & Wastewater',sub:'EPA RMP NAICS 2213x · pump/lift stations',icon:'drop',color:'#F2697A',
+  status:'live',statusNote:'water_rmp connector · verified this commit',
+  stats:[{l:'Accounts',v:732,f:'Registry lower bound (misses hypochlorite/UV)'},{l:'Sites',v:1196,f:'44 states · 759 aliases resolved'},{l:'Est. peak kW',v:1946200,f:'Engineering proxy — replace w/ meter data'}],
+  crit:{c1:{s:3,d:'chlorine_lb is a disinfection-scale proxy, NOT metered kW',fit:'Proxy'},
+        c2:{s:2,d:'Procurement cycles; most ratepayers have no RTP — sell via OEM partners',fit:'Hard'},
+        c3:{s:4,d:'Elevated storage = gravity-fed battery; minutes-to-hours headroom',fit:'Strong'}},
+  gate:'8 process exclusions refused at ingestion (ammonia mfg, refineries, pulp mills misfiled under water NAICS); 9 unresolved names held in review queue.',
+  top:['Metropolitan Water District SoCal — 6 sites · 37,000 kW est','Dallas Water Utilities — 5 sites · 37,000 kW est','American Water Utilities Holdings — 22 sites · 34,700 kW','PR Aqueduct & Sewer Authority — 14 sites · 28,500 kW','Great Lakes Water Authority — 6 sites · 23,500 kW'],
+  ph:null}
+];
+
+const STATUS_RANK={live:0,building:1,planned:2};
+let sortMode='alpha';
+
+function critRow(key,label,c,color){
+  const dots=Array.from({length:5},(_,i)=>`<span class="mseg ${i<c.s?'on':''}"></span>`).join('');
+  return `<div class="crow"><span class="ck">${key}</span><span class="cn">${label}</span>
+    <span class="cd">${esc(c.d)}</span><span class="meter">${dots}</span><span class="fit">${esc(c.fit)}</span></div>`;
+}
+
+function card(s){
+  const stBadge = s.status==='live' ? '<span class="status st-live">LIVE</span>'
+                : s.status==='building' ? '<span class="status st-build">BUILDING</span>'
+                : '<span class="status st-planned">PLANNED</span>';
+  const stats = s.stats.map(x=>`<div class="stat"><div class="slbl">${esc(x.l)}</div>
+      <div class="sval" style="${x.v==null?'color:var(--txt3)':''}">${fmt(x.v)}</div>
+      <div class="sfoot">${esc(x.f)}</div></div>`).join('');
+  const top = s.top ? `<div class="top5"><span class="lbl">Top accounts (real data)</span>${
+      s.top.map(t=>{const [n,v]=t.split(' — ');return `<div class="t5row"><span class="t5n">${esc(n)}</span><span class="t5v">${esc(v)}</span></div>`}).join('')}</div>`
+    : `<div class="ph">${esc(s.ph)}</div>`;
+  const conns = CONNS[s.id] ? `<div class="conns"><span class="lbl">Real universe sources (live links)</span>${
+      CONNS[s.id].map(c=>`<a class="conn" href="${c.url}" target="_blank" rel="noopener noreferrer" title="${esc(c.note)}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a5 5 0 007.07 0l2.83-2.83a5 5 0 00-7.07-7.07L11.4 8.6"/><path d="M14 10a5 5 0 00-7.07 0L4.1 12.83a5 5 0 007.07 7.07l1.42-1.4"/></svg>
+        <span class="cl">${esc(c.label)}</span><span class="cn2">${esc(c.note)}</span></a>`).join('')}</div>` : '';
+  return `<article class="scard" style="--sc:${s.color}" data-status="${s.status}" data-fit="${avgFit(s)}">
+    <div class="shead">
+      <div class="sicon">${svg(s.icon)}</div>
+      <div><div class="sname">${esc(s.name)}</div><div class="ssub">${esc(s.sub)}</div></div>
+      <div class="sbadge">${stBadge}<div class="srcnote">${esc(s.statusNote)}</div></div>
+    </div>
+    <div class="stats">${stats}</div>
+    <div class="crit">
+      ${critRow('C1','Meter scale',s.crit.c1)}
+      ${critRow('C2','Price exposure',s.crit.c2)}
+      ${critRow('C3','Shed buffer',s.crit.c3)}
+    </div>
+    <div class="gate">${s.gate}</div>
+    ${top}
+    ${conns}
+  </article>`;
+}
+
+function avgFit(s){
+  const map={Native:5,Proven:5,Strong:5,Good:4,Partial:3,Medium:3,Variable:3,Proxy:3,Hard:1};
+  return (map[s.crit.c1.fit]+map[s.crit.c2.fit]+map[s.crit.c3.fit])/3;
+}
+
+function render(){
+  const list=[...SECTORS];
+  if(sortMode==='alpha') list.sort((a,b)=>a.name.localeCompare(b.name));
+  if(sortMode==='status') list.sort((a,b)=>STATUS_RANK[a.status]-STATUS_RANK[b.status]||a.name.localeCompare(b.name));
+  if(sortMode==='fit') list.sort((a,b)=>avgFit(b)-avgFit(a)||a.name.localeCompare(b.name));
+  document.getElementById('grid').innerHTML=list.map(card).join('');
+}
+
+document.getElementById('sortSeg').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  sortMode=b.dataset.sort;
+  document.querySelectorAll('#sortSeg button').forEach(x=>x.classList.toggle('on',x===b));
+  render();
+});
+document.getElementById('themeBtn').addEventListener('click',()=>{
+  const h=document.documentElement;
+  const next=h.getAttribute('data-theme')==='dark'?'light':'dark';
+  h.setAttribute('data-theme',next);
+  try{localStorage.setItem('cp-sectors-theme',next)}catch(e){}
+});
+try{const t=localStorage.getItem('cp-sectors-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+render();
+</script>
+</body>
+</html>

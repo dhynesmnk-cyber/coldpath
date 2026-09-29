@@ -1,0 +1,9 @@
+{
+  "meta": { "source": "ev-afdc-datasets", "fixtureNote": "Recorded-shape fixture of AFDC station CSV subset for the depot funnel (EXPANSION-PLAN §6 step 7)." },
+  "rows": [
+    { "StationName": "Fresno Logistics Center Depot", "City": "Fresno", "State": "ca", "EVConnectionsPowerkW": "50;150;", "AccessCode": "E", "GroupsInEVprivateUse": "Freight fleet" },
+    { "StationName": "Public Mall Charger", "City": "Reno", "State": "NV", "EVConnectionsPowerkW": "150", "AccessCode": "A" },
+    { "StationName": "No Power Depot", "City": "Boise", "State": "ID", "EVConnectionsPowerkW": "", "AccessCode": "E" },
+    { "StationName": "School Bus Yard Depot", "City": "Oakland", "State": "CA", "EVConnectionsPowerkW": "62.5;62.5;", "AccessCode": "H" }
+  ]
+}
